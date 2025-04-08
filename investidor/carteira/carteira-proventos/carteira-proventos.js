@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Constants
   const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
-  // Data structures
   const yearlyData = {
     2024: {
       totalReceived: 1195.50,
@@ -114,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   ];
 
-  // State variables
   let chartInstance = null;
   let selectedYear = new Date().getFullYear();
   let selectedPeriodo = '12 MESES';
@@ -123,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function() {
   let filteredIncomeData = [...incomeData];
   let monthlyData = [];
 
-  // Initialize
   initializeApp();
 
   function initializeApp() {
@@ -135,7 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function setupEventListeners() {
-    // Period filter for chart
     const periodFilters = document.querySelectorAll('.filtro-data .option');
     periodFilters.forEach(filter => {
       filter.addEventListener('click', function() {
@@ -154,11 +149,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-    // Year navigation
     document.querySelector('.year-nav.prev').addEventListener('click', navigatePrevYear);
     document.querySelector('.year-nav.next').addEventListener('click', navigateNextYear);
 
-    // Period filter for details
     const detailsPeriodFilters = document.querySelectorAll('.income-details-section .filtro-data .option');
     detailsPeriodFilters.forEach(filter => {
       filter.addEventListener('click', function() {
@@ -169,7 +162,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-    // Asset type filter
     const assetTypeFilters = document.querySelectorAll('.filtro-tipos-ativo .option');
     assetTypeFilters.forEach(filter => {
       filter.addEventListener('click', function() {
@@ -180,12 +172,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-    // Pagination
     const paginationButtons = document.querySelectorAll('.pagination-btn');
     paginationButtons.forEach(btn => {
       btn.addEventListener('click', function() {
-        // Pagination logic would go here
-        // For demo purposes, we're not implementing full pagination
       });
     });
 
@@ -194,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
       page.addEventListener('click', function() {
         document.querySelectorAll('.page-number').forEach(p => p.classList.remove('active'));
         this.classList.add('active');
-        // Page change logic would go here
       });
     });
   }
@@ -258,7 +246,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentYearData = yearlyData[selectedYear];
     const prevYearData = yearlyData[selectedYear - 1] || { totalReceived: 0, monthlyAverage: 0, yield: 0, annualProjection: 0 };
 
-    // Update total received
     document.querySelector('.summary-card:nth-child(1) .card-value').textContent =
       `R$ ${currentYearData.totalReceived.toFixed(2)}`;
 
@@ -268,7 +255,6 @@ document.addEventListener('DOMContentLoaded', function() {
     totalComparisonElem.className =
       `card-comparison ${getComparisonClass(currentYearData.totalReceived, prevYearData.totalReceived)}`;
 
-    // Update monthly average
     document.querySelector('.summary-card:nth-child(2) .card-value').textContent =
       `R$ ${currentYearData.monthlyAverage.toFixed(2)}`;
 
@@ -278,7 +264,6 @@ document.addEventListener('DOMContentLoaded', function() {
     avgComparisonElem.className =
       `card-comparison ${getComparisonClass(currentYearData.monthlyAverage, prevYearData.monthlyAverage)}`;
 
-    // Update yield
     document.querySelector('.summary-card:nth-child(3) .card-value').textContent =
       `${currentYearData.yield.toFixed(1)}%`;
 
@@ -288,7 +273,6 @@ document.addEventListener('DOMContentLoaded', function() {
     yieldComparisonElem.className =
       `card-comparison ${getComparisonClass(currentYearData.yield, prevYearData.yield)}`;
 
-    // Update annual projection
     document.querySelector('.summary-card:nth-child(4) .card-value').textContent =
       `R$ ${currentYearData.annualProjection.toFixed(2)}`;
 
@@ -403,7 +387,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Chart functions
   function createPatrimonioChart(monthsToShow) {
     const canvas = document.querySelector('#patrimonioChart');
     const ctx = canvas.getContext('2d');
@@ -472,7 +455,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const year = date.getFullYear();
       const monthName = MONTHS[date.getMonth()];
 
-      // Check if we have data for this year
       if (yearlyData[year]) {
         const monthData = yearlyData[year].monthlyData.find(m => m.month === monthName);
         data.push(monthData ? monthData.value : 0);
