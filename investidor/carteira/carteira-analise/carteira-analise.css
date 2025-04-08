@@ -1,0 +1,541 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--dark);
+}
+
+.analysis-header {
+  background-color: var(--dark-lighter);
+  padding: 40px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header-content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.header-content p {
+  font-size: 16px;
+  color: var(--light-gray);
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.subscribe-btn {
+  background-color: var(--ambar);
+  color: var(--dark);
+  border: none;
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.subscribe-btn:hover {
+  background-color: #e69500; /* darken var(--ambar) by 10% */
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 20px;
+}
+
+.section-header {
+  margin-bottom: 30px;
+}
+
+.section-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--white);
+  position: relative;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.section-header h2:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: var(--ambar);
+}
+
+.benefits-section {
+  padding: 20px;
+  background-color: var(--dark-lighter);
+  border-radius: 8px;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.benefit-card {
+  background-color: var(--dark);
+  border-radius: 8px;
+  padding: 25px;
+  transition: transform 0.3s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-5px);
+}
+
+.benefit-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.benefit-icon.professional {
+  background-color: var(--blue);
+}
+
+.benefit-icon.optimization {
+  background-color: var(--green);
+}
+
+.benefit-icon.alerts {
+  background-color: var(--red);
+}
+
+.benefit-icon.report {
+  background-color: var(--ambar);
+}
+
+.benefit-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.benefit-card p {
+  font-size: 14px;
+  color: var(--light-gray);
+  line-height: 1.5;
+}
+
+.example-analysis {
+  padding: 20px;
+  background-color: var(--dark-lighter);
+  border-radius: 8px;
+}
+
+.analysis-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.analysis-chart {
+  flex: 1;
+  min-width: 300px;
+}
+
+.chart-placeholder {
+  height: 300px;
+  background-color: var(--dark);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.chart-placeholder span {
+  color: var(--light-gray);
+  font-style: italic;
+}
+
+.analysis-details {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.analysis-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 120px;
+  background-color: var(--dark);
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.stat-item h4 {
+  font-size: 14px;
+  color: var(--light-gray);
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.stat-value.positive {
+  color: var(--green);
+}
+
+.stat-value.negative {
+  color: var(--red);
+}
+
+.stat-value.neutral {
+  color: var(--ambar);
+}
+
+.analysis-recommendations {
+  background-color: var(--dark);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.analysis-recommendations h4 {
+  font-size: 16px;
+  color: var(--white);
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.analysis-recommendations ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.analysis-recommendations li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 12px;
+  color: var(--light-gray);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.analysis-recommendations li:before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--ambar);
+  font-size: 18px;
+}
+
+.plans-section {
+  padding: 20px;
+  background-color: var(--dark-lighter);
+  border-radius: 8px;
+}
+
+.plans-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.plan-card {
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+  background-color: var(--dark);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--dark-lightest);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.plan-card.recommended {
+  border-color: var(--ambar);
+  transform: scale(1.05);
+}
+
+.plan-card.recommended:hover {
+  transform: scale(1.05) translateY(-5px);
+}
+
+.plan-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--ambar);
+  color: var(--dark);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-bottom-left-radius: 8px;
+}
+
+.plan-header {
+  padding: 25px;
+  text-align: center;
+  border-bottom: 1px solid var(--dark-lightest);
+}
+
+.plan-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 15px;
+}
+
+.plan-price .price {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ambar);
+}
+
+.plan-price .period {
+  font-size: 14px;
+  color: var(--light-gray);
+}
+
+.plan-features {
+  padding: 25px;
+}
+
+.plan-features ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.plan-features li {
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 15px;
+  color: var(--white);
+  font-size: 14px;
+}
+
+.plan-features li:before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+}
+
+.plan-features li.not-included {
+  color: var(--light-gray);
+  text-decoration: line-through;
+}
+
+.plan-features li.not-included:before {
+  content: '✕';
+  color: var(--red);
+}
+
+.plan-select-btn {
+  display: block;
+  width: calc(100% - 50px);
+  margin: 0 25px 25px;
+  padding: 12px;
+  background-color: transparent;
+  border: 1px solid var(--ambar);
+  color: var(--ambar);
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.plan-select-btn:hover {
+  background-color: var(--ambar);
+  color: var(--dark);
+}
+
+.testimonials-section {
+  padding: 20px;
+  background-color: var(--dark-lighter);
+  border-radius: 8px;
+}
+
+.testimonials-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.testimonials-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.testimonials-container::-webkit-scrollbar-track {
+  background: var(--dark);
+  border-radius: 10px;
+}
+
+.testimonials-container::-webkit-scrollbar-thumb {
+  background: var(--dark-lightest);
+  border-radius: 10px;
+}
+
+.testimonials-container::-webkit-scrollbar-thumb:hover {
+  background: var(--ambar);
+}
+
+.testimonial-card {
+  flex: 0 0 350px;
+  background-color: var(--dark);
+  border-radius: 8px;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.testimonial-quote {
+  font-size: 14px;
+  color: var(--white);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.testimonial-quote:before {
+  content: '"';
+  font-size: 40px;
+  color: var(--ambar);
+  line-height: 0;
+  vertical-align: -15px;
+  margin-right: 5px;
+  opacity: 0.5;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--dark-lightest);
+}
+
+.author-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.author-title {
+  font-size: 12px;
+  color: var(--light-gray);
+}
+
+.cta-section {
+  margin: 40px 20px;
+  background-color: var(--dark-lighter);
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+}
+
+.cta-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cta-content h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 15px;
+}
+
+.cta-content p {
+  font-size: 16px;
+  color: var(--light-gray);
+  margin-bottom: 30px;
+}
+
+.subscribe-btn-large {
+  background-color: var(--ambar);
+  color: var(--dark);
+  border: none;
+  border-radius: 4px;
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.subscribe-btn-large:hover {
+  background-color: #e69500; /* darken var(--ambar) by 10% */
+}
+
+@media (max-width: 768px) {
+  .analysis-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .analysis-header .cta-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .benefit-card, .testimonial-card {
+    min-width: 100%;
+  }
+
+  .plans-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .plan-card {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .plan-card.recommended {
+    transform: scale(1);
+  }
+
+  .plan-card.recommended:hover {
+    transform: translateY(-5px);
+  }
+
+  .cta-section {
+    padding: 30px 20px;
+  }
+}
