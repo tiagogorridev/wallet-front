@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Carrega o header
   const headerContainer = document.getElementById('header');
   if (headerContainer) {
     fetch('/investidor/header/header.html')
@@ -15,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
       .catch(error => console.error('Erro ao carregar o header:', error));
   }
 
-  // Dados para os componentes
   const assetDistributionData = [
     { class: 'crypto', label: 'Criptomoedas', percentage: 50 },
     { class: 'fixed-income', label: 'Renda Fixa', percentage: 50 }
@@ -70,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   ];
 
-  // Inicializa os componentes
   const patrimonyComponent = new EvolutionPatrimonyComponent('patrimonyEvolutionChart', 'patrimonyFilter');
   patrimonyComponent.initialize();
 
@@ -83,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const assetsComponent = new AssetsComponent('assetCategoriesContainer', 'addAssetModal');
   assetsComponent.initialize();
 
-  // Inicializa os novos componentes refatorados
   const annualReturnChart = new AnnualReturnChartComponent('annualReturnChart');
   annualReturnChart.initialize();
 

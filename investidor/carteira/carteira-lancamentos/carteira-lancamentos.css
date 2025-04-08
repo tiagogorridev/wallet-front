@@ -33,7 +33,6 @@ body {
   color: var(--white);
 }
 
-/* Filtros */
 .filters {
   display: flex;
   gap: 10px;
@@ -117,7 +116,6 @@ body {
   background-color: #e69500;
 }
 
-/* Categorias */
 .categorias-container {
   background-color: var(--dark-lighter);
   border-radius: 8px;
@@ -148,7 +146,6 @@ body {
   color: var(--dark);
 }
 
-/* Tabela de Lançamentos */
 .lancamentos-table-container {
   overflow-x: auto;
 }
@@ -201,7 +198,6 @@ body {
   color: var(--blue);
 }
 
-/* Sumário da Categoria */
 .categoria-summary {
   display: flex;
   gap: 15px;
@@ -237,7 +233,6 @@ body {
   color: var(--red);
 }
 
-/* Paginacão */
 .lancamentos-pagination {
   display: flex;
   justify-content: center;
@@ -297,7 +292,6 @@ body {
   border-color: var(--ambar);
 }
 
-/* Resumo do Período */
 .lancamentos-summary {
   background-color: var(--dark-lighter);
   border-radius: 8px;
@@ -332,7 +326,6 @@ body {
   flex-wrap: wrap;
 }
 
-/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -448,25 +441,4 @@ body {
 .cancel-btn:hover {
   border-color: var(--light-gray);
   color: var(--white);
-}
-
-/* Media Queries para Responsividade */
-@media (max-width: 768px) {
-  .summary-cards {
-    flex-direction: column;
-  }
-
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .filters {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .categoria-summary {
-    flex-direction: column;
-  }
 }

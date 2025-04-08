@@ -1,22 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Inicializar o header
   initHeader();
-
-  // Inicializar os perfis de investidor
   initInvestorProfiles();
-
-  // Inicializar a alocação
   initAllocation();
-
-  // Inicializar os botões de salvar
   initSaveButtons();
 });
 
-// Função para inicializar o header
 function initHeader() {
   const header = document.getElementById('investidor-header');
-
-  // Conteúdo do header
   header.innerHTML = `
       <div class="header-logo">InvestDash</div>
       <div class="header-nav">
@@ -34,7 +24,6 @@ function initHeader() {
       </div>
   `;
 
-  // Adicionar eventos aos links do header
   const navItems = header.querySelectorAll('.header-nav-item');
   navItems.forEach(item => {
       item.addEventListener('click', function(e) {
@@ -45,23 +34,18 @@ function initHeader() {
   });
 }
 
-// Função para inicializar os perfis de investidor
 function initInvestorProfiles() {
   const profileOptions = document.querySelectorAll('.profile-option');
-
   profileOptions.forEach(option => {
       option.addEventListener('click', function() {
           profileOptions.forEach(opt => opt.classList.remove('selected'));
           this.classList.add('selected');
-
-          // Aqui você pode adicionar lógica para alterar alocações baseadas no perfil
           const profileType = this.getAttribute('data-profile');
           updateAllocationByProfile(profileType);
       });
   });
 }
 
-// Função para atualizar alocações baseadas no perfil selecionado
 function updateAllocationByProfile(profileType) {
   const cryptoInput = document.getElementById('crypto-allocation');
   const fixedIncomeInput = document.getElementById('fixed-income-allocation');
@@ -84,24 +68,17 @@ function updateAllocationByProfile(profileType) {
           stocksInput.value = 30;
           break;
   }
-
-  // Atualizar o total
   updateTotalAllocation();
 }
 
-// Função para inicializar a alocação
 function initAllocation() {
   const allocationInputs = document.querySelectorAll('.allocation-value');
-
   allocationInputs.forEach(input => {
       input.addEventListener('input', updateTotalAllocation);
   });
-
-  // Inicializar o total
   updateTotalAllocation();
 }
 
-// Função para atualizar o total da alocação
 function updateTotalAllocation() {
   const cryptoValue = parseInt(document.getElementById('crypto-allocation').value) || 0;
   const fixedIncomeValue = parseInt(document.getElementById('fixed-income-allocation').value) || 0;
@@ -111,18 +88,10 @@ function updateTotalAllocation() {
   const totalElement = document.getElementById('total-allocation');
 
   totalElement.textContent = total + '%';
-
-  // Alterar a cor se o total não for 100%
-  if (total !== 100) {
-      totalElement.style.color = 'var(--red)';
-  } else {
-      totalElement.style.color = 'var(--ambar)';
-  }
+  totalElement.style.color = (total !== 100) ? 'var(--red)' : 'var(--ambar)';
 }
 
-// Função para inicializar os botões de salvar
 function initSaveButtons() {
-  // Botão salvar dados da carteira
   const saveAccountBtn = document.getElementById('save-account');
   saveAccountBtn.addEventListener('click', function() {
       const portfolioName = document.getElementById('portfolio-name').value;
@@ -132,7 +101,6 @@ function initSaveButtons() {
       alert(`Carteira "${portfolioName}" com moeda "${selectedCurrency}" salva com sucesso!`);
   });
 
-  // Botão salvar alocação
   const saveAllocationBtn = document.getElementById('save-allocation');
   saveAllocationBtn.addEventListener('click', function() {
       const cryptoValue = document.getElementById('crypto-allocation').value;

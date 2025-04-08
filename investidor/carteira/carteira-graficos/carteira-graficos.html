@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard de Investimentos</title>
+  <title>MyWallet - Gráficos</title>
   <link rel="stylesheet" href="../../header/header.css">
-  <link rel="stylesheet" href="carteira-graficos.css">
   <link rel="stylesheet" href="../../../css/style.css">
-  <link rel="stylesheet" href="../../../componentes/graficos/graficos.css">
-  <link rel="shortcut icon" href="../../assets/imagens/favicon.png" type="image/x-icon">
+  <link rel="stylesheet" href="carteira-graficos.css">
+  <link rel="shortcut icon" href="../../../assets/imagens/favicon-icon.png" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
 <body>
   <div class="dashboard-container">
-  <header id="header"></header>
+    <header id="header"></header>
 
-    <!-- Main Content -->
     <div class="main-content">
       <section class="chart-section">
         <div class="section-header">
@@ -42,9 +40,7 @@
         </div>
         <div class="pie-chart-container">
           <canvas id="assetsDistributionChart"></canvas>
-          <div class="pie-chart-legend" id="assetsDistributionLegend">
-            <!-- Legend items will be injected via JavaScript -->
-          </div>
+          <div class="pie-chart-legend" id="assetsDistributionLegend"></div>
         </div>
       </section>
     </div>
@@ -65,9 +61,7 @@
         </div>
         <div class="pie-chart-container">
           <canvas id="categoryDistributionChart"></canvas>
-          <div class="pie-chart-legend" id="categoryDistributionLegend">
-            <!-- Legend items will be injected via JavaScript -->
-          </div>
+          <div class="pie-chart-legend" id="categoryDistributionLegend"></div>
         </div>
       </section>
     </div>
@@ -97,7 +91,6 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Table rows will be injected via JavaScript -->
           </tbody>
         </table>
       </div>
@@ -109,12 +102,10 @@
         <button class="add-asset-btn-secondary" id="addAssetBtn">Adicionar Ativo</button>
       </div>
       <div class="assets-table-container" id="assetCategoriesContainer">
-        <!-- Asset categories will be injected via JavaScript -->
       </div>
     </section>
   </div>
 
-  <!-- Modal for adding new assets -->
   <div class="modal" id="addAssetModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -162,7 +153,5 @@
   </div>
 
   <script src="../../header/header.js"></script>
-  <script src="carteira-graficos.js"></script>
   <script src="../../../componentes/graficos/graficos.js"></script>
-</body>
-</html>
+  <script src="carteira-graficos.js"></script>

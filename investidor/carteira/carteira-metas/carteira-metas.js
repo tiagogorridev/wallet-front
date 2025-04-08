@@ -1,4 +1,3 @@
-// Modelo de dados
 let goals = [
   {
     id: 1,
@@ -39,7 +38,6 @@ let filteredGoals = [];
 let currentFilter = 'all';
 let currentEditingGoal = null;
 
-// DOM Elements
 const addGoalModal = document.getElementById('addGoalModal');
 const editGoalModal = document.getElementById('editGoalModal');
 const addGoalForm = document.getElementById('addGoalForm');
@@ -51,13 +49,10 @@ const closeModalBtns = document.querySelectorAll('.close-modal-btn');
 const goalsList = document.getElementById('goalsList');
 const goalTabs = document.querySelectorAll('.goal-tab');
 
-// Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
-  // Inicializar a página
   applyFilter('all');
   updateGoalStats();
 
-  // Adicionar event listeners para os modais
   openAddGoalModalBtn.addEventListener('click', openAddGoalModal);
   closeAddModalBtn.addEventListener('click', closeModal);
   closeEditModalBtn.addEventListener('click', closeModal);
@@ -66,24 +61,20 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', closeModal);
   });
 
-  // Event listeners para formulários
   addGoalForm.addEventListener('submit', onSubmitAdd);
   editGoalForm.addEventListener('submit', onSubmitEdit);
 
-  // Event listeners para as abas de filtro
   goalTabs.forEach(tab => {
     tab.addEventListener('click', (event) => {
       const filter = event.target.dataset.filter;
       applyFilter(filter);
 
-      // Atualizar a classe ativa
       goalTabs.forEach(t => t.classList.remove('active'));
       event.target.classList.add('active');
     });
   });
 });
 
-// Funções de modal
 function openAddGoalModal() {
   addGoalModal.style.display = 'flex';
 }
@@ -93,11 +84,9 @@ function openEditGoalModal(goalId) {
 
   if (!currentEditingGoal) return;
 
-  // Extrair dados da data
   let [day, month, year] = currentEditingGoal.targetDate.split('/');
   let formattedDate = `${year}-${month}-${day}`;
 
-  // Determinando o tipo de ativo
   let assetType = '';
   if (currentEditingGoal.strategy.includes('Renda Fixa')) {
     assetType = 'renda_fixa';
@@ -109,7 +98,6 @@ function openEditGoalModal(goalId) {
     assetType = 'acoes';
   }
 
-  // Determinando o prazo
   let term = '';
   if (currentEditingGoal.subtitle.includes('Curto prazo')) {
     term = 'curto';
@@ -119,7 +107,6 @@ function openEditGoalModal(goalId) {
     term = 'longo';
   }
 
-  // Preencher o formulário
   document.getElementById('edit-id').value = currentEditingGoal.id;
   document.getElementById('edit-title').value = currentEditingGoal.title;
   document.getElementById('edit-term').value = term;
@@ -135,18 +122,15 @@ function closeModal() {
   addGoalModal.style.display = 'none';
   editGoalModal.style.display = 'none';
 
-  // Resetar formulários
   addGoalForm.reset();
   editGoalForm.reset();
 
-  // Limpar mensagens de erro
   clearValidationErrors(addGoalForm);
   clearValidationErrors(editGoalForm);
 
   currentEditingGoal = null;
 }
 
-// Função para limpar mensagens de erro de validação
 function clearValidationErrors(form) {
   const errorMessages = form.querySelectorAll('.error-message');
   errorMessages.forEach(element => {
@@ -159,14 +143,11 @@ function clearValidationErrors(form) {
   });
 }
 
-// Funções de formulário
 function validateForm(form) {
   let isValid = true;
 
-  // Resetar mensagens de erro
   clearValidationErrors(form);
 
-  // Validar cada campo
   const fields = form.querySelectorAll('input[required], select[required]');
   fields.forEach(field => {
     const errorId = field.id.includes('edit-') ?
@@ -206,11 +187,9 @@ function onSubmitAdd(event) {
   const completionDate = document.getElementById('completionDate').value;
   const targetValue = parseFloat(document.getElementById('targetValue').value);
 
-  // Formatar data
   const dateObj = new Date(completionDate);
   const formattedDate = `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${dateObj.getFullYear()}`;
 
-  // Determinar texto do termo
   let termText = '';
   switch(term) {
     case 'curto':
@@ -224,7 +203,6 @@ function onSubmitAdd(event) {
       break;
   }
 
-  // Determinar estratégia
   let strategy = '';
   switch(assetType) {
     case 'renda_fixa':
@@ -241,7 +219,6 @@ function onSubmitAdd(event) {
       break;
   }
 
-  // Criar nova meta
   const newGoal = {
     id: goals.length > 0 ? Math.max(...goals.map(g => g.id)) + 1 : 1,
     title: title,
@@ -273,11 +250,9 @@ function onSubmitEdit(event) {
   const completionDate = document.getElementById('edit-completionDate').value;
   const assetType = document.getElementById('edit-assetType').value;
 
-  // Formatar data
   const dateObj = new Date(completionDate);
   const formattedDate = `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${dateObj.getFullYear()}`;
 
-  // Determinar estratégia
   let strategy = '';
   switch(assetType) {
     case 'renda_fixa':
@@ -294,7 +269,6 @@ function onSubmitEdit(event) {
       break;
   }
 
-  // Determinar texto do termo
   let termText = '';
   switch(term) {
     case 'curto':
@@ -308,11 +282,9 @@ function onSubmitEdit(event) {
       break;
   }
 
-  // Extrair categoria da meta atual
   let category = currentEditingGoal.subtitle.split('•')[1]?.trim() || '';
   let subtitle = `${termText} • ${category}`;
 
-  // Atualizar a meta
   const index = goals.findIndex(g => g.id === id);
   if (index !== -1) {
     goals[index] = {
@@ -332,7 +304,6 @@ function onSubmitEdit(event) {
   closeModal();
 }
 
-// Funções de filtro e exibição
 function applyFilter(filter) {
   currentFilter = filter;
 
@@ -362,7 +333,6 @@ function renderGoals() {
     goalCard.className = 'goal-card';
     goalCard.dataset.id = goal.id;
 
-    // Determine icon class based on goal.icon
     let iconClass = 'fa-regular';
     switch(goal.icon) {
       case 'reserve':
@@ -436,14 +406,12 @@ function updateGoalStats() {
     return goal.status === 'in_progress' ? sum + (goal.targetValue - goal.currentValue) : sum;
   }, 0);
 
-  // Atualizar os cards de estatísticas
   const statCards = document.querySelectorAll('.goal-stat-card');
   if (statCards.length >= 3) {
     statCards[0].querySelector('.stat-value').textContent = inProgressGoals;
     statCards[1].querySelector('.stat-value').textContent = completedGoals;
     statCards[2].querySelector('.stat-value').textContent = `R$ ${totalTarget.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
-    // Atualizar as barras de progresso
     const overallProgress = totalGoals > 0 ? (completedGoals / totalGoals) * 100 : 0;
     statCards[0].querySelector('.progress').style.width = `${(inProgressGoals / totalGoals) * 100}%`;
     statCards[1].querySelector('.progress').style.width = `${overallProgress}%`;
@@ -454,5 +422,4 @@ function calculateProgressPercentage(goal) {
   return (goal.currentValue / goal.targetValue) * 100;
 }
 
-// Função global necessária para o evento de clique inline
 window.openEditGoalModal = openEditGoalModal;

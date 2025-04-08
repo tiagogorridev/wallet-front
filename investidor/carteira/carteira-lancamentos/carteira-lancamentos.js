@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // Estado da aplicação
   const state = {
     lancamentos: [
       {
@@ -50,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
     tipoFilter: null
   };
 
-  // Elementos DOM
   const elements = {
     categoriaBtns: document.querySelectorAll('.categoria-btn'),
     lancamentosTbody: document.getElementById('lancamentos-tbody'),
@@ -68,10 +66,8 @@ document.addEventListener('DOMContentLoaded', function() {
     ativosDropdown: document.getElementById('ativos-dropdown')
   };
 
-  // Inicialização
   init();
 
-  // Funções de inicialização
   function init() {
     setupEventListeners();
     renderLancamentos();
@@ -79,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function setupEventListeners() {
-    // Filtros de categoria
     elements.categoriaBtns.forEach(btn => {
       btn.addEventListener('click', function() {
         const categoria = this.getAttribute('data-categoria');
@@ -87,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-    // Dropdowns
     elements.periodoDrop.addEventListener('click', function(e) {
       e.stopPropagation();
       toggleDropdown('periodo');
@@ -98,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function() {
       toggleDropdown('ativos');
     });
 
-    // Opções dos dropdowns
     document.querySelectorAll('#periodo-dropdown li').forEach(item => {
       item.addEventListener('click', function() {
         const value = this.getAttribute('data-value');
@@ -117,18 +110,11 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
 
-    // Modal
     elements.addAtivoBtn.addEventListener('click', openModal);
     elements.closeModalBtn.addEventListener('click', closeModal);
     elements.cancelBtn.addEventListener('click', closeModal);
-
-    // Form submission
     elements.adicionarAtivoForm.addEventListener('submit', handleFormSubmit);
-
-    // Close dropdowns on outside click
     document.addEventListener('click', closeDropdowns);
-
-    // Close modal on Escape key
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
         closeModal();
@@ -137,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Funções para manipulação de dados
   function parseDataBR(dataString) {
     const [dia, mes, ano] = dataString.split('/').map(Number);
     return new Date(ano, mes - 1, dia);
@@ -151,8 +136,8 @@ document.addEventListener('DOMContentLoaded', function() {
     return state.lancamentos.filter(lancamento => {
       const dataLancamento = parseDataBR(lancamento.data);
       const dataMatch = dataLancamento >= dataLimite;
-
       let categoriaMatch = true;
+
       if (state.ativoFilter) {
         categoriaMatch = lancamento.categoria === state.ativoFilter;
       } else if (state.categoriaSelecionada) {
@@ -160,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       const tipoMatch = state.tipoFilter ? lancamento.tipo === state.tipoFilter : true;
-
       return dataMatch && categoriaMatch && tipoMatch;
     });
   }
@@ -180,7 +164,6 @@ document.addEventListener('DOMContentLoaded', function() {
       lancamento.tipo === 'Dividendo' ? total + lancamento.valorTotal : total, 0);
   }
 
-  // Funções de atualização da UI
   function renderLancamentos() {
     const lancamentosFiltrados = filtrarLancamentos();
     elements.lancamentosTbody.innerHTML = '';
@@ -215,7 +198,6 @@ document.addEventListener('DOMContentLoaded', function() {
     state.categoriaSelecionada = categoria;
     state.ativoFilter = categoria;
 
-    // Atualizar UI
     elements.categoriaBtns.forEach(btn => {
       btn.classList.remove('active');
       if (btn.getAttribute('data-categoria') === categoria) {
@@ -236,15 +218,12 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSummary();
   }
 
-  // Funções para dropdowns
   function toggleDropdown(dropdownId) {
-    // Fechar todos os outros dropdowns
     const otherDropdownIds = ['periodo', 'ativos'].filter(id => id !== dropdownId);
     otherDropdownIds.forEach(id => {
       document.getElementById(`${id}-dropdown`).classList.remove('show');
     });
 
-    // Alternar o dropdown atual
     document.getElementById(`${dropdownId}-dropdown`).classList.toggle('show');
   }
 
@@ -256,14 +235,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function updatePeriod(periodOption) {
     state.periodoMeses = parseInt(periodOption);
-    console.log('Período selecionado:', state.periodoMeses, 'meses');
     renderLancamentos();
     updateSummary();
   }
 
   function updateAtivoFilter(ativoOption) {
-    console.log('Ativo selecionado:', ativoOption);
-
     const ativoMap = {
       'TODOS': null,
       'CRIPTOS': 'Criptomoedas',
@@ -277,7 +253,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (state.ativoFilter) {
       state.categoriaSelecionada = state.ativoFilter;
 
-      // Atualizar botões de categoria
       elements.categoriaBtns.forEach(btn => {
         btn.classList.remove('active');
         if (btn.getAttribute('data-categoria') === state.ativoFilter) {
@@ -290,7 +265,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSummary();
   }
 
-  // Funções para o modal
   function openModal() {
     elements.modalOverlay.style.display = 'flex';
   }
@@ -311,7 +285,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const valorUnitario = parseFloat(document.getElementById('valorUnitario').value);
     const categoria = document.getElementById('categoria').value;
 
-    // Formato da data DD/MM/YYYY
     const formattedDate = formatDate(new Date(data));
 
     const novoLancamento = {
@@ -325,17 +298,10 @@ document.addEventListener('DOMContentLoaded', function() {
       categoria
     };
 
-    // Adicionar o novo lançamento
     state.lancamentos.unshift(novoLancamento);
-
-    // Atualizar a UI
     renderLancamentos();
     updateSummary();
-
-    // Fechar o modal
     closeModal();
-
-    console.log('Novo ativo adicionado:', novoLancamento);
   }
 
   function formatDate(date) {
@@ -346,7 +312,6 @@ document.addEventListener('DOMContentLoaded', function() {
     return `${day}/${month}/${year}`;
   }
 
-  // CSS auxiliar para exibir os dropdowns abertos
   const style = document.createElement('style');
   style.textContent = `
     .dropdown-menu {
