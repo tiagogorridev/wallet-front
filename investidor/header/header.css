@@ -1,15 +1,3 @@
-:root {
-  --dark: #121212;
-  --dark-lighter: #1e1e1e;
-  --dark-lightest: #333333;
-  --ambar: #FFA500;
-  --white: #FFFFFF;
-  --light-gray: #AAAAAA;
-  --gray: #666666;
-  --green: #22C55E;
-  --red: #EF4444;
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -22,6 +10,17 @@
   flex-direction: column;
   background-color: var(--dark);
   color: var(--white);
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.investment-summary {
+  display: flex;
+  gap: 30px;
 }
 
 .header-summary {
@@ -79,6 +78,7 @@
   font-weight: 600;
 }
 
+
 .portfolio-actions {
   display: flex;
   align-items: center;
@@ -90,6 +90,8 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  position: relative;
+  z-index: 1000;
 }
 
 .portfolio-selector span {
@@ -174,16 +176,13 @@
   color: var(--white);
 }
 
-.nav-item.active {
-  color: var(--ambar);
-  border-bottom: 2px solid var(--ambar);
+.navigation .nav-item.active {
+  color: var(--ambar) !important;
+  border-bottom: 2px solid var(--ambar) !important;
 }
 
-/* Portfolio Dropdown Styling - verifique se estes estilos estão sendo aplicados */
-
-.portfolio-selector {
-  position: relative;
-  z-index: 1000; /* Certifique-se de que o z-index seja alto o suficiente */
+.navigation .nav-item.active i {
+  color: var(--ambar) !important;
 }
 
 .portfolio-dropdown {
@@ -198,12 +197,6 @@
   min-width: 220px;
   z-index: 1000;
   overflow: hidden;
-}
-
-/* Debug para visualizar o dropdown mesmo que esteja com problema */
-.portfolio-dropdown.debug-visible {
-  display: block !important;
-  border: 2px solid red;
 }
 
 .portfolio-option {
@@ -241,7 +234,6 @@
   margin-right: 8px;
 }
 
-/* Modal Styling */
 .modal {
   position: fixed;
   top: 0;
@@ -357,4 +349,16 @@
 
 .modal-confirm:hover {
   background-color: #e69500;
+}
+
+.positive {
+  color: var(--green) !important;
+}
+
+.negative {
+  color: var(--red) !important;
+}
+
+.neutral {
+  color: var(--ambar) !important;
 }
