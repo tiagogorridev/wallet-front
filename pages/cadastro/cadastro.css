@@ -1,6 +1,3 @@
-/* styles.css */
-
-/* Definindo variáveis CSS para substituir as variáveis SASS */
 :root {
   --ambar: #FFA500;
   --gray: #333333;
@@ -135,7 +132,7 @@ html, body {
 }
 
 .cadastro-btn button:hover {
-  background-color: #e69500; /* Versão mais escura do ambar */
+  background-color: #e69500;
 }
 
 .no-account {
@@ -156,25 +153,9 @@ html, body {
 
 .cadastro-background {
   width: 50%;
-  background-image: url('../../assets/imagens/login-background.png'); /* Caminho ajustado */
+  background-image: url('../../assets/imagens/login-background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   height: 100vh;
-}
-
-/* Responsividade para telas menores */
-@media (max-width: 768px) {
-  .cadastro-container {
-    flex-direction: column;
-  }
-
-  .cadastro-content {
-    width: 100%;
-    height: 100%;
-  }
-
-  .cadastro-background {
-    display: none;
-  }
 }
