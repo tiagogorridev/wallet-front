@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard de Investimentos</title>
+  <link rel="stylesheet" href="../../header/header.css">
+  <link rel="stylesheet" href="carteira-proventos.css">
+  <link rel="stylesheet" href="../../../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header id="header"></header>
+  <div class="dashboard-container">
+    <main class="main-content">
+      <section class="chart-section">
+        <div class="section-header">
+          <h2>Evolução dos Proventos</h2>
+          <div class="filters">
+            <div class="filtro-data">
+              <div class="filter-wrapper">
+                <div class="selected-option">12 MESES</div>
+                <div class="options-dropdown">
+                  <div class="option">3 MESES</div>
+                  <div class="option">6 MESES</div>
+                  <div class="option">12 MESES</div>
+                  <div class="option">24 MESES</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-container" style="height: 400px; width: 100%;">
+          <canvas id="patrimonioChart"></canvas>
+        </div>
+      </section>
+    </main>
+
+    <section class="income-summary-section">
+      <div class="section-header">
+        <h2>Resumo de Proventos</h2>
+        <div class="year-selector">
+          <span class="year-nav prev">◄</span>
+          <span class="current-year">2025</span>
+          <span class="year-nav next">►</span>
+        </div>
+      </div>
+
+      <div class="income-summary-container">
+        <div class="summary-cards">
+          <div class="summary-card">
+            <div class="card-title">Total Recebido</div>
+            <div class="card-value">R$ 1345.25</div>
+            <div class="card-comparison positive">+12.5%</div>
+          </div>
+          <div class="summary-card">
+            <div class="card-title">Média Mensal</div>
+            <div class="card-value">R$ 224.20</div>
+            <div class="card-comparison positive">+8.2%</div>
+          </div>
+          <div class="summary-card">
+            <div class="card-title">Yield</div>
+            <div class="card-value">4.3%</div>
+            <div class="card-comparison positive">+13.2%</div>
+          </div>
+          <div class="summary-card">
+            <div class="card-title">Projeção Anual</div>
+            <div class="card-value">R$ 2690.50</div>
+            <div class="card-comparison positive">+15.3%</div>
+          </div>
+        </div>
+
+        <div class="monthly-chart-container">
+          <div class="monthly-distribution-bars">
+            <!-- Os elementos da barra mensal serão inseridos dinamicamente pelo JavaScript -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="income-details-section">
+      <div class="section-header">
+        <h2>Proventos Recebidos</h2>
+        <div class="filters">
+          <div class="filtro-data">
+            <div class="filter-wrapper">
+              <div class="selected-option">12 MESES</div>
+              <div class="options-dropdown">
+                <div class="option">3 MESES</div>
+                <div class="option">6 MESES</div>
+                <div class="option">12 MESES</div>
+                <div class="option">24 MESES</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="filtro-tipos-ativo">
+            <div class="filter-wrapper">
+              <div class="selected-option">TODOS</div>
+              <div class="options-dropdown">
+                <div class="option">TODOS</div>
+                <div class="option">DIVIDENDOS</div>
+                <div class="option">JUROS</div>
+                <div class="option">ALUGUÉIS</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="income-table-container">
+        <table class="income-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Ativo</th>
+              <th>Tipo de Renda</th>
+              <th>Quantidade</th>
+              <th>Valor por Ação</th>
+              <th>Valor Total</th>
+              <th>Rendimento (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- O conteúdo da tabela será inserido dinamicamente pelo JavaScript -->
+          </tbody>
+        </table>
+        <div class="pagination">
+          <button class="pagination-btn">Anterior</button>
+          <div class="page-numbers">
+            <span class="page-number active">1</span>
+            <span class="page-number">2</span>
+            <span class="page-number">3</span>
+          </div>
+          <button class="pagination-btn">Próximo</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../../header/header.js"></script>
+  <script src="carteira-proventos.js"></script>
+</body>
+</html>
