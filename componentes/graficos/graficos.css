@@ -163,7 +163,6 @@
   color: var(--white);
 }
 
-/* Estilos para valores positivos, negativos e neutros */
 .positive {
   color: var(--green) !important;
 }

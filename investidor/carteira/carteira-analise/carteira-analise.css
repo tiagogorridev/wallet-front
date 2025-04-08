@@ -45,7 +45,7 @@
 }
 
 .subscribe-btn:hover {
-  background-color: #e69500; /* darken var(--ambar) by 10% */
+  background-color: #e69500;
 }
 
 .main-content {
@@ -499,43 +499,5 @@
 }
 
 .subscribe-btn-large:hover {
-  background-color: #e69500; /* darken var(--ambar) by 10% */
-}
-
-@media (max-width: 768px) {
-  .analysis-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .analysis-header .cta-buttons {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .benefit-card, .testimonial-card {
-    min-width: 100%;
-  }
-
-  .plans-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .plan-card {
-    width: 100%;
-    max-width: 400px;
-  }
-
-  .plan-card.recommended {
-    transform: scale(1);
-  }
-
-  .plan-card.recommended:hover {
-    transform: translateY(-5px);
-  }
-
-  .cta-section {
-    padding: 30px 20px;
-  }
+  background-color: #e69500;
 }
