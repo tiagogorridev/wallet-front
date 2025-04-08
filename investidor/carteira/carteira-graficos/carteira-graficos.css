@@ -13,7 +13,116 @@
   flex-wrap: wrap;
 }
 
-/* Seção de ativos */
+.chart-section {
+  flex: 1;
+  min-width: 300px;
+  background-color: var(--dark-lighter);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.section-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.chart-container {
+  height: 300px;
+  position: relative;
+}
+
+.pie-chart-container {
+  display: flex;
+  height: 300px;
+  position: relative;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.pie-chart-legend {
+  width: 30%;
+  margin-left: 20px;
+  overflow-y: auto;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-data {
+  display: flex;
+  gap: 5px;
+}
+
+.filter-option {
+  background-color: var(--dark);
+  color: var(--light-gray);
+  border: 1px solid var(--dark-lightest);
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-option:hover {
+  background-color: var(--dark-lightest);
+}
+
+.filter-option.active {
+  background-color: var(--ambar);
+  color: var(--dark);
+  border-color: var(--ambar);
+}
+
+.historical-performance {
+  margin: 0 20px 20px;
+  background-color: var(--dark-lighter);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+}
+
+.performance-table-container {
+  overflow-x: auto;
+}
+
+.performance-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.performance-table th {
+  padding: 12px 15px;
+  text-align: left;
+  background-color: var(--dark-lightest);
+  color: var(--light-gray);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.performance-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--dark-lightest);
+  font-size: 14px;
+}
+
 .assets-section {
   margin: 0 20px 20px;
   background-color: var(--dark-lighter);
@@ -44,6 +153,10 @@
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s ease;
+}
+
+.add-asset-btn-secondary:hover {
+  opacity: 0.9;
 }
 
 .asset-category {
@@ -162,7 +275,6 @@
   font-weight: 600;
 }
 
-/* Modal para adicionar novos ativos */
 .modal {
   display: none;
   position: fixed;
@@ -222,7 +334,8 @@
   font-size: 14px;
 }
 
-.form-group input, .form-group select {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 10px;
   border-radius: 4px;
