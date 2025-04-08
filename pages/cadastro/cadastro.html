@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro - MyWallet</title>
+  <title>MyWallet - Cadastro</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="cadastro.css">
-  <link rel="shortcut icon" href="../../assets/imagens/favicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="../../assets/imagens/favicon-icon-icon.png" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -18,9 +18,8 @@
         <h2>Facilite a sua vida criando uma conta no MyWallet.</h2>
       </div>
       <div class="cadastro-form">
-        <form>
+        <form id="cadastroForm">
           <div class="form-group">
-            <label for="nome"></label>
             <input
               type="text"
               id="nome"
@@ -30,18 +29,15 @@
             >
           </div>
           <div class="form-group calendar-container">
-            <label for="dataNascimento"></label>
             <input
               type="date"
               id="dataNascimento"
               name="dataNascimento"
               class="input-field"
-              placeholder="Data de Nascimento"
               required
             >
           </div>
           <div class="form-group">
-            <label for="email"></label>
             <input
               type="email"
               id="email"
@@ -50,8 +46,7 @@
               class="input-field"
             >
           </div>
-          <div class="form-group password-group">
-            <label for="password"></label>
+          <div class="form-group">
             <input
               type="password"
               id="password"
@@ -59,11 +54,8 @@
               placeholder="Senha"
               class="input-field"
             >
-            <span class="password-toggle" onclick="togglePassword('password')">
-            </span>
           </div>
-          <div class="form-group password-group">
-            <label for="confirmPassword"></label>
+          <div class="form-group">
             <input
               type="password"
               id="confirmPassword"
@@ -71,8 +63,6 @@
               placeholder="Confirmação da Senha"
               class="input-field"
             >
-            <span class="password-toggle" onclick="togglePassword('confirmPassword')">
-            </span>
           </div>
           <div class="cadastro-btn">
             <button type="submit">Cadastrar</button>
@@ -82,25 +72,10 @@
           </div>
         </form>
       </div>
+      <div id="mensagem" class="mensagem-feedback" style="display: none;"></div>
     </div>
     <div class="cadastro-background"></div>
   </div>
-
-  <script>
-    function togglePassword(inputId) {
-      const passwordInput = document.getElementById(inputId);
-      const toggleIcon = event.currentTarget.querySelector('i');
-
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        toggleIcon.classList.remove("fa-eye");
-        toggleIcon.classList.add("fa-eye-slash");
-      } else {
-        passwordInput.type = "password";
-        toggleIcon.classList.remove("fa-eye-slash");
-        toggleIcon.classList.add("fa-eye");
-      }
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
