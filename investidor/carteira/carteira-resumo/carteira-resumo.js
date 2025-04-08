@@ -1,16 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Inicializar componentes de gráficos
   const evolutionPatrimonyComponent = new EvolutionPatrimonyComponent('patrimonioChart', 'patrimonyFilter');
   evolutionPatrimonyComponent.initialize();
 
   const assetsDistributionComponent = new AssetsDistributionComponent('assetsDistributionChart', 'pie-chart-legend');
   assetsDistributionComponent.initialize();
 
-  // Importante: inicializar o componente de ativos
   const assetsComponent = new AssetsComponent('assets-table-container', 'add-asset-modal');
   assetsComponent.initialize();
 
-  // Adicionar evento para expandir/colapsar categorias diretamente
   const categoryHeaders = document.querySelectorAll('.category-header');
   categoryHeaders.forEach(header => {
     header.addEventListener('click', () => {
@@ -18,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const content = category.querySelector('.category-content');
       const icon = header.querySelector('.category-expand-icon');
 
-      // Fechar outras categorias primeiro
       document.querySelectorAll('.asset-category').forEach(cat => {
         if (cat !== category && cat.classList.contains('expanded')) {
           cat.classList.remove('expanded');
@@ -27,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Expandir/colapsar a categoria clicada
       if (category.classList.contains('expanded')) {
         category.classList.remove('expanded');
         content.style.display = 'none';
@@ -40,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Modal functionality
   const addAssetBtn = document.getElementById('add-asset-btn');
   const modal = document.getElementById('add-asset-modal');
   const closeModal = document.querySelector('.close-modal');
