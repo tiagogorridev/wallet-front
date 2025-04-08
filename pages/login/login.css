@@ -153,11 +153,20 @@ html, body {
   height: 100vh;
 }
 
-@media (max-width: 768px) {
-  .login-content {
-      width: 100%;
-  }
-  .login-background {
-      display: none;
-  }
+#login-message {
+  margin-top: 15px;
+  padding: 8px;
+  width: 100%;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.message-success {
+  background-color: #dff0d8;
+  color: #3c763d;
+}
+
+.message-error {
+  background-color: #f2dede;
+  color: #a94442;
 }
