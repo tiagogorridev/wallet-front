@@ -28,55 +28,42 @@ document.addEventListener('DOMContentLoaded', function() {
       }, 5000);
   }
 
-  loginForm.addEventListener('submit', async function(event) {
-      event.preventDefault();
+  loginForm.addEventListener('submit', function(event) {
+    event.preventDefault();
 
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-      if (!email || !password) {
-          showMessage('Por favor, preencha todos os campos.', true);
-          return;
-      }
+    if (!email || !password) {
+        showMessage('Por favor, preencha todos os campos.', true);
+        return;
+    }
 
-      try {
-          const loginData = {
-              email: email,
-              password: password
-          };
+    const loginData = {
+        email: email,
+        senha: password
+    };
 
-          const requestOptions = {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(loginData)
-          };
-
-          const apiUrl = 'http://localhost:8080/api/auth/login';
-
-          showMessage('Autenticando...');
-
-          const response = await fetch(apiUrl, requestOptions);
-
-          if (response.ok) {
-              const data = await response.json();
-
-              localStorage.setItem('authToken', data.token);
-              localStorage.setItem('userData', JSON.stringify(data.user));
-
-              showMessage('Login realizado com sucesso!');
-
-              setTimeout(() => {
-                  window.location.href = '../dashboard/dashboard.html';
-              }, 1000);
-          } else {
-              const errorData = await response.json();
-              showMessage(errorData.message || 'Falha na autenticação. Verifique suas credenciais.', true);
-          }
-      } catch (error) {
-          console.error('Erro ao conectar com o servidor:', error);
-          showMessage('Erro ao conectar com o servidor. Tente novamente mais tarde.', true);
-      }
-  });
+    fetch('http://127.0.0.1:8080/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Credenciais inválidas.');
+        }
+        return response.json();
+    })
+    .then(data => {
+        localStorage.setItem('emailUsuario', email);
+        window.location.href = `http://127.0.0.1:5500/investidor/carteira/carteira-resumo/carteira-resumo.html?email=${encodeURIComponent(email)}`;
+    })
+    .catch(error => {
+        console.error('Erro no login:', error);
+        showMessage('Email ou senha inválidos.', true);
+    });
+});
 });
