@@ -3,14 +3,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const accessToken = localStorage.getItem('accessToken');
         if (!accessToken) {
             console.log('Usuário não autenticado. Redirecionando para login...');
-            window.location.href = '/login.html';
+            window.location.href = '../../pages/login/login.html';
             return;
         }
         const userInfoString = localStorage.getItem('userInfo');
         if (!userInfoString) {
             console.log('Informações do usuário não encontradas. Redirecionando para login...');
             localStorage.removeItem('accessToken');
-            window.location.href = '/login.html';
+            window.location.href = '../../pages/login/login.html';
             return;
         }
         try {
@@ -36,19 +36,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Perfil desconhecido. Redirecionando para login...');
                 localStorage.removeItem('accessToken');
                 localStorage.removeItem('userInfo');
-                window.location.href = '/login.html';
+                window.location.href = '../../pages/login/login.html';
             }
         } catch (error) {
             console.error('Erro ao verificar permissões:', error);
             localStorage.removeItem('accessToken');
             localStorage.removeItem('userInfo');
-            window.location.href = '/login.html';
+            window.location.href = '../../pages/login/login.html';
         }
     }
     window.performLogout = function() {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userInfo');
-        window.location.href = '/login.html';
+        window.location.href = '../../pages/login/login.html';
     }
     checkAuthAndPermission();
 });
