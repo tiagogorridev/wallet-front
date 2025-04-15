@@ -1,0 +1,330 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--dark);
+  }
+  
+  .config-section {
+    margin: 20px;
+    background-color: var(--dark-lighter);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .section-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  
+  .config-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .config-card {
+    background-color: var(--dark);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .config-card-header {
+    background-color: var(--dark-lightest);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .config-card-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  
+  .config-card-content {
+    padding: 20px;
+  }
+  
+  .account-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .form-group label {
+    font-size: 14px;
+    color: var(--light-gray);
+  }
+  
+  .form-group input {
+    background-color: var(--dark-lightest);
+    border: 1px solid var(--gray);
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: var(--white);
+    font-size: 14px;
+  }
+  
+  .form-group input:focus {
+    border-color: var(--ambar);
+    outline: none;
+  }
+  
+  .password-field {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .password-field input {
+    flex: 1;
+  }
+  
+  .toggle-password-btn {
+    background-color: var(--dark-lightest);
+    border: 1px solid var(--gray);
+    border-radius: 4px;
+    color: var(--light-gray);
+    cursor: pointer;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  
+  .toggle-password-btn:hover {
+    border-color: var(--ambar);
+    color: var(--ambar);
+  }
+  
+  .password-strength-meter {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 5px;
+  }
+  
+  .meter-label {
+    font-size: 12px;
+    color: var(--light-gray);
+  }
+  
+  .meter-container {
+    height: 4px;
+    background-color: var(--dark-lightest);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  
+  .meter-bar {
+    height: 100%;
+    width: 0;
+    background-color: var(--red);
+    transition: all 0.3s ease;
+  }
+  
+  .meter-text {
+    font-size: 12px;
+    color: var(--red);
+  }
+  
+  .password-requirements {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: var(--dark-lightest);
+    border-radius: 4px;
+  }
+  
+  .requirement {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--light-gray);
+  }
+  
+  .requirement i {
+    color: var(--red);
+  }
+  
+  .requirement.valid i {
+    color: var(--green);
+  }
+  
+  .form-actions {
+    margin-top: 15px;
+  }
+  
+  .save-account-btn {
+    background-color: var(--ambar);
+    color: var(--dark);
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .save-account-btn:hover {
+    background-color: #e0a800;
+  }
+  
+  .notification-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .notification-option {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .notification-toggle {
+    min-width: 50px;
+  }
+  
+  .notification-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .notification-name {
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 5px;
+  }
+  
+  .notification-desc {
+    font-size: 12px;
+    color: var(--light-gray);
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--dark-lightest);
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--white);
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: var(--ambar);
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px var(--ambar);
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(22px);
+  }
+  
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+.profile-selection {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.profile-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background-color: var(--dark-lighter);
+  border-radius: 8px;
+  flex: 1;
+  min-width: 200px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+.profile-option:hover {
+  border-color: rgba(255, 193, 7, 0.5);
+}
+.profile-option.selected {
+  border-color: var(--ambar);
+}
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  background-color: var(--dark-lightest);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profile-icon i {
+  color: var(--ambar);
+  font-size: 20px;
+}
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+.profile-name {
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 5px;
+}
+.profile-desc {
+  font-size: 12px;
+  color: var(--light-gray);
+}
