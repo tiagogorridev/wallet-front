@@ -1,6 +1,3 @@
-/**
- * Componente de Evolução do Patrimônio
- */
 class EvolutionPatrimonyComponent {
   constructor(containerId, filterContainerId = null) {
     this.containerId = containerId;
@@ -120,16 +117,11 @@ class EvolutionPatrimonyComponent {
   }
 }
 
-/**
- * Componente de Ativos na Carteira
- */
 class AssetsDistributionComponent {
   constructor(chartContainerId, legendContainerId, data = null) {
     this.chartContainerId = chartContainerId;
     this.legendContainerId = legendContainerId;
     this.chartInstance = null;
-
-    // Dados padrão caso não seja fornecido
     this.data = data || [
       { class: 'crypto', label: 'Criptomoedas', percentage: 50 },
       { class: 'fixed-income', label: 'Renda Fixa', percentage: 50 }
@@ -187,35 +179,22 @@ class AssetsDistributionComponent {
 
   updateData(newData) {
     this.data = newData;
-
-    // Atualizar gráfico
     this.chartInstance.data.labels = this.data.map(item => item.label);
     this.chartInstance.data.datasets[0].data = this.data.map(item => item.percentage);
     this.chartInstance.update();
-
-    // Atualizar legenda
     this.createLegend();
   }
 }
-
-/**
- * Componente de Ativos
- *
- */
 class AssetsComponent {
   constructor(containerId, modalId = null) {
     this.containerId = containerId;
     this.modalId = modalId;
-
-    // Categorias padrão
     this.assetCategories = [
       { name: 'FIS', isExpanded: false },
       { name: 'CRIPTOMOEDAS', isExpanded: false },
       { name: 'AÇÕES', isExpanded: false },
       { name: 'RENDA FIXA', isExpanded: false }
     ];
-
-    // Exemplo de ativos criptomoedas
     this.cryptoAssets = [
       {
         symbol: 'BTC',
@@ -290,8 +269,6 @@ class AssetsComponent {
     this.assetCategories.forEach(category => {
       const categoryDiv = document.createElement('div');
       categoryDiv.className = `asset-category ${category.isExpanded ? 'expanded' : ''}`;
-
-      // Criar cabeçalho da categoria
       const headerDiv = document.createElement('div');
       headerDiv.className = 'category-header';
       headerDiv.innerHTML = `
@@ -309,12 +286,8 @@ class AssetsComponent {
           (META: ${category.name === 'CRIPTOMOEDAS' ? '30%' : '20%'})
         </div>
       `;
-
-      // Adicionar evento para expandir/colapsar
       headerDiv.addEventListener('click', () => this.toggleCategoryExpansion(category));
       categoryDiv.appendChild(headerDiv);
-
-      // Adicionar conteúdo da categoria se estiver expandida
       if (category.isExpanded) {
         const contentDiv = document.createElement('div');
         contentDiv.className = 'category-content';
@@ -409,7 +382,6 @@ class AssetsComponent {
           `;
           contentDiv.appendChild(table);
         } else {
-          // Para outras categorias sem dados específicos
           const emptyMsg = document.createElement('div');
           emptyMsg.className = 'empty-category-message';
           emptyMsg.textContent = 'Não há ativos nesta categoria.';
@@ -460,8 +432,6 @@ class AssetsComponent {
         modal.style.display = 'none';
       }
     });
-
-    // Formulário para adicionar ativo
     const addAssetForm = modal.querySelector('#addAssetForm');
     if (addAssetForm) {
       addAssetForm.addEventListener('submit', (e) => {
@@ -475,11 +445,7 @@ class AssetsComponent {
           rating: parseInt(document.getElementById('assetRating').value),
           idealPercentage: parseFloat(document.getElementById('assetIdealPercentage').value)
         };
-
         console.log('Novo ativo adicionado:', formData);
-
-        // Aqui você adicionaria a lógica para adicionar o ativo aos dados
-
         modal.style.display = 'none';
         addAssetForm.reset();
       });
@@ -487,15 +453,11 @@ class AssetsComponent {
   }
 
   updateAssets(newAssets) {
-    // Método para atualizar os ativos
     this.cryptoAssets = newAssets;
     this.renderAssetCategories();
   }
 }
 
-/**
- * Componente de Gráfico de Rentabilidade Anual
- */
 class AnnualReturnChartComponent {
   constructor(containerId) {
     this.containerId = containerId;
@@ -565,9 +527,6 @@ class AnnualReturnChartComponent {
   }
 }
 
-/**
- * Componente de Tabela de Performance
- */
 class PerformanceTableComponent {
   constructor(tableId, filterId, data) {
     this.tableId = tableId;
@@ -592,8 +551,6 @@ class PerformanceTableComponent {
   setupTable() {
     const performanceTable = document.getElementById(this.tableId);
     if (!performanceTable) return;
-
-    // Inicializar com 12 meses
     this.updatePerformanceTable('12 MESES');
   }
 
@@ -642,8 +599,6 @@ class PerformanceTableComponent {
 
   updateData(newData) {
     this.fullPerformanceData = newData;
-
-    // Re-render the table with current filter
     const activeFilter = document.querySelector(`#${this.filterId} .filter-option.active`);
     if (activeFilter) {
       this.updatePerformanceTable(activeFilter.textContent.trim());
@@ -652,8 +607,6 @@ class PerformanceTableComponent {
     }
   }
 }
-
-// Exportar os componentes para uso global
 window.EvolutionPatrimonyComponent = EvolutionPatrimonyComponent;
 window.AssetsDistributionComponent = AssetsDistributionComponent;
 window.AssetsComponent = AssetsComponent;

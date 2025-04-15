@@ -11,7 +11,6 @@ let etapaAtual = 0;
 let pontuacao = 0;
 let respostaSelecionada = -1;
 
-// Perguntas e opções com pontuação
 const perguntas = [
     { 
     texto: "Introdução", 
@@ -110,7 +109,6 @@ const perguntas = [
     }
 ];
 
-// Array para armazenar as respostas do usuário
 const respostasUsuario = new Array(perguntas.length).fill(-1);
 
 function atualizarBarraProgresso() {
@@ -147,15 +145,10 @@ function criarEtapas() {
                 btn.dataset.valor = i;
                 btn.innerText = opcao;
                 btn.onclick = () => {
-                    // Remover seleção anterior
                     opcoesDiv.querySelectorAll('.botao-opcao').forEach(b => {
                         b.classList.remove('selecionado');
                     });
-                    
-                    // Adicionar seleção atual
                     btn.classList.add('selecionado');
-                    
-                    // Armazenar resposta selecionada
                     respostaSelecionada = i;
                     respostasUsuario[index] = i;
                 };
@@ -175,20 +168,15 @@ function mostrarEtapa(index) {
         etapa.classList.toggle("active", i === index);
     });
 
-    // Gerenciar visibilidade dos botões de navegação
     if (index === 0) {
-        // Na introdução: mostrar Pular, esconder Voltar
         btnPular.style.display = "inline-block";
         btnVoltar.style.display = "none";
-        espacoVoltar.style.display = "block";
+        espacoVoltar.style.display = "none";
     } else {
-        // Em todas as outras páginas: esconder Pular, mostrar Voltar
         btnPular.style.display = "none";
         btnVoltar.style.display = "inline-block";
         espacoVoltar.style.display = "none";
     }
-    
-    // Restaurar resposta anterior se existir
     if (index > 0 && respostasUsuario[index] !== -1) {
         const etapaAtiva = document.querySelector(".etapa.active");
         const botoes = etapaAtiva.querySelectorAll(".botao-opcao");
@@ -204,13 +192,11 @@ function mostrarEtapa(index) {
 }
 
 function avancarEtapa() {
-    // Verificar se é uma pergunta e se tem resposta selecionada
     if (etapaAtual > 0 && etapaAtual < perguntas.length && respostaSelecionada === -1) {
         alert("Por favor, selecione uma opção antes de continuar.");
         return;
     }
 
-    // Se não for a tela de introdução, adicionar pontuação
     if (etapaAtual > 0) {
         pontuacao += respostaSelecionada;
     }
@@ -228,7 +214,6 @@ function avancarEtapa() {
 
 function voltarEtapa() {
     if (etapaAtual > 0) {
-        // Se estiver em uma pergunta, remover a pontuação dessa pergunta
         if (etapaAtual > 0 && respostasUsuario[etapaAtual] !== -1) {
             pontuacao -= respostasUsuario[etapaAtual];
         }
@@ -241,22 +226,31 @@ function voltarEtapa() {
 
 function mostrarResultado() {
     let perfil = "";
-    const pontuacaoMaxima = 40; // 10 perguntas com pontuação máxima 4 (índice 3) em cada
+    const pontuacaoMaxima = 40;
     
     if (pontuacao <= pontuacaoMaxima * 0.33) {
-        perfil = "Conservador";
+        perfil = "conservative";
     } else if (pontuacao <= pontuacaoMaxima * 0.66) {
-        perfil = "Moderado";
+        perfil = "moderate";
     } else {
-        perfil = "Arrojado";
+        perfil = "aggressive";
     }
+
+    localStorage.setItem('investorProfile', perfil);
 
     etapasContainer.innerHTML = `
         <div class="resultado">
-            <h2>Seu perfil de investidor é: <span class="perfil-resultado">${perfil}</span></h2>
+            <h2>Seu perfil de investidor é: <span class="perfil-resultado">${getPtBrPerfil(perfil)}</span></h2>
             <p>Obrigado por completar o questionário! Com base nas suas respostas, identificamos seu perfil e agora poderemos oferecer recomendações personalizadas para seus investimentos.</p>
+            <div class="botao-finalizar-container">
+                <button id="btnFinalizar">Finalizar</button>
+            </div>
         </div>
     `;
+
+    document.getElementById("btnFinalizar").addEventListener("click", () => {
+        window.location.href = "../perfil/perfil.html";
+    });
 
     btnProximo.style.display = "none";
     btnVoltar.style.display = "none";
@@ -264,6 +258,15 @@ function mostrarResultado() {
     espacoVoltar.style.display = "none";
     
     atualizarBarraProgresso();
+}
+
+function getPtBrPerfil(perfil) {
+    switch(perfil) {
+        case 'conservative': return 'Conservador';
+        case 'moderate': return 'Moderado';
+        case 'aggressive': return 'Arrojado';
+        default: return '';
+    }
 }
 
 btnProximo.addEventListener("click", () => {
@@ -275,7 +278,7 @@ btnVoltar.addEventListener("click", () => {
 });
 
 btnPular.addEventListener("click", () => {
-    etapaAtual = perguntas.length; // pula tudo
+    etapaAtual = perguntas.length;
     mostrarResultado();
 });
 
@@ -289,10 +292,8 @@ function abrirQuestionario() {
     etapasContainer.innerHTML = "";
     criarEtapas();
     mostrarEtapa(0);
-    
-    // Configurar estado inicial dos botões
     btnProximo.style.display = "inline-block";
     btnVoltar.style.display = "none";
     btnPular.style.display = "inline-block";
-    espacoVoltar.style.display = "block";
+    espacoVoltar.style.display = "none";
 }

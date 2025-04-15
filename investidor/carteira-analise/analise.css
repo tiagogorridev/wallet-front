@@ -33,7 +33,6 @@
   gap: 12px;
 }
 
-/* Ajustar o estilo para links e botões de assinar */
 .subscribe-btn {
   background-color: var(--ambar);
   color: var(--dark);
@@ -332,7 +331,6 @@
   color: var(--green);
 }
 
-/* Atualizar o estilo do botão de seleção de plano para links */
 .plan-select-btn {
   display: block;
   width: calc(100% - 50px);
@@ -467,7 +465,6 @@
   margin-bottom: 30px;
 }
 
-/* Atualizar o estilo do botão grande para links */
 .subscribe-btn-large {
   background-color: var(--ambar);
   color: var(--dark);

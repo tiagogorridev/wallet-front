@@ -1,4 +1,3 @@
-/* Estilos comuns para seções de gráficos */
 .chart-section {
   flex: 1;
   min-width: 300px;
@@ -54,7 +53,6 @@
   color: var(--dark);
 }
 
-/* Containers de gráficos */
 .chart-container {
   height: 300px;
   background-color: var(--dark);
@@ -72,7 +70,6 @@
   position: relative;
 }
 
-/* Legendas de gráficos */
 .pie-chart-legend {
   position: absolute;
   right: 15px;
@@ -124,7 +121,6 @@
   width: calc(100% - 20px);
 }
 
-/* Tabela de performance histórica */
 .historical-performance {
   margin: 0 20px 20px;
   background-color: var(--dark-lighter);

@@ -11,16 +11,6 @@ body {
     line-height: 1.6;
 }
 
-:root {
-    --dark: #121212;
-    --dark-lighter: #1e1e1e;
-    --dark-lightest: #2a2a2a;
-    --white: #ffffff;
-    --light-gray: #a0a0a0;
-    --ambar: #ffa500;
-    --red: #e74c3c;
-}
-
 #modalQuestionario {
     position: fixed;
     top: 0;
@@ -112,7 +102,14 @@ h3 {
 .botoes-navegacao {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.botao-finalizar-container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
 }
 
 button {
@@ -123,6 +120,23 @@ button {
     font-size: 15px;
     font-weight: 600;
     transition: background-color 0.3s;
+}
+
+#btnFinalizar {
+    background-color: var(--white);
+    color: var(--dark);
+    padding: 12px 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+#btnFinalizar:hover {
+    background-color: #e6e6e6;
 }
 
 #btnProximo {
@@ -167,7 +181,6 @@ button {
     font-size: 1.2em;
 }
 
-/* Indicador de progresso */
 .progresso {
     margin-bottom: 20px;
     text-align: center;

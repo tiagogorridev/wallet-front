@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             setTimeout(() => {
               alert("Pagamento confirmado! Você será redirecionado para a página de análise.");
-              window.location.href = "/investidor/analise"; // Altere para a rota adequada
+              window.location.href = "/investidor/analise";
             }, 2000);
           } else {
             statusChecking.innerHTML = '<i class="fas fa-exclamation-circle" style="color: var(--ambar); font-size: 24px;"></i><p>Pagamento ainda não identificado. Tente novamente em alguns instantes.</p>';

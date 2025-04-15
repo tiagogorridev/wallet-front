@@ -1,4 +1,3 @@
-/* Dashboard Administrativo */
 :root {
     --dark: #1d1f21;
     --dark-lighter: #2c2f34;
@@ -12,7 +11,6 @@
     --purple: #9c27b0;
 }
 
-/* Corpo do Dashboard */
 body {
     background-color: var(--dark-lighter);
 }
@@ -43,13 +41,11 @@ body {
     color: var(--light-gray);
 }
 
-/* Conteúdo Principal */
 .main-content {
     padding: 20px;
     flex: 1;
 }
 
-/* Seções */
 .overview-section,
 .charts-section,
 .activity-section,
@@ -98,7 +94,6 @@ body {
     cursor: pointer;
 }
 
-/* Cards de Resumo */
 .overview-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -150,7 +145,6 @@ body {
     color: var(--red);
 }
 
-/* Gráficos */
 .charts-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -195,7 +189,6 @@ body {
     padding: 20px;
 }
 
-/* Atividades Recentes */
 .activity-list {
     display: flex;
     flex-direction: column;
@@ -292,14 +285,12 @@ body {
     color: var(--white);
 }
 
-/* Layout duas colunas */
 .two-column-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
 
-/* Novos Usuários */
 .users-list {
     display: flex;
     flex-direction: column;
@@ -356,7 +347,6 @@ body {
     color: var(--white);
 }
 
-/* Top Ativos */
 .assets-list {
     display: flex;
     flex-direction: column;
@@ -425,68 +415,4 @@ body {
 .asset-variation {
     font-size: 12px;
     font-weight: 600;
-}
-
-/* Responsividade */
-@media (max-width: 1200px) {
-    .overview-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 992px) {
-    .charts-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .chart-card.large {
-        grid-column: span 1;
-    }
-
-    .two-column-section {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    .overview-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .activity-item {
-        flex-wrap: wrap;
-    }
-
-    .activity-action {
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    .activity-action button {
-        width: 100%;
-    }
-}
-
-@media (max-width: 576px) {
-    .main-content {
-        padding: 10px;
-    }
-
-    .overview-section,
-    .charts-section,
-    .activity-section,
-    .users-section,
-    .top-assets-section {
-        padding: 15px;
-    }
-
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .date-filter select {
-        width: 100%;
-    }
 }

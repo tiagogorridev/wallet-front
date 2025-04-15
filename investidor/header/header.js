@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const headerContainer = document.getElementById('header');
 
   if (headerContainer) {
-    fetch('../../header/header.html')
+    fetch('../header/header.html')
       .then(response => {
         if (!response.ok) {
           throw new Error('Erro ao carregar o header: ' + response.status);
@@ -42,6 +42,13 @@ document.addEventListener('DOMContentLoaded', function() {
           const event = new CustomEvent('openAddAssetModal');
           document.dispatchEvent(event);
         }
+      });
+    }
+    const logoutButton = document.getElementById('logoutBtn');
+    if (logoutButton) {
+      logoutButton.addEventListener('click', function() {
+        localStorage.clear();
+        window.location.href = '../../pages/login/login.html';
       });
     }
 

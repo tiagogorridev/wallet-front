@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const API_URL = '191.239.116.115:8080';
+  const API_URL = 'http://191.239.116.115:8080';
   const mensagemElement = document.getElementById("mensagem");
   const passwordFields = document.querySelectorAll('.password-toggle');
   if (passwordFields.length > 0) {
@@ -68,9 +68,8 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       console.log("Dados sendo enviados:", dadosUsuario);
       
-      const response = await fetch(`http://${API_URL}/auth/signup`, {
+      const response = await fetch(`${API_URL}/auth/signup`, {
         method: "POST",
-        credentials: 'include',
         headers: {
           "Content-Type": "application/json"
         },
@@ -83,7 +82,10 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log("Resposta recebida:", responseData);
       
       if (!response.ok) {
-        throw new Error(responseData.message || "Erro ao realizar cadastro");
+        if (responseData.errors && responseData.errors.length > 0) {
+          throw new Error(responseData.errors[0] || responseData.msg || "Erro ao realizar cadastro");
+        }
+        throw new Error(responseData.msg || "Erro ao realizar cadastro");
       }
 
       return responseData;

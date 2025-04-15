@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const headerContainer = document.getElementById('admin-header');
 
   if (headerContainer) {
-    fetch('../header/header-adm.html')  // Caminho ajustado para a pasta 'header'
+    fetch('../header/header-adm.html')
       .then(response => {
         if (!response.ok) {
           throw new Error('Erro ao carregar o header: ' + response.status);
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeHeader();
       })
       .catch(error => {
-        fetch('../header/header.html')  // Caminho alternativo para 'header.html'
+        fetch('../header/header.html')
           .then(response => {
             if (!response.ok) {
               throw new Error('Erro ao carregar o header (caminho alternativo): ' + response.status);
@@ -32,6 +32,14 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function initializeHeader() {
+    const logoutButton = document.getElementById('logoutBtn');
+    if (logoutButton) {
+      logoutButton.addEventListener('click', function() {
+        localStorage.clear();
+        window.location.href = '../../pages/login/login.html';
+      });
+    }
+
     const addAssetButton = document.getElementById('headerAddAssetBtn');
     if (addAssetButton) {
       addAssetButton.addEventListener('click', function() {

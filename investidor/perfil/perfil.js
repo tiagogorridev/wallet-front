@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     initPasswordToggle();
+    initProfileFromTest();
     initPasswordStrength();
     initSaveButtons();
     initInvestorProfiles();
+    initProfileFromTest();
 });
 
 function initPasswordToggle() {
@@ -24,6 +26,19 @@ function initPasswordToggle() {
             }
         });
     });
+}
+
+function initProfileFromTest() {
+    const savedProfile = localStorage.getItem('investorProfile');
+    if (savedProfile) {
+        const profileOptions = document.querySelectorAll('.profile-option');
+        profileOptions.forEach(option => {
+            if (option.getAttribute('data-profile') === savedProfile) {
+                profileOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+            }
+        });
+    }
 }
 
 function initPasswordStrength() {

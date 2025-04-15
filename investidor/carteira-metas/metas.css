@@ -73,7 +73,7 @@ body {
 }
 
 .add-goal-btn:hover {
-  background-color: #e5ac00; /* darken(var(--ambar), 10%) */
+  background-color: #e5ac00;
 }
 
 .filters {
@@ -525,7 +525,7 @@ body {
 }
 
 .modal-actions .cancel-btn:hover {
-  background-color: #0a0a0a; /* darken(var(--dark), 10%) */
+  background-color: #0a0a0a;
 }
 
 .modal-actions .save-btn {
@@ -534,7 +534,7 @@ body {
 }
 
 .modal-actions .save-btn:hover {
-  background-color: #e5ac00; /* darken(var(--ambar), 10%) */
+  background-color: #e5ac00;
 }
 
 .modal-actions .save-btn:disabled {

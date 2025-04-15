@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
         headerStyle.rel = 'stylesheet';
         headerStyle.href = '/investidor/header/header.css';
         document.head.appendChild(headerStyle);
-        initializeHeader();
       })
       .catch(error => console.error('Erro ao carregar o header:', error));
   }
