@@ -125,13 +125,13 @@
   font-size: 0.8rem;
 }
 
-.user-profile {
+.user-profile a {
   font-size: 1.5rem;
   cursor: pointer;
   color: var(--light-gray);
 }
 
-.user-profile:hover {
+.user-profile a:hover {
   color: var(--white);
 }
 

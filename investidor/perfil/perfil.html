@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyWallet - Configurações do Investidor</title>
+    <link rel="stylesheet" href="../header/header.css">
+    <link rel="stylesheet" href="perfil.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="shortcut icon" href="../../../assets/imagens/favicon-icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header id="header"></header>
+    <div class="dashboard-container">
+        <section class="config-section">
+            <div class="section-header">
+                <h2>Configurações do Investidor</h2>
+            </div>
+            <div class="config-content">
+                <div class="config-card">
+                    <div class="config-card-header">
+                        <h3>Perfil de Investidor</h3>
+                    </div>
+                    <div class="config-card-content">
+                        <div class="profile-selection">
+                            <div class="profile-option selected" data-profile="conservative">
+                                <div class="profile-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="profile-info">
+                                    <span class="profile-name">Conservador</span>
+                                    <span class="profile-desc">Prioriza segurança, evita riscos</span>
+                                </div>
+                            </div>
+                            <div class="profile-option" data-profile="moderate">
+                                <div class="profile-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="profile-info">
+                                    <span class="profile-name">Moderado</span>
+                                    <span class="profile-desc">Equilíbrio entre segurança e retorno</span>
+                                </div>
+                            </div>
+                            <div class="profile-option" data-profile="aggressive">
+                                <div class="profile-icon">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <div class="profile-info">
+                                    <span class="profile-name">Arrojado</span>
+                                    <span class="profile-desc">Foco em rentabilidade, aceita riscos</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="config-card">
+                    <div class="config-card-header">
+                        <h3>Dados Pessoais</h3>
+                    </div>
+                    <div class="config-card-content">
+                        <div class="account-settings">
+                            <div class="form-group">
+                                <label>Nome Completo</label>
+                                <input type="text" value="João da Silva" id="user-name">
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail</label>
+                                <input type="email" value="joao.silva@email.com" id="user-email">
+                            </div>
+                            <div class="form-actions">
+                                <button class="save-account-btn" id="save-personal-data">Salvar Alterações</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-card">
+                    <div class="config-card-header">
+                        <h3>Alterar Senha</h3>
+                    </div>
+                    <div class="config-card-content">
+                        <div class="account-settings">
+                            <div class="form-group">
+                                <label>Senha Atual</label>
+                                <div class="password-field">
+                                    <input type="password" id="current-password">
+                                    <button class="toggle-password-btn" data-target="current-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Nova Senha</label>
+                                <div class="password-field">
+                                    <input type="password" id="new-password">
+                                    <button class="toggle-password-btn" data-target="new-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Digite a Nova Senha Novamente</label>
+                                <div class="password-field">
+                                    <input type="password" id="confirm-password">
+                                    <button class="toggle-password-btn" data-target="confirm-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="password-strength-meter">
+                                <div class="meter-label">Força da senha:</div>
+                                <div class="meter-container">
+                                    <div class="meter-bar" id="password-strength"></div>
+                                </div>
+                                <div class="meter-text" id="password-strength-text">Fraca</div>
+                            </div>
+                            <div class="password-requirements">
+                                <div class="requirement" id="req-length">
+                                    <i class="fas fa-times-circle"></i>
+                                    <span>Mínimo de 8 caracteres</span>
+                                </div>
+                                <div class="requirement" id="req-uppercase">
+                                    <i class="fas fa-times-circle"></i>
+                                    <span>Pelo menos 1 letra maiúscula</span>
+                                </div>
+                                <div class="requirement" id="req-lowercase">
+                                    <i class="fas fa-times-circle"></i>
+                                    <span>Pelo menos 1 letra minúscula</span>
+                                </div>
+                                <div class="requirement" id="req-number">
+                                    <i class="fas fa-times-circle"></i>
+                                    <span>Pelo menos 1 número</span>
+                                </div>
+                                <div class="requirement" id="req-special">
+                                    <i class="fas fa-times-circle"></i>
+                                    <span>Pelo menos 1 caractere especial</span>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="save-account-btn" id="change-password-btn">Alterar Senha</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="../header/header.js"></script>
+    <script src="perfil.js"></script>
+</body>
+</html>
