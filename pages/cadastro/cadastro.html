@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MyWallet - Cadastro</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../../css/style.css">
   <link rel="stylesheet" href="cadastro.css">
   <link rel="shortcut icon" href="../../assets/imagens/favicon-icon.png" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -26,6 +26,7 @@
               name="nome"
               placeholder="Nome Completo"
               class="input-field"
+              required
             >
           </div>
           <div class="form-group">
@@ -35,25 +36,34 @@
               name="email"
               placeholder="Email"
               class="input-field"
+              required
             >
           </div>
-          <div class="form-group">
+          <div class="form-group password-group">
             <input
               type="password"
               id="password"
               name="password"
               placeholder="Senha"
               class="input-field"
+              required
             >
+            <span class="password-toggle">
+              <i class="fas fa-eye"></i>
+            </span>
           </div>
-          <div class="form-group">
+          <div class="form-group password-group">
             <input
               type="password"
               id="confirmPassword"
               name="confirmPassword"
               placeholder="Confirmação da Senha"
               class="input-field"
+              required
             >
+            <span class="password-toggle">
+              <i class="fas fa-eye"></i>
+            </span>
           </div>
           <div class="cadastro-btn">
             <button type="submit">Cadastrar</button>
@@ -67,6 +77,6 @@
     </div>
     <div class="cadastro-background"></div>
   </div>
-  <script src="script.js"></script>
+  <script src="cadastro.js"></script>
 </body>
 </html>
