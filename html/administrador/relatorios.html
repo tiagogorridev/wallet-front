@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyWallet - Relatórios Administrativos</title>
+    <link rel="stylesheet" href="../../css/layout/administrador/header-adm.css">
+    <link rel="stylesheet" href="../../css/layout/administrador/relatorios.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="shortcut icon" href="../../assets/imagens/favicon-icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <header id="admin-header"></header>
+
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="header-content">
+                <h1>Relatórios Gerenciais</h1>
+                <p>Análises detalhadas e métricas da plataforma MyWallet</p>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <!-- Filtros e Controles -->
+            <section class="filters-section">
+                <div class="section-header">
+                    <h2>Filtros de Relatório</h2>
+                    <button class="export-btn"><i class="fas fa-download"></i> Exportar Dados</button>
+                </div>
+
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <label for="date-range">Período</label>
+                        <div class="date-range-picker">
+                            <input type="date" id="date-from" name="date-from">
+                            <span>até</span>
+                            <input type="date" id="date-to" name="date-to">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="report-type">Tipo de Relatório</label>
+                        <select id="report-type">
+                            <option value="all">Todos os relatórios</option>
+                            <option value="users">Usuários</option>
+                            <option value="financial">Financeiro</option>
+                            <option value="assets">Ativos</option>
+                            <option value="engagement">Engajamento</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="data-granularity">Granularidade</label>
+                        <select id="data-granularity">
+                            <option value="daily">Diário</option>
+                            <option value="weekly">Semanal</option>
+                            <option value="monthly" selected>Mensal</option>
+                            <option value="quarterly">Trimestral</option>
+                            <option value="yearly">Anual</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <button class="apply-filter-btn">Aplicar Filtros</button>
+                        <button class="clear-filter-btn">Limpar</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Métricas Principais -->
+            <section class="metrics-section">
+                <div class="section-header">
+                    <h2>Métricas Principais</h2>
+                    <div class="date-display">
+                        Abril 2025
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <h3>Receita Total</h3>
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <p class="metric-value">R$ 120.345,00</p>
+                        <div class="metric-comparison">
+                            <p class="variation positive">+15,2%</p>
+                            <p class="comparison-period">vs mês anterior</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <h3>Novos Usuários</h3>
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <p class="metric-value">325</p>
+                        <div class="metric-comparison">
+                            <p class="variation positive">+8,6%</p>
+                            <p class="comparison-period">vs mês anterior</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <h3>Conversão Premium</h3>
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <p class="metric-value">12,8%</p>
+                        <div class="metric-comparison">
+                            <p class="variation negative">-1,4%</p>
+                            <p class="comparison-period">vs mês anterior</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <h3>Retenção de Usuários</h3>
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <p class="metric-value">85,3%</p>
+                        <div class="metric-comparison">
+                            <p class="variation positive">+2,1%</p>
+                            <p class="comparison-period">vs mês anterior</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gráficos de Tendências -->
+            <section class="charts-section">
+                <div class="section-header">
+                    <h2>Tendências e Análises</h2>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card large">
+                        <h4>Crescimento de Receita e Usuários</h4>
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <span>Gráfico de linha - comparativo receita vs usuários</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h4>Distribuição por Plano</h4>
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <span>Gráfico de pizza - usuários por plano</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h4>Churn Rate Mensal</h4>
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <span>Gráfico de barras - taxa de abandono</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Relatórios Detalhados -->
+            <section class="reports-section">
+                <div class="section-header">
+                    <h2>Relatórios Detalhados</h2>
+                    <div class="tab-controls">
+                        <button class="tab-btn active" data-tab="users">Usuários</button>
+                        <button class="tab-btn" data-tab="financial">Financeiro</button>
+                        <button class="tab-btn" data-tab="assets">Ativos</button>
+                        <button class="tab-btn" data-tab="engagement">Engajamento</button>
+                    </div>
+                </div>
+
+                <div class="tab-content active" id="users-tab">
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Período</th>
+                                    <th>Novos Usuários</th>
+                                    <th>Conversões Premium</th>
+                                    <th>Usuários Ativos</th>
+                                    <th>Taxa de Retenção</th>
+                                    <th>Churn Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Abril 2025</td>
+                                    <td>325</td>
+                                    <td>42</td>
+                                    <td>2.453</td>
+                                    <td>85,3%</td>
+                                    <td>3,7%</td>
+                                </tr>
+                                <tr>
+                                    <td>Março 2025</td>
+                                    <td>298</td>
+                                    <td>45</td>
+                                    <td>2.340</td>
+                                    <td>83,6%</td>
+                                    <td>4,2%</td>
+                                </tr>
+                                <tr>
+                                    <td>Fevereiro 2025</td>
+                                    <td>271</td>
+                                    <td>36</td>
+                                    <td>2.230</td>
+                                    <td>82,1%</td>
+                                    <td>4,9%</td>
+                                </tr>
+                                <tr>
+                                    <td>Janeiro 2025</td>
+                                    <td>342</td>
+                                    <td>51</td>
+                                    <td>2.154</td>
+                                    <td>81,8%</td>
+                                    <td>5,2%</td>
+                                </tr>
+                                <tr>
+                                    <td>Dezembro 2024</td>
+                                    <td>310</td>
+                                    <td>48</td>
+                                    <td>2.065</td>
+                                    <td>80,5%</td>
+                                    <td>5,7%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="financial-tab">
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Período</th>
+                                    <th>Receita Total</th>
+                                    <th>Receita Premium</th>
+                                    <th>CAC</th>
+                                    <th>LTV</th>
+                                    <th>Margem</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Abril 2025</td>
+                                    <td>R$ 120.345,00</td>
+                                    <td>R$ 98.560,00</td>
+                                    <td>R$ 75,20</td>
+                                    <td>R$ 450,80</td>
+                                    <td>65,3%</td>
+                                </tr>
+                                <tr>
+                                    <td>Março 2025</td>
+                                    <td>R$ 104.450,00</td>
+                                    <td>R$ 87.320,00</td>
+                                    <td>R$ 78,50</td>
+                                    <td>R$ 442,30</td>
+                                    <td>63,8%</td>
+                                </tr>
+                                <tr>
+                                    <td>Fevereiro 2025</td>
+                                    <td>R$ 98.750,00</td>
+                                    <td>R$ 81.230,00</td>
+                                    <td>R$ 82,10</td>
+                                    <td>R$ 435,60</td>
+                                    <td>61,2%</td>
+                                </tr>
+                                <tr>
+                                    <td>Janeiro 2025</td>
+                                    <td>R$ 115.620,00</td>
+                                    <td>R$ 93.450,00</td>
+                                    <td>R$ 76,80</td>
+                                    <td>R$ 428,50</td>
+                                    <td>62,5%</td>
+                                </tr>
+                                <tr>
+                                    <td>Dezembro 2024</td>
+                                    <td>R$ 105.380,00</td>
+                                    <td>R$ 86.920,00</td>
+                                    <td>R$ 80,30</td>
+                                    <td>R$ 420,90</td>
+                                    <td>60,8%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="assets-tab">
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Ativo</th>
+                                    <th>Usuários Investindo</th>
+                                    <th>Volume Total</th>
+                                    <th>Ticket Médio</th>
+                                    <th>Variação (30d)</th>
+                                    <th>Popularidade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PETR4</td>
+                                    <td>853</td>
+                                    <td>R$ 4.250.650,00</td>
+                                    <td>R$ 4.982,00</td>
+                                    <td class="positive">+2,4%</td>
+                                    <td>Alta</td>
+                                </tr>
+                                <tr>
+                                    <td>VALE3</td>
+                                    <td>712</td>
+                                    <td>R$ 3.852.490,00</td>
+                                    <td>R$ 5.411,00</td>
+                                    <td class="positive">+1,2%</td>
+                                    <td>Alta</td>
+                                </tr>
+                                <tr>
+                                    <td>Bitcoin</td>
+                                    <td>624</td>
+                                    <td>R$ 5.820.350,00</td>
+                                    <td>R$ 9.328,00</td>
+                                    <td class="negative">-3,5%</td>
+                                    <td>Alta</td>
+                                </tr>
+                                <tr>
+                                    <td>HGLG11</td>
+                                    <td>421</td>
+                                    <td>R$ 2.240.120,00</td>
+                                    <td>R$ 5.320,00</td>
+                                    <td class="positive">+0,8%</td>
+                                    <td>Média</td>
+                                </tr>
+                                <tr>
+                                    <td>ITUB4</td>
+                                    <td>395</td>
+                                    <td>R$ 1.890.650,00</td>
+                                    <td>R$ 4.787,00</td>
+                                    <td class="negative">-0,6%</td>
+                                    <td>Média</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="engagement-tab">
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Métrica</th>
+                                    <th>Abril 2025</th>
+                                    <th>Março 2025</th>
+                                    <th>Fevereiro 2025</th>
+                                    <th>Variação</th>
+                                    <th>Tendência</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Sessões Diárias</td>
+                                    <td>1.245</td>
+                                    <td>1.180</td>
+                                    <td>1.120</td>
+                                    <td class="positive">+5,5%</td>
+                                    <td><i class="fas fa-arrow-up positive"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>Tempo Médio</td>
+                                    <td>18:25 min</td>
+                                    <td>16:50 min</td>
+                                    <td>15:40 min</td>
+                                    <td class="positive">+9,3%</td>
+                                    <td><i class="fas fa-arrow-up positive"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>Taxa de Cliques</td>
+                                    <td>4,2%</td>
+                                    <td>3,9%</td>
+                                    <td>3,8%</td>
+                                    <td class="positive">+7,7%</td>
+                                    <td><i class="fas fa-arrow-up positive"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>Compartilhamentos</td>
+                                    <td>325</td>
+                                    <td>298</td>
+                                    <td>287</td>
+                                    <td class="positive">+9,1%</td>
+                                    <td><i class="fas fa-arrow-up positive"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>Avaliações 5★</td>
+                                    <td>82%</td>
+                                    <td>80%</td>
+                                    <td>79%</td>
+                                    <td class="positive">+2,5%</td>
+                                    <td><i class="fas fa-arrow-up positive"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../js/layout/administrador/header-adm.js"></script>
+    <script src="../../js/layout/administrador/relatorios.js"></script>
+</body>
+
+</html>

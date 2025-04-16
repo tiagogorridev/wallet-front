@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyWallet - Configurações </title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/layout/investidor/carteira-configuracoes.css">
+    <link rel="stylesheet" href="../../css/layout/investidor/header.css">
+    <link rel="shortcut icon" href="../../../assets/imagens/favicon-icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+  <header id="header"></header>
+    <div class="dashboard-container">
+        <section class="config-section">
+            <div class="section-header">
+                <h2>Configurações da Carteira</h2>
+            </div>
+            <div class="config-content">
+                <div class="config-card">
+                    <div class="config-card-header">
+                        <h3>Dados da Carteira</h3>
+                    </div>
+                    <div class="config-card-content">
+                        <div class="account-settings">
+                            <div class="form-group">
+                                <label>Nome da Carteira</label>
+                                <input type="text" value="Carteira Principal" id="portfolio-name">
+                            </div>
+                            <div class="form-group">
+                                <label>Moeda Padrão</label>
+                                <select id="currency-select">
+                                    <option selected>R$ (BRL)</option>
+                                    <option>$ (USD)</option>
+                                    <option>€ (EUR)</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button class="save-account-btn" id="save-account">Salvar Alterações</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-card">
+                    <div class="config-card-header">
+                        <h3>Alocação por Categoria</h3>
+                        <button class="save-btn" id="save-allocation">Salvar</button>
+                    </div>
+                    <div class="config-card-content">
+                        <div class="allocation-table-container">
+                            <table class="allocation-table">
+                                <thead>
+                                    <tr>
+                                        <th>Categoria</th>
+                                        <th>Alocação Atual</th>
+                                        <th>Meta (%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="category-name">
+                                            <div class="category-color crypto"></div>
+                                            Criptomoedas
+                                        </td>
+                                        <td>50%</td>
+                                        <td>
+                                            <div class="allocation-input">
+                                                <input type="number" value="30" min="0" max="100" class="allocation-value" id="crypto-allocation">
+                                                <span>%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="category-name">
+                                            <div class="category-color fixed-income"></div>
+                                            Renda Fixa
+                                        </td>
+                                        <td>50%</td>
+                                        <td>
+                                            <div class="allocation-input">
+                                                <input type="number" value="50" min="0" max="100" class="allocation-value" id="fixed-income-allocation">
+                                                <span>%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="category-name">
+                                            <div class="category-color stocks"></div>
+                                            Ações
+                                        </td>
+                                        <td>0%</td>
+                                        <td>
+                                            <div class="allocation-input">
+                                                <input type="number" value="20" min="0" max="100" class="allocation-value" id="stocks-allocation">
+                                                <span>%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td><strong>Total</strong></td>
+                                        <td>100%</td>
+                                        <td>
+                                            <div class="total-allocation" id="total-allocation">100%</div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="../../js/layout/investidor/header.js"></script>
+    <script src="../../js/layout/investidor/carteira-configuracoes.js"></script>
+  </body>
+</html>

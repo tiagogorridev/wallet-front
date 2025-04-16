@@ -9,6 +9,10 @@
   --green: #22C55E;
   --red: #EF4444;
   --blue: #2196f3;
+  --success: #dff0d8;
+  --success-text: #3c763d;
+  --error: #f2dede;
+  --error-text: #a94442;
 }
 
 * {

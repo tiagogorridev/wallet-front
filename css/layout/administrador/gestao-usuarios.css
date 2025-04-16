@@ -1,0 +1,672 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 70px);
+    background-color: var(--dark);
+    color: var(--white);
+}
+
+.dashboard-header {
+    background-color: var(--dark-lighter);
+    padding: 30px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.header-content h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--white);
+}
+
+.header-content p {
+    font-size: 16px;
+    color: var(--light-gray);
+}
+
+.main-content {
+    padding: 20px;
+    flex: 1;
+}
+
+.overview-section,
+.search-section,
+.users-list-section {
+    background-color: var(--dark-lighter);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white);
+}
+
+/* Overview Cards */
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.overview-card {
+    background-color: var(--dark);
+    border-radius: 8px;
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.overview-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.overview-card i {
+    font-size: 2rem;
+    color: var(--ambar);
+    margin-bottom: 15px;
+}
+
+.overview-card h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--light-gray);
+    margin-bottom: 10px;
+}
+
+.overview-card .value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+}
+
+.overview-card .variation {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.variation.positive {
+    color: var(--green);
+}
+
+.variation.negative {
+    color: var(--red);
+}
+
+/* Search and Filter Section */
+.search-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: var(--dark);
+    border-radius: 8px;
+    padding: 0 15px;
+    border: 1px solid var(--dark-lightest);
+}
+
+.search-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--white);
+    padding: 12px 0;
+    font-size: 15px;
+}
+
+.search-btn {
+    background: transparent;
+    border: none;
+    color: var(--light-gray);
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.search-btn:hover {
+    color: var(--ambar);
+}
+
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-item label {
+    font-size: 14px;
+    color: var(--light-gray);
+}
+
+.filter-item select {
+    background-color: var(--dark);
+    color: var(--white);
+    border: 1px solid var(--dark-lightest);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.reset-filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: transparent;
+    color: var(--light-gray);
+    border: 1px solid var(--dark-lightest);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: auto;
+}
+
+.reset-filter-btn:hover {
+    background-color: var(--dark-lightest);
+    color: var(--white);
+}
+
+/* User Table Section */
+.table-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.add-user-btn,
+.export-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--dark);
+    border: 1px solid var(--dark-lightest);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--white);
+}
+
+.add-user-btn {
+    background-color: var(--ambar);
+    color: var(--dark);
+    border: none;
+}
+
+.add-user-btn:hover {
+    background-color: #e69500;
+}
+
+.export-btn:hover {
+    background-color: var(--dark-lightest);
+}
+
+.export-dropdown {
+    position: relative;
+}
+
+.export-options {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--dark);
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    min-width: 150px;
+    z-index: 100;
+    display: none;
+}
+
+.export-dropdown:hover .export-options {
+    display: block;
+}
+
+.export-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    color: var(--white);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.export-option:hover {
+    background-color: var(--dark-lightest);
+}
+
+.users-table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--white);
+}
+
+.users-table th,
+.users-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--dark-lightest);
+}
+
+.users-table th {
+    background-color: var(--dark);
+    color: var(--light-gray);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.users-table tbody tr {
+    background-color: var(--dark);
+    transition: background-color 0.2s;
+}
+
+.users-table tbody tr:hover {
+    background-color: var(--dark-lightest);
+}
+
+.user-info-cell {
+    min-width: 180px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--dark-lightest);
+    flex-shrink: 0;
+}
+
+.user-name p {
+    font-weight: 500;
+    margin: 0;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge.premium {
+    background-color: var(--ambar);
+    color: var(--dark);
+}
+
+.badge.basic {
+    background-color: var(--blue);
+    color: var(--white);
+}
+
+.badge.active {
+    background-color: var(--green);
+    color: var(--white);
+}
+
+.badge.inactive {
+    background-color: var(--light-gray);
+    color: var(--dark);
+}
+
+.badge.suspended {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+/* Estilos para as células de ações */
+.actions-cell {
+    white-space: nowrap;
+    min-width: 120px;
+}
+
+.action-btn {
+    background-color: transparent;
+    border: none;
+    color: var(--light-gray);
+    font-size: 14px;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background-color: var(--dark-lightest);
+    color: var(--white);
+}
+
+.action-btn.view-btn:hover {
+    color: var(--blue);
+}
+
+.action-btn.edit-btn:hover {
+    color: var(--ambar);
+}
+
+.action-btn.delete-btn:hover {
+    color: var(--red);
+}
+
+/* Estilos para a paginação */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    font-size: 14px;
+}
+
+.pagination-info {
+    color: var(--light-gray);
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.per-page-select {
+    background-color: var(--dark);
+    color: var(--white);
+    border: 1px solid var(--dark-lightest);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.pagination-buttons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pagination-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--dark);
+    border: 1px solid var(--dark-lightest);
+    border-radius: 4px;
+    color: var(--white);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled):not(.active) {
+    background-color: var(--dark-lightest);
+}
+
+.pagination-btn.active {
+    background-color: var(--ambar);
+    color: var(--dark);
+    border-color: var(--ambar);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+    color: var(--light-gray);
+    padding: 0 5px;
+}
+
+/* Estilos para o modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--dark-lighter);
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalFade 0.3s ease;
+}
+
+@keyframes modalFade {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--dark-lightest);
+}
+
+.modal-header h3 {
+    font-size: 18px;
+    color: var(--white);
+    font-weight: 600;
+    margin: 0;
+}
+
+.close-modal {
+    background: transparent;
+    border: none;
+    color: var(--light-gray);
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-modal:hover {
+    color: var(--red);
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* Estilos para formulário do modal */
+#user-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+#user-form .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#user-form .form-field.full-width {
+    grid-column: span 2;
+}
+
+#user-form label {
+    font-size: 14px;
+    color: var(--light-gray);
+}
+
+#user-form input,
+#user-form select,
+#user-form textarea {
+    background-color: var(--dark);
+    border: 1px solid var(--dark-lightest);
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: var(--white);
+    font-size: 14px;
+}
+
+#user-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+#user-form .form-actions {
+    grid-column: span 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+#user-form button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#user-form .cancel-btn {
+    background-color: var(--dark);
+    color: var(--white);
+    border: 1px solid var(--dark-lightest);
+}
+
+#user-form .cancel-btn:hover {
+    background-color: var(--dark-lightest);
+}
+
+#user-form .save-btn {
+    background-color: var(--ambar);
+    color: var(--dark);
+    border: none;
+}
+
+#user-form .save-btn:hover {
+    background-color: #e69500;
+}
+
+/* Estilos para detalhes do usuário */
+.user-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.user-details .user-profile {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.user-details .user-avatar-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: var(--dark-lightest);
+    margin-bottom: 15px;
+}
+
+.user-details .user-name-large {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.user-details .user-tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--light-gray);
+}
+
+.user-details .detail-group {
+    background-color: var(--dark);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.user-details .detail-group h4 {
+    color: var(--light-gray);
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid var(--dark-lightest);
+    padding-bottom: 10px;
+}
+
+.user-details .detail-item {
+    margin-bottom: 10px;
+}
+
+.user-details .detail-label {
+    font-size: 13px;
+    color: var(--light-gray);
+    margin-bottom: 5px;
+}
+
+.user-details .detail-value {
+    font-size: 14px;
+    color: var(--white);
+}

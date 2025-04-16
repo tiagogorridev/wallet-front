@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyWallet - Gráficos</title>
+  <link rel="stylesheet" href="../../css/style.css">
+  <link rel="stylesheet" href="../../css/components/graficos.css">
+  <link rel="stylesheet" href="../../css/layout/investidor/carteira-graficos.css">
+  <link rel="stylesheet" href="../../css/layout/investidor/header.css">
+  <link rel="shortcut icon" href="../../assets/imagens/favicon-icon.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <header id="header"></header>
+
+    <div class="main-content">
+      <section class="section chart-section">
+        <div class="section-header">
+          <h2>Evolução do Patrimônio</h2>
+          <div class="filters">
+            <div class="filter-data" id="patrimonyFilter">
+              <button class="filter-option" data-value="3">3 MESES</button>
+              <button class="filter-option" data-value="6">6 MESES</button>
+              <button class="filter-option active" data-value="12">12 MESES</button>
+              <button class="filter-option" data-value="24">24 MESES</button>
+            </div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="patrimonyEvolutionChart"></canvas>
+        </div>
+      </section>
+
+      <section class="section chart-section">
+        <div class="section-header">
+          <h2>Ativos na carteira</h2>
+        </div>
+        <div class="pie-chart-container">
+          <canvas id="assetsDistributionChart"></canvas>
+          <div class="pie-chart-legend" id="assetsDistributionLegend"></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="main-content">
+      <section class="section chart-section">
+        <div class="section-header">
+          <h2>Rentabilidade Anual</h2>
+        </div>
+        <div class="chart-container">
+          <canvas id="annualReturnChart"></canvas>
+        </div>
+      </section>
+
+      <section class="section chart-section">
+        <div class="section-header">
+          <h2>Patrimônio por Categoria</h2>
+        </div>
+        <div class="pie-chart-container">
+          <canvas id="categoryDistributionChart"></canvas>
+          <div class="pie-chart-legend" id="categoryDistributionLegend"></div>
+        </div>
+      </section>
+    </div>
+
+    <section class="section historical-performance">
+      <div class="section-header">
+        <h2>Histórico de Performance</h2>
+        <div class="filters">
+          <div class="filter-data" id="performanceFilter">
+            <button class="filter-option" data-value="3">3 MESES</button>
+            <button class="filter-option" data-value="6">6 MESES</button>
+            <button class="filter-option active" data-value="12">12 MESES</button>
+            <button class="filter-option" data-value="24">24 MESES</button>
+          </div>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table" id="performanceTable">
+          <thead>
+            <tr>
+              <th>Período</th>
+              <th>Rentabilidade</th>
+              <th>CDI</th>
+              <th>IBOVESPA</th>
+              <th>S&P 500</th>
+              <th>Bitcoin</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section assets-section">
+      <div class="assets-header">
+        <h2>Ativos</h2>
+        <button class="btn btn-primary btn-round" id="addAssetBtn">Adicionar Ativo</button>
+      </div>
+      <div class="table-container" id="assetCategoriesContainer">
+      </div>
+    </section>
+  </div>
+
+  <div class="modal" id="addAssetModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Adicionar Novo Ativo</h2>
+        <span class="close-button">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="addAssetForm">
+          <div class="form-group">
+            <label for="assetSymbol">Símbolo</label>
+            <input type="text" id="assetSymbol" placeholder="Ex: BTCS, AAPL" required>
+          </div>
+          <div class="form-group">
+            <label for="assetCategory">Categoria</label>
+            <select id="assetCategory" required>
+              <option value="CRIPTOMOEDAS">Criptomoedas</option>
+              <option value="ACOES">Ações</option>
+              <option value="FIS">FIIs</option>
+              <option value="RENDA_FIXA">Renda Fixa</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="assetQuantity">Quantidade</label>
+            <input type="number" id="assetQuantity" step="0.00000001" required>
+          </div>
+          <div class="form-group">
+            <label for="assetPrice">Preço Médio</label>
+            <input type="number" id="assetPrice" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label for="assetRating">Minha Nota (1-10)</label>
+            <input type="number" id="assetRating" min="1" max="10" step="1" required>
+          </div>
+          <div class="form-group">
+            <label for="assetIdealPercentage">Porcentagem Ideal na Carteira</label>
+            <input type="number" id="assetIdealPercentage" step="0.1" required>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Adicionar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/layout/investidor/header.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="../../js/components/graficos.js"></script>
+  <script src="../../js/layout/investidor/carteira-graficos.js"></script>
+</body>
+</html>
