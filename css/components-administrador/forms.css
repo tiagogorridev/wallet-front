@@ -1,0 +1,72 @@
+#user-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+#user-form .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#user-form .form-field.full-width {
+    grid-column: span 2;
+}
+
+#user-form label {
+    font-size: 14px;
+    color: var(--light-gray);
+}
+
+#user-form input,
+#user-form select,
+#user-form textarea {
+    background-color: var(--dark);
+    border: 1px solid var(--dark-lightest);
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: var(--white);
+    font-size: 14px;
+}
+
+#user-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+#user-form .form-actions {
+    grid-column: span 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+#user-form button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#user-form .cancel-btn {
+    background-color: var(--dark);
+    color: var(--white);
+    border: 1px solid var(--dark-lightest);
+}
+
+#user-form .cancel-btn:hover {
+    background-color: var(--dark-lightest);
+}
+
+#user-form .save-btn {
+    background-color: var(--ambar);
+    color: var(--dark);
+    border: none;
+}
+
+#user-form .save-btn:hover {
+    background-color: #e69500;
+}

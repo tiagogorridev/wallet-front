@@ -20,7 +20,7 @@ MyWallet é um sistema centralizado de gerenciamento de carteira que permite aos
 - **Frontend**:
   - HTML
   - CSS
-  - JavaScript puro (sem frameworks)
+  - JavaScript puro
 - **Backend**:
   - Java puro
 

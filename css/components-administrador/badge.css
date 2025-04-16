@@ -1,0 +1,35 @@
+.user-status,
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.user-status.premium,
+.badge.premium {
+    background-color: var(--ambar);
+    color: var(--dark);
+}
+
+.user-status.basic,
+.badge.basic {
+    background-color: var(--blue);
+    color: var(--white);
+}
+
+.badge.active {
+    background-color: var(--green);
+    color: var(--white);
+}
+
+.badge.inactive {
+    background-color: var(--light-gray);
+    color: var(--dark);
+}
+
+.badge.suspended {
+    background-color: var(--red);
+    color: var(--white);
+}

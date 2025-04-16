@@ -100,7 +100,6 @@
     color: var(--ambar);
   }
   
-  /* Tabs */
   .categoria-tabs,
   .goals-tabs {
     display: flex;
@@ -146,7 +145,6 @@
     font-weight: 600;
   }
   
-  /* Year selector */
   .year-selector {
     display: flex;
     align-items: center;

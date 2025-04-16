@@ -61,7 +61,6 @@
   border-radius: 20px;
 }
 
-/* Icon buttons */
 .goal-action-btn {
   background-color: transparent;
   border: none;
@@ -94,7 +93,6 @@
   color: var(--white);
 }
 
-/* Adicionar ao buttons.css */
 .subscribe-btn {
   background-color: var(--ambar);
   color: var(--dark);
@@ -163,7 +161,6 @@
   background-color: rgba(255, 193, 7, 0.1);
 }
 
-/* Adicionar em buttons.css */
 .save-account-btn {
   background-color: var(--ambar);
   color: var(--dark);

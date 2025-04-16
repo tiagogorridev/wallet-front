@@ -1,0 +1,63 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 70px);
+    background-color: var(--dark);
+    color: var(--white);
+}
+
+.dashboard-header {
+    background-color: var(--dark-lighter);
+    padding: 30px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.header-content h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--white);
+}
+
+.header-content p {
+    font-size: 16px;
+    color: var(--light-gray);
+}
+Main Content
+.main-content {
+    padding: 20px;
+    flex: 1;
+}
+
+.overview-section,
+.charts-section,
+.activity-section,
+.users-section,
+.top-assets-section,
+.search-section,
+.users-list-section {
+    background-color: var(--dark-lighter);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.two-column-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}

@@ -1,0 +1,43 @@
+.users-table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--white);
+}
+
+.users-table th,
+.users-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--dark-lightest);
+}
+
+.users-table th {
+    background-color: var(--dark);
+    color: var(--light-gray);
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.users-table tbody tr {
+    background-color: var(--dark);
+    transition: background-color 0.2s;
+}
+
+.users-table tbody tr:hover {
+    background-color: var(--dark-lightest);
+}
+
+.user-info-cell {
+    min-width: 180px;
+}
+
+.actions-cell {
+    white-space: nowrap;
+    min-width: 120px;
+}

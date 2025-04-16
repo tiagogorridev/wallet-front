@@ -37,7 +37,6 @@
     margin-top: 20px;
   }
   
-  /* Form validation */
   .form-group .error-message {
     color: var(--red);
     font-size: 12px;

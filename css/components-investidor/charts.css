@@ -57,7 +57,6 @@
     color: var(--white);
   }
   
-  /* Monthly chart for income */
   .income-summary-container {
     display: flex;
     flex-direction: column;
@@ -153,7 +152,6 @@
     right: 15px;
   }
 
-  /* Adicionar ao charts.css */
 .analysis-preview {
   display: flex;
   flex-wrap: wrap;

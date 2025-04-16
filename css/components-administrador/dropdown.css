@@ -1,0 +1,33 @@
+.export-dropdown {
+    position: relative;
+}
+
+.export-options {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--dark);
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    min-width: 150px;
+    z-index: 100;
+    display: none;
+}
+
+.export-dropdown:hover .export-options {
+    display: block;
+}
+
+.export-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    color: var(--white);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.export-option:hover {
+    background-color: var(--dark-lightest);
+}
