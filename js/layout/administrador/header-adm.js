@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (logoutButton) {
       logoutButton.addEventListener('click', function() {
         localStorage.clear();
-        window.location.href = '../../pages/login/login.html';
+        window.location.href = '../../../html/auth/login.html';
       });
     }
 

@@ -1,0 +1,99 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--light-gray);
+    font-size: 14px;
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid var(--gray);
+    background-color: var(--dark);
+    color: var(--white);
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus {
+    outline: none;
+    border-color: var(--ambar);
+  }
+  
+  .form-actions,
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  /* Form validation */
+  .form-group .error-message {
+    color: var(--red);
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+  }
+  
+  .form-group.has-error .error-message {
+    display: block;
+  }
+  
+  .form-group.has-error input,
+  .form-group.has-error select {
+    border-color: var(--red);
+  }
+
+  .allocation-input {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .allocation-input input {
+    width: 60px;
+    background-color: var(--dark-lightest);
+    border: 1px solid var(--gray);
+    border-radius: 4px;
+    padding: 8px 10px;
+    color: var(--white);
+    font-size: 14px;
+    text-align: right;
+  }
+  
+  .allocation-input input:focus {
+    border-color: var(--ambar);
+    outline: none;
+  }
+  
+  .total-allocation {
+    font-weight: 600;
+    color: var(--ambar);
+  }
+  
+  .account-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+  }
+  
+  .password-field {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .password-field input {
+    flex: 1;
+  }
+  

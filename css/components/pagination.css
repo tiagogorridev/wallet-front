@@ -1,0 +1,70 @@
+.lancamentos-pagination,
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 15px;
+}
+
+.pagination-btn {
+  background-color: var(--dark-lightest);
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+  padding: 8px 15px;
+  color: var(--light-gray);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover {
+  border-color: var(--ambar);
+  color: var(--white);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.page-btn,
+.page-number {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: var(--dark-lightest);
+  border: 1px solid var(--gray);
+  color: var(--light-gray);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page-btn:hover,
+.page-number:hover {
+  border-color: var(--ambar);
+  color: var(--white);
+}
+
+.page-btn.active,
+.page-number.active {
+  background-color: var(--ambar);
+  color: var(--dark);
+  border-color: var(--ambar);
+}
+
+.period-display {
+  color: var(--light-gray);
+  font-size: 14px;
+  padding: 5px 10px;
+  background-color: var(--dark-lightest);
+  border-radius: 4px;
+}

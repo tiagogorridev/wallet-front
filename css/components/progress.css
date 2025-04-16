@@ -1,0 +1,23 @@
+.progress-bar {
+    height: 8px;
+    background-color: var(--dark-lightest);
+    border-radius: 4px;
+    margin-bottom: 5px;
+    overflow: hidden;
+  }
+  
+  .progress-bar .progress {
+    height: 100%;
+    background-color: var(--ambar);
+    border-radius: 4px;
+  }
+  
+  .goal-stat-card .progress-bar {
+    height: 6px;
+    margin-top: 10px;
+  }
+  
+  .goal-stat-card .progress-bar.completed .progress,
+  .goal-card.completed .progress-bar .progress {
+    background-color: var(--green);
+  }

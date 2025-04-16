@@ -1,0 +1,199 @@
+.add-asset-btn-secondary,
+.add-lancamento-btn,
+.add-goal-btn,
+.submit-btn,
+.btn-primary,
+.save-btn,
+.modal-actions .save-btn {
+  background-color: var(--ambar);
+  color: var(--dark);
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.add-asset-btn-secondary:hover,
+.add-lancamento-btn:hover,
+.add-goal-btn:hover,
+.submit-btn:hover,
+.btn-primary:hover,
+.save-btn:hover,
+.modal-actions .save-btn:hover {
+  background-color: #e69500;
+  opacity: 0.9;
+}
+
+.submit-btn,
+.btn-primary,
+.modal-actions .save-btn {
+  border-radius: 4px;
+  padding: 10px 20px;
+  margin-top: 10px;
+}
+
+.btn-secondary,
+.cancel-btn,
+.modal-actions .cancel-btn,
+.pagination-btn {
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid var(--light-gray);
+  color: var(--light-gray);
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover,
+.cancel-btn:hover,
+.modal-actions .cancel-btn:hover,
+.pagination-btn:hover {
+  border-color: var(--ambar);
+  color: var(--white);
+}
+
+.btn-round,
+.goal-tab {
+  border-radius: 20px;
+}
+
+/* Icon buttons */
+.goal-action-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--light-gray);
+  font-size: 16px;
+}
+
+.goal-action-btn:hover {
+  color: var(--ambar);
+}
+
+.close-modal,
+.close-button,
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--light-gray);
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  transition: color 0.2s ease;
+}
+
+.close-modal:hover,
+.close-button:hover,
+.close-btn:hover {
+  color: var(--white);
+}
+
+/* Adicionar ao buttons.css */
+.subscribe-btn {
+  background-color: var(--ambar);
+  color: var(--dark);
+  border: none;
+  border-radius: 4px;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+
+.subscribe-btn:hover {
+  background-color: #e69500;
+}
+
+.subscribe-btn-large {
+  background-color: var(--ambar);
+  color: var(--dark);
+  border: none;
+  border-radius: 4px;
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+
+.subscribe-btn-large:hover {
+  background-color: #e69500;
+}
+
+.plan-select-btn {
+  display: block;
+  width: calc(100% - 50px);
+  margin: 0 25px 25px;
+  padding: 12px;
+  background-color: transparent;
+  border: 1px solid var(--ambar);
+  color: var(--ambar);
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  text-align: center;
+}
+
+.plan-select-btn:hover {
+  background-color: var(--ambar);
+  color: var(--dark);
+}
+
+.change-password-btn {
+  background-color: transparent;
+  color: var(--ambar);
+  border: 1px solid var(--ambar);
+}
+
+.change-password-btn:hover {
+  background-color: rgba(255, 193, 7, 0.1);
+}
+
+/* Adicionar em buttons.css */
+.save-account-btn {
+  background-color: var(--ambar);
+  color: var(--dark);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.save-account-btn:hover {
+  background-color: #e0a800;
+}
+
+.realizar-teste-btn {
+  background-color: var(--ambar);
+  color: var(--dark);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.realizar-teste-btn:hover {
+  background-color: #e0a800;
+}

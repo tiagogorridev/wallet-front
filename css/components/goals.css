@@ -1,0 +1,132 @@
+.goals-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+  }
+  
+  .goal-card {
+    background-color: var(--dark);
+    border-radius: 8px;
+    padding: 16px;
+    border-left: 4px solid var(--ambar);
+  }
+  
+  .goal-card.completed {
+    border-left-color: var(--green);
+  }
+  
+  .goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+  
+  .goal-title-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .goal-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark);
+    font-weight: bold;
+  }
+  
+  .goal-icon.reserve { background-color: var(--blue); }
+  .goal-icon.reserve:after { content: "💰"; }
+  .goal-icon.vacation { background-color: var(--ambar); }
+  .goal-icon.vacation:after { content: "✈️"; }
+  .goal-icon.house { background-color: var(--green); }
+  .goal-icon.house:after { content: "🏠"; }
+  .goal-icon.custom { background-color: var(--light-gray); }
+  .goal-icon.custom:after { content: "📊"; }
+  
+  .goal-title-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .goal-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    margin: 0;
+  }
+  
+  .goal-subtitle {
+    font-size: 12px;
+    color: var(--light-gray);
+  }
+  
+  .goal-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .status-badge {
+    background-color: var(--green);
+    color: var(--dark);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
+  .goal-progress {
+    margin-bottom: 15px;
+  }
+  
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+  
+  .current-value {
+    font-size: 14px;
+    color: var(--white);
+    font-weight: 600;
+  }
+  
+  .target-value {
+    font-size: 14px;
+    color: var(--light-gray);
+  }
+  
+  .progress-percentage {
+    text-align: right;
+    font-size: 12px;
+    color: var(--light-gray);
+  }
+  
+  .goal-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+    border-top: 1px solid var(--dark-lightest);
+    padding-top: 15px;
+  }
+  
+  .goal-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .detail-label {
+    font-size: 12px;
+    color: var(--light-gray);
+  }
+  
+  .detail-value {
+    font-size: 14px;
+    color: var(--white);
+  }

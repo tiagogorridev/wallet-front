@@ -1,0 +1,40 @@
+.table-container,
+.assets-table-container,
+.lancamentos-table-container,
+.income-table-container {
+  overflow-x: auto;
+}
+
+.table,
+.assets-table,
+.lancamentos-table,
+.income-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+
+.table th,
+.assets-table th,
+.lancamentos-table th,
+.income-table th {
+  background-color: var(--dark-lightest);
+  color: var(--light-gray);
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 13px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table td,
+.assets-table td,
+.lancamentos-table td,
+.income-table td {
+  padding: 12px 15px;
+  color: var(--white);
+  border-bottom: 1px solid var(--dark-lightest);
+  font-size: 14px;
+}

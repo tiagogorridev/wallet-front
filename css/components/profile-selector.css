@@ -1,0 +1,60 @@
+/* Seletor de perfil */
+.profile-selection {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+  
+  .profile-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background-color: var(--dark-lighter);
+    border-radius: 8px;
+    flex: 1;
+    min-width: 200px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+  }
+  
+  .profile-option:hover {
+    border-color: rgba(255, 193, 7, 0.5);
+  }
+  
+  .profile-option.selected {
+    border-color: var(--ambar);
+  }
+  
+  .profile-icon {
+    width: 40px;
+    height: 40px;
+    background-color: var(--dark-lightest);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .profile-icon i {
+    color: var(--ambar);
+    font-size: 20px;
+  }
+  
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .profile-name {
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 5px;
+  }
+  
+  .profile-desc {
+    font-size: 12px;
+    color: var(--light-gray);
+  }

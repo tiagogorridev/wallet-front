@@ -1,0 +1,196 @@
+.chart-container {
+    height: 300px;
+    position: relative;
+    background-color: var(--dark);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--light-gray);
+    font-style: italic;
+  }
+  
+  .pie-chart-container {
+    display: flex;
+    height: 300px;
+    position: relative;
+    background-color: var(--dark);
+    border-radius: 8px;
+  }
+  
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .pie-chart-legend {
+    width: 30%;
+    margin-left: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .legend-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+  }
+  
+  .legend-color.dividend {
+    background-color: var(--green);
+  }
+  
+  .legend-color.interest {
+    background-color: var(--blue);
+  }
+  
+  .legend-label {
+    font-size: 14px;
+    color: var(--white);
+  }
+  
+  /* Monthly chart for income */
+  .income-summary-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .monthly-chart-container {
+    background-color: var(--dark);
+    border-radius: 8px;
+    padding: 20px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  
+  .monthly-distribution-bars {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
+    gap: 5px;
+  }
+  
+  .month-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    flex: 1;
+    min-width: 0;
+    padding-bottom: 30px;
+  }
+  
+  .month-bar.future {
+    opacity: 0.6;
+  }
+  
+  .bar-container {
+    width: 25px;
+    height: 60%;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 5px;
+  }
+  
+  .bar-value {
+    width: 100%;
+    background-color: var(--ambar);
+    border-radius: 4px 4px 0 0;
+    position: relative;
+    transition: height 0.3s ease;
+  }
+  
+  .bar-value.future-bar {
+    background-color: #d28800;
+    opacity: 0.7;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 5px,
+      rgba(0, 0, 0, 0.1) 5px,
+      rgba(0, 0, 0, 0.1) 10px
+    );
+  }
+  
+  .month-value {
+    font-size: 10px;
+    color: var(--white);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  
+  .month-name {
+    color: var(--light-gray);
+    font-size: 11px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    transform: rotate(-45deg);
+    transform-origin: right;
+    position: relative;
+    right: 15px;
+  }
+
+  /* Adicionar ao charts.css */
+.analysis-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.analysis-chart {
+  flex: 1;
+  min-width: 300px;
+}
+
+.chart-placeholder {
+  height: 300px;
+  background-color: var(--dark);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.chart-placeholder span {
+  color: var(--light-gray);
+  font-style: italic;
+}
+
+.analysis-details {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.analysis-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}

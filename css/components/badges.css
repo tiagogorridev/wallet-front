@@ -1,0 +1,32 @@
+.lancamento-tipo,
+.income-type {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  min-width: 80px;
+  line-height: 1.4;
+}
+
+.lancamento-tipo.compra {
+  background-color: rgba(0, 255, 0, 0.15);
+  color: var(--green);
+}
+
+.lancamento-tipo.venda {
+  background-color: rgba(255, 0, 0, 0.15);
+  color: var(--red);
+}
+
+.lancamento-tipo.dividendo,
+.income-type.dividend {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: var(--green);
+}
+
+.income-type.interest {
+  background-color: rgba(33, 150, 243, 0.2);
+  color: var(--blue);
+}

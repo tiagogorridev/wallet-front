@@ -1,0 +1,117 @@
+.asset-category {
+    border: 1px solid var(--dark-lightest);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  
+  .asset-category.expanded .category-content {
+    display: block;
+  }
+  
+  .category-header {
+    display: flex;
+    align-items: center;
+    padding: 14px;
+    background-color: var(--dark-lightest);
+    cursor: pointer;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  .category-expand-icon {
+    margin-right: 10px;
+    color: var(--ambar);
+  }
+  
+  .category-name {
+    font-weight: 600;
+    width: 150px;
+    color: var(--white);
+  }
+  
+  .category-count {
+    width: 100px;
+    font-size: 12px;
+    color: var(--light-gray);
+  }
+  
+  .category-value,
+  .category-variation,
+  .category-percentage {
+    flex: 1;
+    min-width: 180px;
+    font-size: 12px;
+    color: var(--light-gray);
+  }
+  
+  .category-content {
+    display: none;
+    background-color: var(--dark);
+  }
+  
+  .asset-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+  }
+  
+  .asset-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+  
+  .asset-icon.crypto {
+    background-color: var(--red);
+  }
+  
+  .asset-icon.stock {
+    background-color: var(--green);
+  }
+  
+  .asset-icon.fixed-income {
+    background-color: var(--blue);
+  }
+  
+  .rating {
+    background-color: var(--ambar);
+    color: var(--dark);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  
+  .buy-status {
+    font-weight: 600;
+  }
+
+  .category-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+  }
+  
+  .category-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+  }
+  
+  .category-color.crypto {
+    background-color: var(--green);
+  }
+  
+  .category-color.fixed-income {
+    background-color: var(--blue);
+  }
+  
+  .category-color.stocks {
+    background-color: var(--red);
+  }

@@ -1,0 +1,197 @@
+/* Estilos melhorados para a seção de alocação por categoria */
+
+/* Cabeçalho da seção */
+.config-card {
+    margin-bottom: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--dark-lightest);
+  }
+  
+  /* Cabeçalho do card */
+  .config-card-header {
+    background-color: var(--dark-lightest);
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .config-card-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    margin: 0;
+  }
+  
+  /* Botão salvar do cabeçalho */
+  button.save-btn {
+    background-color: var(--ambar);
+    color: var(--dark);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  button.save-btn:hover {
+    background-color: #ffb938;
+    transform: translateY(-1px);
+  }
+  
+  button.save-btn:active {
+    transform: translateY(1px);
+  }
+  
+  /* Conteúdo do card */
+  .config-card-content {
+    padding: 20px;
+  }
+  
+  /* Container da tabela */
+  .allocation-table-container {
+    overflow-x: auto;
+    border-radius: 6px;
+  }
+  
+  /* Tabela de alocação */
+  .allocation-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .allocation-table th {
+    padding: 12px 20px;
+    text-align: left;
+    color: var(--light-gray);
+    font-weight: 500;
+    font-size: 14px;
+    border-bottom: 1px solid var(--dark-lightest);
+  }
+  
+  .allocation-table td {
+    padding: 8px 10px;
+    font-size: 14px;
+    color: var(--white);
+  }
+  
+  /* Indicadores de categoria */
+  .category-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+  }
+  
+  .category-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  
+  .category-color.crypto {
+    background-color: var(--green);
+    box-shadow: 0 0 6px rgba(var(--green-rgb), 0.6);
+  }
+  
+  .category-color.fixed-income {
+    background-color: var(--blue);
+    box-shadow: 0 0 6px rgba(var(--blue-rgb), 0.6);
+  }
+  
+  .category-color.stocks {
+    background-color: var(--red);
+    box-shadow: 0 0 6px rgba(var(--red-rgb), 0.6);
+  }
+  
+  /* Coluna de alocação atual */
+  .allocation-table td:nth-child(2) {
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  /* Inputs de percentual */
+  .allocation-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .allocation-input input {
+    width: 60px;
+    background-color: var(--dark-lightest);
+    border: 1px solid var(--gray);
+    border-radius: 6px;
+    padding: 10px;
+    color: var(--white);
+    font-size: 14px;
+    text-align: center;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .allocation-input input:focus {
+    border-color: var(--ambar);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 170, 0, 0.2);
+  }
+  
+  .allocation-input input:hover {
+    border-color: var(--light-gray);
+  }
+  
+  .allocation-input span {
+    color: var(--light-gray);
+    font-size: 14px;
+  }
+  
+  /* Rodapé da tabela */
+  .allocation-table tfoot td {
+    border-top: 2px solid var(--dark-lightest);
+    font-weight: 600;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  
+  .allocation-table tfoot td:first-child {
+    color: var(--white);
+  }
+  
+  .allocation-table tfoot td:nth-child(2) {
+    text-align: center;
+    color: var(--white);
+  }
+  
+  /* Total de alocação */
+  .total-allocation {
+    color: var(--ambar);
+    font-weight: 700;
+    font-size: 15px;
+    text-align: center;
+    display: inline-block;
+    width: 60px;
+  }
+  
+  /* Adicionar transição suave para todos os elementos */
+  .allocation-table * {
+    transition: all 0.2s ease;
+  }
+  
+  /* Efeito hover nas linhas */
+  .allocation-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+  
+  /* Alinhamento centralizado para os inputs e valores de meta */
+  .allocation-table th:last-child,
+  .allocation-table td:last-child {
+    text-align: center;
+  }
