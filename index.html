@@ -1,13 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <meta http-equiv="refresh" content="0; url=html/login.html">
-  <title>Redirecionando...</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyWallet - Login</title>
+    <link rel="stylesheet" href="css/auth/auth.css">
+    <link rel="stylesheet" href="css/auth/style.css">
+    <link rel="shortcut icon" href="assets/favicon-icon.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/primeicons/6.0.1/primeicons.min.css">
 </head>
 <body>
-  <p>Redirecionando para a página de login...</p>
-  <script>
-    window.location.href = "html/auth/login.html";
-  </script>
+    <div class="auth-container">
+        <div class="auth-content">
+            <div class="welcome-message">
+                <h1>Bem-vindo ao MyWallet</h1>
+                <h2>Centralize todos seus investimentos em um lugar só.</h2>
+            </div>
+            <div class="auth-form">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" required placeholder="seu@email.com" class="input-field">
+                    </div>
+                    <div class="form-group password-group">
+                        <input type="password" id="password" name="password" required placeholder="Digite sua senha" class="input-field">
+                        <span class="password-toggle">
+                            <i class="pi pi-eye"></i>
+                        </span>
+                    </div>
+                    <div class="auth-btn">
+                        <button type="submit">Entrar</button>
+                    </div>
+                    <div class="account-link">
+                        <a href="html/auth/cadastro.html">Não possuo uma conta</a>
+                    </div>
+                </form>
+                <div id="login-message" class="feedback-message"></div>
+            </div>
+        </div>
+        <div class="auth-background"></div>
+    </div>
+
+    <script src="js/auth/login.js"></script>
 </body>
 </html>
