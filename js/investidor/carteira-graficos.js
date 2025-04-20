@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const headerContainer = document.getElementById('header');
     if (headerContainer) {
-      fetch('../../../html/investidor/header.html')
+      fetch('../../html/investidor/header.html')
         .then(response => response.text())
         .then(data => {
           headerContainer.innerHTML = data;
