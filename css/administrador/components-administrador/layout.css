@@ -10,6 +10,7 @@
     background-color: var(--dark-lighter);
     padding: 30px 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    margin: 10px 0px;
 }
 
 .header-content h1 {
