@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyWallet - Dashboard Administrativo</title>
+    <link rel="stylesheet" href="gestao-user.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="shortcut icon" href="../../assets/imagens/favicon-icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <header id="admin-header"></header>
+
+        <div class="assets-section">
+            <div class="assets-header">
+                <h2>Gestão de Usuários</h2>
+                <div class="header-actions">
+                    <button id="configUserBtn" class="add-asset-btn-secondary">
+                        <i class="fas fa-cog"></i> Configurações de Usuários
+                    </button>
+                </div>
+            </div>
+
+            <div class="assets-table-container">
+                <table class="assets-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Data de Cadastro</th>
+                            <th>Status</th>
+                            <th>Último Acesso</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- O JavaScript preencherá esta tabela -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Edição de Usuário -->
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Editar Usuário</h2>
+            <form id="editUserForm">
+                <input type="hidden" id="userId">
+                <div class="form-group">
+                    <label for="userName">Nome</label>
+                    <input type="text" id="userName" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="userStatus">Status</label>
+                    <select id="userStatus">
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                        <option value="pendente">Pendente</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal da Carteira do Usuário -->
+    <div id="userPortfolioModal" class="modal">
+        <div class="modal-content portfolio-modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Carteira do Usuário</h2>
+            <div class="user-info-summary">
+                <h3 id="portfolioUserName">Nome do Usuário</h3>
+                <div class="investment-summary">
+                    <div class="summary-item">
+                        <span>Total Investido</span>
+                        <h4 id="totalInvested">R$ 0,00</h4>
+                    </div>
+                    <div class="summary-item">
+                        <span>Retorno</span>
+                        <h4 id="totalReturn">R$ 0,00</h4>
+                    </div>
+                    <div class="summary-item">
+                        <span>Variação %</span>
+                        <h4 id="totalVariation">0,00%</h4>
+                    </div>
+                </div>
+                <button id="addAssetBtn" class="add-asset-btn-secondary">
+                    <i class="fas fa-plus"></i> Adicionar Ativo
+                </button>
+            </div>
+            <div class="assets-table-container">
+                <table class="assets-table" id="portfolioTable">
+                    <thead>
+                        <tr>
+                            <th>Ativo</th>
+                            <th>Quantidade</th>
+                            <th>Preço Médio</th>
+                            <th>Valor Investido</th>
+                            <th>Valor Atual</th>
+                            <th>Variação</th>
+                            <th>Rentabilidade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- O JavaScript preencherá esta tabela -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar Ativo -->
+    <div id="addAssetModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Adicionar Ativo</h2>
+            <form id="addAssetForm">
+                <input type="hidden" id="portfolioUserId">
+                <div class="form-group">
+                    <label for="assetSymbol">Código do Ativo</label>
+                    <input type="text" id="assetSymbol" required placeholder="Ex: PETR4">
+                </div>
+                <div class="form-group">
+                    <label for="assetQuantity">Quantidade</label>
+                    <input type="number" id="assetQuantity" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="assetAvgPrice">Preço Médio (R$)</label>
+                    <input type="number" id="assetAvgPrice" required min="0.01" step="0.01">
+                </div>
+                <button type="submit" class="submit-btn">Adicionar à Carteira</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Ativo -->
+    <div id="editAssetModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Editar Ativo</h2>
+            <form id="editAssetForm">
+                <input type="hidden" id="editPortfolioUserId">
+                <input type="hidden" id="editAssetIndex">
+                <div class="form-group">
+                    <label for="editAssetSymbol">Código do Ativo</label>
+                    <input type="text" id="editAssetSymbol" required placeholder="Ex: PETR4">
+                </div>
+                <div class="form-group">
+                    <label for="editAssetQuantity">Quantidade</label>
+                    <input type="number" id="editAssetQuantity" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="editAssetAvgPrice">Preço Médio (R$)</label>
+                    <input type="number" id="editAssetAvgPrice" required min="0.01" step="0.01">
+                </div>
+                <button type="submit" class="submit-btn">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-content delete-confirm-modal">
+            <span class="close-modal">&times;</span>
+            <h2>Confirmar Exclusão</h2>
+            <p>Tem certeza que deseja excluir este ativo da carteira do usuário?</p>
+            <input type="hidden" id="deleteUserId">
+            <input type="hidden" id="deleteAssetIndex">
+            <div class="confirm-buttons">
+                <button id="cancelDeleteBtn" class="cancel-btn">Cancelar</button>
+                <button id="confirmDeleteBtn" class="delete-btn">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../header/header-adm.js"></script>
+    <script src="gestao-user.js"></script>
+</body>
+
+</html>

@@ -5,7 +5,6 @@ const btnVoltar = document.getElementById("btnVoltar");
 const btnPular = document.getElementById("btnPular");
 const barraProgresso = document.getElementById("barraProgresso");
 const textoProgresso = document.getElementById("textoProgresso");
-const espacoVoltar = document.getElementById("espacoVoltar");
 
 let etapaAtual = 0;
 let pontuacao = 0;
@@ -114,16 +113,18 @@ const perguntas = [
 const respostasUsuario = new Array(perguntas.length).fill(-1);
 
 function atualizarBarraProgresso() {
+    const totalEtapas = perguntas.length;
+    
     if (etapaAtual === 0) {
         barraProgresso.style.width = "0%";
         textoProgresso.innerText = "Introdução";
-    } else if (etapaAtual >= perguntas.length) {
+    } else if (etapaAtual >= totalEtapas) {
         barraProgresso.style.width = "100%";
         textoProgresso.innerText = "Concluído";
     } else {
-        const progresso = (etapaAtual / (perguntas.length - 1)) * 100;
+        const progresso = (etapaAtual / (totalEtapas - 1)) * 100;
         barraProgresso.style.width = progresso + "%";
-        textoProgresso.innerText = `Questão ${etapaAtual} de ${perguntas.length - 1}`;
+        textoProgresso.innerText = `Questão ${etapaAtual} de ${totalEtapas - 1}`;
     }
 }
 
@@ -180,12 +181,10 @@ function mostrarEtapa(index) {
         // Na introdução: mostrar Pular, esconder Voltar
         btnPular.style.display = "inline-block";
         btnVoltar.style.display = "none";
-        espacoVoltar.style.display = "block";
     } else {
         // Em todas as outras páginas: esconder Pular, mostrar Voltar
         btnPular.style.display = "none";
         btnVoltar.style.display = "inline-block";
-        espacoVoltar.style.display = "none";
     }
     
     // Restaurar resposta anterior se existir
@@ -261,7 +260,6 @@ function mostrarResultado() {
     btnProximo.style.display = "none";
     btnVoltar.style.display = "none";
     btnPular.style.display = "none";
-    espacoVoltar.style.display = "none";
     
     atualizarBarraProgresso();
 }
@@ -294,5 +292,4 @@ function abrirQuestionario() {
     btnProximo.style.display = "inline-block";
     btnVoltar.style.display = "none";
     btnPular.style.display = "inline-block";
-    espacoVoltar.style.display = "block";
 }

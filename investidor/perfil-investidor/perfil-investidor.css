@@ -146,6 +146,7 @@ button {
 #btnPular {
     background-color: var(--dark-lightest);
     color: var(--white);
+        
 }
 
 #btnPular:hover {
@@ -192,4 +193,4 @@ button {
 .texto-progresso {
     font-size: 14px;
     color: var(--light-gray);
-}
+}   

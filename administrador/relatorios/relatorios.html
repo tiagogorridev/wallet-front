@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyWallet - Dashboard Administrativo</title>
+    <link rel="stylesheet" href="../header/header-adm.css">
+    <link rel="stylesheet" href="relatorios.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="shortcut icon" href="../../assets/imagens/favicon-icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Relatórios do Administrador</h1>
+        </header>
+
+        <section class="filtros">
+            <label for="tipoRelatorio">Tipo de Relatório:</label>
+            <select id="tipoRelatorio">
+                <option value="mensal">Mensal</option>
+                <option value="anual">Anual</option>
+                <option value="porAtivo">Por Ativo</option>
+            </select>
+
+            <button class="btn" onclick="gerarRelatorio()">Gerar Relatório</button>
+            <button class="btn exportar" onclick="exportarDados()">Exportar Dados</button>
+        </section>
+
+        <section class="grafico-section">
+            <canvas id="graficoRelatorio" width="800" height="400"></canvas>
+        </section>
+    </div>
+
+    <script src="relatorios.js"></script>
+</body>
+
+</html>

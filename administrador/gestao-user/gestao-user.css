@@ -1,0 +1,371 @@
+:root {
+    --dark: #121212;
+    --dark-lighter: #1e1e1e;
+    --dark-lightest: #2a2a2a;
+    --ambar: #ffa500;
+    --white: #ffffff;
+    --light-gray: #aaaaaa;
+    --red: #ff4d4d;
+    --green: #4caf50;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--dark);
+    color: var(--white);
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--dark);
+}
+
+.assets-section {
+    margin: 20px;
+    background-color: var(--dark-lighter);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+}
+
+.assets-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.assets-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.add-asset-btn-secondary {
+    background-color: var(--ambar);
+    color: var(--dark);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.add-asset-btn-secondary:hover {
+    background-color: #e69500;
+}
+
+.assets-table-container {
+    overflow-x: auto;
+}
+
+.assets-table {
+    width: 100%;
+    min-width: 800px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.assets-table th {
+    padding: 12px 15px;
+    text-align: left;
+    background-color: var(--dark-lightest);
+    color: var(--light-gray);
+    font-weight: 500;
+    font-size: 13px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.assets-table td {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 14px;
+    color: var(--white);
+    border-bottom: 1px solid var(--dark-lightest);
+}
+
+.user-status {
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-active {
+    background-color: var(--green);
+    color: var(--dark);
+}
+
+.status-inactive {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+.status-pending {
+    background-color: var(--ambar);
+    color: var(--dark);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.action-button {
+    background-color: var(--dark-lightest);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-button:hover {
+    background-color: var(--dark-lighter);
+}
+
+.edit-button {
+    background-color: var(--ambar);
+    color: var(--dark);
+}
+
+.edit-button:hover {
+    background-color: #e69500;
+}
+
+.delete-button {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+.delete-button:hover {
+    background-color: #e04343;
+}
+
+.portfolio-button {
+    background-color: var(--dark-lightest);
+    color: var(--white);
+}
+
+.portfolio-button:hover {
+    background-color: var(--dark-lighter);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    background-color: var(--dark-lighter);
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+}
+
+.portfolio-modal-content {
+    max-width: 900px;
+}
+
+.delete-confirm-modal {
+    max-width: 400px;
+    text-align: center;
+}
+
+.delete-confirm-modal p {
+    margin: 20px 0;
+    color: var(--white);
+}
+
+.confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.cancel-btn {
+    background-color: var(--dark-lightest);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.cancel-btn:hover {
+    background-color: var(--dark-lighter);
+}
+
+.delete-btn {
+    background-color: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.delete-btn:hover {
+    background-color: #e04343;
+}
+
+.close-modal {
+    color: var(--ambar);
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--white);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: var(--dark);
+    color: var(--white);
+    border: 1px solid var(--dark-lightest);
+}
+
+.submit-btn {
+    background-color: var(--ambar);
+    color: var(--dark);
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: #e69500;
+}
+
+.user-info-summary {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.user-info-summary h3 {
+    margin-bottom: 5px;
+    color: var(--white);
+}
+
+.investment-summary {
+    display: flex;
+    gap: 45px;
+    flex-wrap: wrap;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.summary-item span {
+    font-size: 12px;
+    color: var(--light-gray);
+}
+
+.summary-item h4 {
+    font-size: 18px;
+    color: var(--white);
+}
+
+.positive {
+    color: var(--green);
+}
+
+.negative {
+    color: var(--red);
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 4px;
+    color: var(--white);
+    font-weight: 600;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.notification.show {
+    opacity: 1;
+}
+
+.notification.success {
+    background-color: var(--green);
+}
+
+.notification.error {
+    background-color: var(--red);
+}
+
+@media (max-width: 768px) {
+    .investment-summary {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+}
