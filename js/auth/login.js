@@ -1,16 +1,10 @@
-// Arquivo: js/auth/login.js
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos do DOM
     const loginForm = document.getElementById('loginForm');
     const loginMessage = document.getElementById('login-message');
     const passwordToggle = document.querySelector('.password-toggle');
     const passwordInput = document.getElementById('password');
-    
-    // URL do backend (sem http:// no início)
     const API_URL = '191.239.116.115:8080';
 
-    // Toggle para mostrar/esconder a senha
     passwordToggle.addEventListener('click', function() {
         const icon = this.querySelector('i');
         if (passwordInput.type === 'password') {
@@ -24,28 +18,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Listener do formulário de login
     loginForm.addEventListener('submit', function(event) {
         event.preventDefault();
         
-        // Obter valores do formulário
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
-        
-        // Validação básica
         if (!email || !password) {
             showMessage('Por favor, preencha todos os campos.', 'error');
             return;
         }
-        
-        // Mostrar mensagem de carregamento
         showMessage('Autenticando...', 'info');
-        
-        // Fazer login
         login(email, password);
     });
     
-    // Função de login
     async function login(email, password) {
         try {
             const loginUrl = `http://${API_URL}/auth/login`;
@@ -74,9 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Processar login bem-sucedido
     function handleSuccessfulLogin(data) {
-        // Obter token da resposta
         let token = null;
         
         if (data.token) {
@@ -89,7 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
             token = data.data.access_token;
         }
         
-        // Obter dados do usuário
         let userData = null;
         if (data.usuario) {
             userData = data.usuario;
@@ -101,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
             userData = data.data.user;
         }
         
-        // Salvar token e dados do usuário
         if (token) {
             localStorage.setItem('accessToken', token);
         } else {
@@ -112,11 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (userData) {
             localStorage.setItem('userInfo', JSON.stringify(userData));
-            
-            // Mostrar mensagem de sucesso
             showMessage('Login realizado com sucesso!', 'success');
-            
-            // Redirecionar após breve delay
             setTimeout(() => {
                 redirectUserByProfile(userData.perfil);
             }, 1000);
@@ -126,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Redirecionar com base no perfil
     function redirectUserByProfile(profile) {
         switch(profile) {
             case 'ADMIN':
@@ -147,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Mostrar mensagem de feedback
     function showMessage(message, type) {
         loginMessage.textContent = message;
         loginMessage.className = 'feedback-message ' + type;
