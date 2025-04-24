@@ -1,3 +1,4 @@
+const API_URL = 'http://191.239.116.115:8080';
 document.addEventListener('DOMContentLoaded', function() {
     initPasswordToggle();
     loadUserData();
@@ -6,12 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function loadUserData() {
-    // Carregar dados do usuário a partir do localStorage
     const userInfoString = localStorage.getItem('userInfo');
     if (userInfoString) {
         const userInfo = JSON.parse(userInfoString);
         
-        // Preencher os campos do formulário com os dados do usuário
         if (userInfo.nome) {
             document.getElementById('user-name').value = userInfo.nome;
         }
@@ -20,7 +19,6 @@ function loadUserData() {
             document.getElementById('user-email').value = userInfo.email;
         }
         
-        // Selecionar o perfil de investidor correto
         if (userInfo.estilo_investidor) {
             selectInvestorProfile(userInfo.estilo_investidor);
         }
@@ -77,17 +75,11 @@ function initSaveButtons() {
                 return;
             }
             
-            // Obter os dados atuais do usuário
             const userInfoString = localStorage.getItem('userInfo');
             let userInfo = userInfoString ? JSON.parse(userInfoString) : {};
-            
-            // Atualizar apenas o nome
             userInfo.nome = userName;
-            
-            // Salvar de volta no localStorage
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
-            
-            alert('Nome atualizado com sucesso!');
+            updateUserInBackend(userInfo);
         });
     }
     
@@ -108,15 +100,99 @@ function initSaveButtons() {
                 return;
             }
             
-            // Enviar requisição para alterar a senha (simulação)
             alert('Solicitação de alteração de senha enviada');
             
-            // Limpar os campos
             document.getElementById('current-password').value = '';
             document.getElementById('new-password').value = '';
             document.getElementById('confirm-password').value = '';
         });
     }
+}
+
+function updateUserInBackend(userInfo) {
+    const accessToken = localStorage.getItem('accessToken');
+    
+    if (!accessToken) {
+        alert('Erro: Usuário não autenticado');
+        return;
+    }
+    
+    const userData = {
+        nome: userInfo.nome,
+        email: userInfo.email,
+        estilo_investidor: userInfo.estilo_investidor,
+        perfil: userInfo.perfil || 'USUARIO'
+    };
+    
+    if (userInfo.id && userInfo.id !== 'null' && userInfo.id !== null) {
+        userData.id = userInfo.id;
+    }
+    
+    console.log('Enviando dados para atualização:', userData);
+    fetch(`${API_URL}/usuarios`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => {
+        console.log('Status da resposta:', response.status);
+        if (!response.ok) {
+            return response.text().then(text => {
+                console.log('Texto da resposta de erro:', text);
+                let errorMsg = 'Erro ao atualizar usuário';
+                try {
+                    if (text && text.trim()) {
+                        const errorData = JSON.parse(text);
+                        if (errorData && errorData.msg) {
+                            errorMsg = errorData.msg;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Resposta não é um JSON válido:', text);
+                }
+
+                throw new Error(errorMsg);
+            });
+        }
+        return response.text().then(text => {
+            console.log('Texto da resposta de sucesso:', text);
+            
+            if (!text || !text.trim()) {
+                return { success: true };
+            }
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('Resposta não é um JSON válido:', text);
+                return { success: true };
+            }
+        });
+    })
+    .then(data => {
+        console.log('Dados processados:', data);
+        if (data && data.data && data.data.user) {
+            const updatedUserInfo = {
+                ...userInfo,
+                ...data.data.user
+            };
+            localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
+        }
+        
+        alert('Nome atualizado com sucesso!');
+        const userNameDisplayElements = document.querySelectorAll('.user-name-display');
+        if (userNameDisplayElements.length > 0) {
+            userNameDisplayElements.forEach(element => {
+                element.textContent = userInfo.nome;
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao atualizar usuário:', error);
+        alert(`Erro: ${error.message}`);
+    });
 }
 
 function initInvestorProfiles() {
@@ -134,14 +210,9 @@ function initInvestorProfiles() {
                     'aggressive': 'ARROJADO'
                 };
                 
-                // Obter os dados atuais do usuário
                 const userInfoString = localStorage.getItem('userInfo');
                 let userInfo = userInfoString ? JSON.parse(userInfoString) : {};
-                
-                // Atualizar o estilo de investidor
                 userInfo.estilo_investidor = profileMapping[profileType] || 'CONSERVADOR';
-                
-                // Salvar de volta no localStorage
                 localStorage.setItem('userInfo', JSON.stringify(userInfo));
                 
                 let profileName = '';
@@ -156,8 +227,8 @@ function initInvestorProfiles() {
                         profileName = 'Arrojado';
                         break;
                 }
-                
                 alert(`Perfil de investidor alterado para ${profileName}`);
+                updateUserInBackend(userInfo);
             });
         });
     }

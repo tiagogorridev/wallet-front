@@ -27,6 +27,10 @@
   cursor: not-allowed;
 }
 
+.disabled-email {
+  cursor: not-allowed;
+}
+
 .page-numbers {
   display: flex;
   gap: 5px;

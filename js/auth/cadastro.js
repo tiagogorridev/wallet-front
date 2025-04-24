@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (resultado) {
         mostrarMensagem("Cadastro realizado com sucesso!", "sucesso");
         setTimeout(() => {
-          window.location.href = "../investidor/carteira-resumo/carteira-resumo.html";
+          window.location.href = "../../html/investidor/resumo.html";
         }, 2000);
         this.reset();
       }
