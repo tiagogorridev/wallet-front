@@ -246,13 +246,12 @@ async function deleteUser() {
     const token = localStorage.getItem('accessToken');
     
     try {
-        const response = await fetch(`http://${API_URL}/users`, {
+        const response = await fetch(`http://${API_URL}/users?id=${userToDelete}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id: userToDelete })
+            }
         });
         
         const data = await response.json();
