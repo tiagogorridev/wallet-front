@@ -32,11 +32,6 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-.logo-container {
-  display: flex;
-  align-items: center;
-}
-
 .logo {
   display: flex;
   align-items: center;
@@ -78,7 +73,6 @@
   font-weight: 600;
 }
 
-
 .portfolio-actions {
   display: flex;
   align-items: center;
@@ -103,26 +97,53 @@
   font-size: 0.7rem;
 }
 
-.add-asset-btn {
-  background-color: var(--ambar);
-  color: var(--dark);
-  border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
+.portfolio-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 12px;
+  background-color: var(--dark-lighter);
+  border: 1px solid var(--dark-lightest);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  min-width: 220px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.portfolio-option {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  padding: 12px 15px;
   cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
-.add-asset-btn:hover, .add-asset-btn-secondary:hover {
-  background-color: #e69500;
+.portfolio-option:hover {
+  background-color: var(--dark-lightest);
 }
 
-.add-asset-btn i {
-  font-size: 0.8rem;
+.portfolio-option span {
+  font-size: 0.9rem;
+}
+
+.portfolio-option i.visible {
+  color: var(--ambar);
+  display: inline-block;
+}
+
+.portfolio-option i.hidden {
+  display: none;
+}
+
+.portfolio-option.create-new {
+  border-top: 1px solid var(--dark-lightest);
+  color: var(--ambar);
+}
+
+.portfolio-option.create-new i {
+  margin-right: 8px;
 }
 
 .user-profile a {
@@ -185,182 +206,8 @@
   color: var(--ambar) !important;
 }
 
-.portfolio-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 12px;
-  background-color: var(--dark-lighter);
-  border: 1px solid var(--dark-lightest);
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  min-width: 220px;
-  z-index: 1000;
-  overflow: hidden;
-}
-
-.portfolio-option {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 15px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.portfolio-option:hover {
-  background-color: var(--dark-lightest);
-}
-
-.portfolio-option span {
-  font-size: 0.9rem;
-}
-
-.portfolio-option i.visible {
-  color: var(--ambar);
-  display: inline-block;
-}
-
-.portfolio-option i.hidden {
-  display: none;
-}
-
-.portfolio-option.create-new {
-  border-top: 1px solid var(--dark-lightest);
-  color: var(--ambar);
-}
-
-.portfolio-option.create-new i {
-  margin-right: 8px;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.modal-content {
-  background-color: var(--dark-lighter);
-  border-radius: 8px;
-  width: 100%;
-  max-width: 450px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid var(--dark-lightest);
-}
-
-.modal-header h2 {
-  color: var(--white);
-  font-size: 1.2rem;
-  font-weight: 500;
-}
-
-.close-modal {
-  color: var(--light-gray);
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: color 0.2s ease;
-}
-
-.close-modal:hover {
-  color: var(--white);
-}
-
-.modal-body {
-  padding: 20px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--light-gray);
-  font-size: 0.9rem;
-}
-
-.form-group input,
-.form-group select {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 4px;
-  border: 1px solid var(--dark-lightest);
-  background-color: var(--dark);
-  color: var(--white);
-  font-size: 0.95rem;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: var(--ambar);
-}
-
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 15px 20px;
-  border-top: 1px solid var(--dark-lightest);
-}
-
-.modal-footer button {
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.modal-cancel {
-  background-color: transparent;
-  border: 1px solid var(--light-gray);
-  color: var(--light-gray);
-}
-
-.modal-cancel:hover {
-  border-color: var(--white);
-  color: var(--white);
-}
-
-.modal-confirm {
-  background-color: var(--ambar);
-  border: none;
-  color: var(--dark);
-}
-
-.modal-confirm:hover {
-  background-color: #e69500;
-}
-
 .positive {
   color: var(--green) !important;
-}
-
-.negative {
-  color: var(--red) !important;
-}
-
-.neutral {
-  color: var(--ambar) !important;
 }
 
 .logout-btn {

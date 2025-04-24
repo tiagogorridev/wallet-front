@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyWallet - Resumo </title>
+    <title>MyWallet - Resumo</title>
     <link rel="stylesheet" href="../../css/auth/style.css">
     <link rel="stylesheet" href="../../css/investidor/header.css">
     <link rel="stylesheet" href="../../css/investidor/components-investidor/components-investidor.css">
@@ -11,24 +11,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <header id="header"></header>
+    <header id="header"></header>
     <div class="dashboard-container">
         <main class="main-content">
             <section class="chart-section">
-              <div class="section-header">
-                <h2>Evolução do Patrimônio</h2>
-                <div class="filters">
-                    <div class="filter-data" id="patrimonyFilter">
-                        <button class="filter-option" data-value="3">3 MESES</button>
-                        <button class="filter-option" data-value="6">6 MESES</button>
-                        <button class="filter-option active" data-value="12">12 MESES</button>
-                        <button class="filter-option" data-value="24">24 MESES</button>
+                <div class="section-header">
+                    <h2>Evolução do Patrimônio</h2>
+                    <div class="filters">
+                        <div class="filter-data" id="patrimonyFilter">
+                            <button class="filter-option" data-value="3">3 MESES</button>
+                            <button class="filter-option" data-value="6">6 MESES</button>
+                            <button class="filter-option active" data-value="12">12 MESES</button>
+                            <button class="filter-option" data-value="24">24 MESES</button>
+                        </div>
                     </div>
                 </div>
-              </div>
                 <div class="chart-container">
-                  <canvas id="patrimonioChart"></canvas>
-              </div>
+                    <canvas id="patrimonioChart"></canvas>
+                </div>
             </section>
 
             <section class="chart-section">
@@ -37,16 +37,7 @@
                 </div>
                 <div class="pie-chart-container">
                     <canvas id="assetsDistributionChart"></canvas>
-                    <div class="pie-chart-legend">
-                        <div class="legend-item">
-                            <span class="legend-color crypto"></span>
-                            <span class="legend-label">50% Criptomoedas</span>
-                        </div>
-                        <div class="legend-item">
-                            <span class="legend-color fixed-income"></span>
-                            <span class="legend-label">50% Renda Fixa</span>
-                        </div>
-                    </div>
+                    <div class="pie-chart-legend" id="pie-chart-legend"></div>
                 </div>
             </section>
         </main>
@@ -54,161 +45,78 @@
         <section class="assets-section">
             <div class="assets-header">
                 <h2>Meus Ativos</h2>
-                <button id="add-asset-btn" class="add-asset-btn-secondary">Adicionar Ativo</button>
+                <div class="action-buttons">
+                    <button id="add-wallet-btn" class="add-asset-btn-secondary">Adicionar Carteira</button>
+                    <button id="add-asset-btn" class="add-asset-btn-secondary">Adicionar Ativo</button>
+                </div>
             </div>
 
-            <div class="assets-table-container">
-                <div class="asset-category" id="fiis-category">
-                    <div class="category-header">
-                        <div class="category-expand-icon">►</div>
-                        <div class="category-name">FIIS</div>
-                        <div class="category-count">1 ATIVO</div>
-                        <div class="category-value">VALOR TOTAL: R$ 0,00</div>
-                        <div class="category-variation">VARIAÇÃO: 0,00%</div>
-                        <div class="category-percentage">% NA CARTEIRA: 0,00% (META: 20%)</div>
-                    </div>
-
-                    <div class="category-content">
-                        <table class="assets-table">
-                            <thead>
-                                <tr>
-                                    <th>Ativo</th>
-                                    <th>Quantidade</th>
-                                    <th>Preço Médio</th>
-                                    <th>Preço Atual</th>
-                                    <th>Variação</th>
-                                    <th>Rentabilidade</th>
-                                    <th>Saldo</th>
-                                    <th>Variação (24h)</th>
-                                    <th>Variação (30d)</th>
-                                    <th>Minha Nota</th>
-                                    <th>% Carteira</th>
-                                    <th>% Ideal</th>
-                                    <th>Comprar?</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="asset-name">
-                                        <div class="asset-icon crypto"></div>
-                                        HGLG11
-                                    </td>
-                                    <td>0,00</td>
-                                    <td>R$ 0,00</td>
-                                    <td>R$ 0,00</td>
-                                    <td class="negative">-0,00%</td>
-                                    <td class="negative">-0,00%</td>
-                                    <td>R$ 0</td>
-                                    <td class="negative">-0,00%</td>
-                                    <td class="negative">-0,00%</td>
-                                    <td>
-                                        <div class="rating">10</div>
-                                    </td>
-                                    <td>0,00%</td>
-                                    <td>0,00%</td>
-                                    <td class="buy-status">NÃO</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="asset-category" id="crypto-category">
-                    <div class="category-header">
-                        <div class="category-expand-icon">►</div>
-                        <div class="category-name">CRIPTOMOEDAS</div>
-                        <div class="category-count">12 ATIVOS</div>
-                        <div class="category-value">VALOR TOTAL: R$ 5.000,00</div>
-                        <div class="category-variation">VARIAÇÃO: 0,00%</div>
-                        <div class="category-percentage">% NA CARTEIRA: 50% (META: 30%)</div>
-                    </div>
-
-                    <div class="category-content">
-                        <table class="assets-table">
-                            <thead>
-                                <tr>
-                                    <th>Ativo</th>
-                                    <th>Quantidade</th>
-                                    <th>Preço Médio</th>
-                                    <th>Preço Atual</th>
-                                    <th>Variação</th>
-                                    <th>Rentabilidade</th>
-                                    <th>Saldo</th>
-                                    <th>Variação (24h)</th>
-                                    <th>Variação (30d)</th>
-                                    <th>Minha Nota</th>
-                                    <th>% Carteira</th>
-                                    <th>% Ideal</th>
-                                    <th>Comprar?</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="asset-name">
-                                        <div class="asset-icon crypto"></div>
-                                        UNI
-                                    </td>
-                                    <td>0,00</td>
-                                    <td>R$ 0,00</td>
-                                    <td>R$ 0,00</td>
-                                    <td class="negative">-0,00%</td>
-                                    <td class="negative">-0,00%</td>
-                                    <td>R$ 0</td>
-                                    <td class="negative">-0,00%</td>
-                                    <td class="negative">-0,00%</td>
-                                    <td>
-                                        <div class="rating">10</div>
-                                    </td>
-                                    <td>0,00%</td>
-                                    <td>0,00%</td>
-                                    <td class="buy-status">NÃO</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="assets-table-container" id="assets-table-container">
+                <div id="loading-assets" class="loading-message">
+                    <p>Carregando carteiras...</p>
                 </div>
             </div>
         </section>
     </div>
 
+    <div id="add-wallet-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Nova Carteira</h2>
+            <form id="add-wallet-form">
+                <div class="form-group">
+                    <label for="wallet-name">Nome da Carteira</label>
+                    <input type="text" id="wallet-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="wallet-description">Descrição</label>
+                    <textarea id="wallet-description"></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Criar Carteira</button>
+            </form>
+        </div>
+    </div>
+
     <div id="add-asset-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <h2>Adicionar Novo Ativo</h2>
+            <h2>Novo Ativo</h2>
             <form id="add-asset-form">
                 <div class="form-group">
                     <label for="asset-type">Tipo de Ativo</label>
                     <select id="asset-type" required>
                         <option value="">Selecione um tipo</option>
-                        <option value="FIIS">FIIs</option>
-                        <option value="CRIPTOMOEDAS">Criptomoedas</option>
+                        <option value="acao">Ação</option>
+                        <option value="fii">FII</option>
+                        <option value="renda_fixa">Renda Fixa</option>
+                        <option value="cripto">Cripto</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="asset-symbol">Código/Símbolo</label>
+                    <label for="asset-symbol">Símbolo/Código</label>
                     <input type="text" id="asset-symbol" required>
                 </div>
                 <div class="form-group">
                     <label for="asset-quantity">Quantidade</label>
-                    <input type="number" id="asset-quantity" step="0.00000001" required>
+                    <input type="number" id="asset-quantity" min="0" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="asset-price">Preço de Compra</label>
-                    <input type="number" id="asset-price" step="0.01" required>
+                    <label for="asset-price">Preço de Compra (R$)</label>
+                    <input type="number" id="asset-price" min="0" step="0.01" required>
                 </div>
                 <div class="form-group">
                     <label for="asset-date">Data de Compra</label>
                     <input type="date" id="asset-date" required>
                 </div>
                 <div class="form-group">
-                    <label for="asset-rating">Minha Nota (1-10)</label>
-                    <input type="number" id="asset-rating" min="1" max="10" required>
+                    <label for="asset-rating">Avaliação (1-5)</label>
+                    <input type="number" id="asset-rating" min="1" max="5" required>
                 </div>
                 <div class="form-group">
-                    <label for="asset-ideal-percentage">% Ideal na Carteira</label>
-                    <input type="number" id="asset-ideal-percentage" step="0.1" required>
+                    <label for="asset-ideal-percentage">Percentual Ideal (%)</label>
+                    <input type="number" id="asset-ideal-percentage" min="0" max="100" step="0.1" required>
                 </div>
-                <button type="submit" class="submit-btn">Adicionar</button>
+                <button type="submit" class="btn-submit">Adicionar Ativo</button>
             </form>
         </div>
     </div>
@@ -216,7 +124,7 @@
     <script src="../../js/auth/acess.js"></script>
     <script src="../../js/investidor/graficos.js"></script>
     <script src="../../js/investidor/header.js"></script>
-    <script src="../../js/investidor/carteira-resumo.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="../../js/investidor/carteira-resumo.js"></script>
 </body>
 </html>

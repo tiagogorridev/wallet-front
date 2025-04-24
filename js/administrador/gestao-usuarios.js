@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
     
     if (!token || userInfo.perfil !== 'ADMIN') {
-        window.location.href = '/html/auth/login.html';
+        window.location.href = '../../index.html';
         return;
     }
     fetchUsers();
