@@ -1,74 +1,4 @@
 const API_URL = '191.239.116.115:8080';
-
-document.addEventListener('DOMContentLoaded', () => {
-  const evolutionPatrimonyComponent = new EvolutionPatrimonyComponent('patrimonioChart', 'patrimonyFilter');
-  evolutionPatrimonyComponent.initialize();
-  
-  const assetsDistributionComponent = new AssetsDistributionComponent('assetsDistributionChart', 'pie-chart-legend');
-  assetsDistributionComponent.initialize();
-  
-  class WalletApiService {
-      async getWallets() {
-          try {
-              const response = await fetch(`http://${API_URL}/wallets`, {
-                  method: 'GET',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-                  },
-                  credentials: 'include'
-              });
-              
-              const result = await response.json();
-              
-              if (result.error) {
-                  throw new Error(result.msg || 'Erro ao buscar carteiras');
-              }
-              
-              return result.data?.data || [];
-          } catch (error) {
-              console.error('Erro ao buscar carteiras:', error);
-              return [];
-          }
-      }
-
-      async createWallet(walletData) {
-          let timeoutId;
-          
-          try {
-              const timeoutPromise = new Promise((_, reject) => {
-                  timeoutId = setTimeout(() => {
-                      reject(new Error('Tempo limite excedido ao criar carteira'));
-                  }, 10000);
-              });
-              
-              const fetchPromise = fetch(`http://${API_URL}/wallets`, {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-                  },
-                  credentials: 'include',
-                  body: JSON.stringify(walletData)
-              });
-              
-              const response = await Promise.race([fetchPromise, timeoutPromise]);
-              clearTimeout(timeoutId);
-              
-              const result = await response.json();
-              
-              if (result.error) {
-                  throw new Error(result.msg || 'Erro ao criar carteira');
-              }
-              
-              return result.data.data;
-          } catch (error) {
-              if (timeoutId) clearTimeout(timeoutId);
-              console.error('Erro ao criar carteira:', error);
-              throw error;
-          }
-      }
-  }
   
   class WalletComponent {
       constructor(containerId) {
@@ -97,20 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
               }
           } catch (error) {
               console.error('Falha ao carregar carteiras:', error);
-              loadingElement.innerHTML = `
-                  <p class="error-message">Erro ao carregar carteiras: ${error.message}</p>
-                  <button id="retry-loading" class="retry-btn">Tentar novamente</button>
-              `;
-              
-              document.getElementById('retry-loading')?.addEventListener('click', () => {
-                  this.loadWallets();
-              });
-              
-              return;
+              loadingElement.innerHTML = '<p class="error-message">Erro ao carregar carteiras. Tente novamente mais tarde.</p>';
           }
       }
       
       renderWallets() {
+          // Limpa o container
           while (this.container.firstChild && this.container.firstChild.id !== 'loading-assets') {
               this.container.removeChild(this.container.firstChild);
           }
@@ -122,36 +44,18 @@ document.addEventListener('DOMContentLoaded', () => {
               return;
           }
           
+          // Esconde o loading
           loadingElement.style.display = 'none';
           
+          // Renderiza as carteiras
           this.wallets.forEach(wallet => {
               const walletElement = this.createWalletElement(wallet);
               this.container.appendChild(walletElement);
           });
       }
       
-      createWalletElement(wallet) {
-          const walletElement = document.createElement('div');
-          walletElement.className = 'asset-category';
-          walletElement.id = `wallet-${wallet.id}`;
-          
-          walletElement.innerHTML = `
-              <div class="category-header">
-                  <span class="category-expand-icon">►</span>
-                  <span class="category-name">${wallet.nome}</span>
-                  <span class="category-description">${wallet.descricao || ''}</span>
-              </div>
-              <div class="category-content" style="display: none;">
-                  <div class="assets-list">
-                      <p>Carregando ativos...</p>
-                  </div>
-              </div>
-          `;
-          
-          return walletElement;
-      }
-      
       setupEventListeners() {
+          // Modal para adicionar nova carteira
           const addWalletBtn = document.getElementById('add-wallet-btn');
           const walletModal = document.getElementById('add-wallet-modal');
           const walletCloseModal = walletModal.querySelector('.close-modal');
@@ -191,9 +95,11 @@ document.addEventListener('DOMContentLoaded', () => {
                   
                   console.log('Nova carteira criada:', newWallet);
                   
+                  // Recarrega as carteiras após criar uma nova
                   await this.loadWallets();
                   this.renderWallets();
                   
+                  // Configura os event listeners novamente para as novas carteiras
                   this.setupWalletEventListeners();
                   
                   walletModal.style.display = 'none';
@@ -205,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
               }
           });
           
+          // Modal para adicionar ativo
           const addAssetBtn = document.getElementById('add-asset-btn');
           const assetModal = document.getElementById('add-asset-modal');
           const assetCloseModal = assetModal.querySelector('.close-modal');
@@ -241,10 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
               addAssetForm.reset();
           });
           
+          // Configura os listeners para expandir/colapsar carteiras
           this.setupWalletEventListeners();
       }
       
       setupWalletEventListeners() {
+          // Configurar listeners para expansão de carteiras
           document.querySelectorAll('.category-header').forEach(header => {
               header.addEventListener('click', () => {
                   const category = header.closest('.asset-category');
@@ -273,6 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   }
   
+  // Inicializar o componente da carteira
   const walletComponent = new WalletComponent('assets-table-container');
-  walletComponent.initialize();
-});
+  walletComponent.initialize();z
