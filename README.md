@@ -9,7 +9,6 @@ MyWallet é um sistema centralizado de gerenciamento de carteira que permite aos
 - **Múltiplas Carteiras**: Crie carteiras separadas para diferentes objetivos financeiros (aposentadoria, viagens, educação, etc.)
 - **Acompanhamento de Ativos**: Adicione e monitore diferentes tipos de investimentos:
   - Ações
-  - FIIs (Fundos de Investimento Imobiliário)
   - Criptomoedas
   - Ativos de Renda Fixa
 - **Métricas de Desempenho**: Calcule retornos, indicadores de risco e progresso em relação aos objetivos

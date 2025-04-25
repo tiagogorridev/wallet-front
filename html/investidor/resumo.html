@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyWallet - Resumo</title>
+    <link rel="stylesheet" href="../../css/investidor/teste.css">
     <link rel="stylesheet" href="../../css/auth/style.css">
     <link rel="stylesheet" href="../../css/investidor/header.css">
     <link rel="stylesheet" href="../../css/investidor/components-investidor/components-investidor.css">
@@ -44,75 +45,16 @@
 
         <section class="assets-section">
             <div class="assets-header">
-                <h2>Meus Ativos</h2>
-                <div class="action-buttons">
-                    <button id="add-wallet-btn" class="add-asset-btn-secondary">Adicionar Carteira</button>
-                    <button id="add-asset-btn" class="add-asset-btn-secondary">Adicionar Ativo</button>
-                </div>
+                <h2>Carteira: x</h2>
             </div>
 
             <div class="assets-table-container" id="assets-table-container">
                 <div id="loading-assets" class="loading-message">
-                    <p>Carregando carteiras...</p>
+                    <p>Carregando carteira...</p>
                 </div>
             </div>
         </section>
     </div>
-
-    <div id="add-wallet-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>Nova Carteira</h2>
-            <form id="add-wallet-form">
-                <div class="form-group">
-                    <label for="wallet-name">Nome da Carteira</label>
-                    <input type="text" id="wallet-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="wallet-description">Descrição</label>
-                    <textarea id="wallet-description"></textarea>
-                </div>
-                <button type="submit" class="btn-submit">Criar Carteira</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="add-asset-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>Novo Ativo</h2>
-            <form id="add-asset-form">
-                <div class="form-group">
-                    <label for="asset-type">Tipo de Ativo</label>
-                    <select id="asset-type" required>
-                        <option value="">Selecione um tipo</option>
-                        <option value="acao">Ação</option>
-                        <option value="fii">FII</option>
-                        <option value="renda_fixa">Renda Fixa</option>
-                        <option value="cripto">Cripto</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="asset-symbol">Símbolo/Código</label>
-                    <input type="text" id="asset-symbol" required>
-                </div>
-                <div class="form-group">
-                    <label for="asset-quantity">Quantidade</label>
-                    <input type="number" id="asset-quantity" min="0" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="asset-price">Preço de Compra (R$)</label>
-                    <input type="number" id="asset-price" min="0" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="asset-date">Data de Compra</label>
-                    <input type="date" id="asset-date" required>
-                </div>
-                <button type="submit" class="btn-submit">Adicionar Ativo</button>
-            </form>
-        </div>
-    </div>
-
     <script src="../../js/auth/acess.js"></script>
     <script src="../../js/investidor/graficos.js"></script>
     <script src="../../js/investidor/header.js"></script>

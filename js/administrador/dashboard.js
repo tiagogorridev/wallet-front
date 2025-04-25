@@ -1,6 +1,4 @@
-// Dados simulados para demonstração
 const mockData = {
-    // Dados de usuários
     users: {
         totalCount: 1287,
         growthRate: 23.5,
@@ -13,7 +11,6 @@ const mockData = {
         history: generateUserData(365)
     },
     
-    // Dados de investimentos
     investments: {
         totalValue: 8576432.67,
         growthRate: 15.7,
@@ -34,7 +31,6 @@ const mockData = {
         }
     },
     
-    // Dados de categorias populares
     categories: {
         byUsers: {
             "Criptomoedas": {
@@ -79,7 +75,6 @@ const mockData = {
     }
 };
 
-// Gerar dados aleatórios de crescimento de usuários
 function generateUserData(days) {
     const data = [];
     let userCount = 1000;
@@ -89,7 +84,6 @@ function generateUserData(days) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
         
-        // Variação aleatória entre -5 e 20 usuários por dia
         const dailyChange = Math.floor(Math.random() * 25) - 5;
         userCount = Math.max(1000, userCount + dailyChange);
         
@@ -103,7 +97,6 @@ function generateUserData(days) {
     return data;
 }
 
-// Gerar dados aleatórios de investimentos
 function generateInvestmentData(days) {
     const data = [];
     let totalValue = 7000000;
@@ -112,8 +105,6 @@ function generateInvestmentData(days) {
     for (let i = days; i >= 0; i--) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
-        
-        // Variação aleatória entre -0.5% e 1% por dia
         const dailyChangePercent = (Math.random() * 1.5) - 0.5;
         const dailyChange = totalValue * (dailyChangePercent / 100);
         totalValue = Math.max(7000000, totalValue + dailyChange);
@@ -127,7 +118,6 @@ function generateInvestmentData(days) {
     return data;
 }
 
-// Formatar data como DD/MM/YYYY
 function formatDate(date) {
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -144,62 +134,43 @@ function formatCurrency(value) {
     }).format(value);
 }
 
-// Configurar elementos do DOM quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar todas as seções
     initializeUserSection();
     initializeInvestmentSection();
     initializeCategoriesSection();
-    
-    // Configurar eventos de filtros
     setupFilterEvents();
 });
 
-// Inicializar a seção de usuários
 function initializeUserSection() {
-    // Preencher cards com dados
     document.getElementById('total-users').textContent = mockData.users.totalCount.toLocaleString('pt-BR');
     document.getElementById('new-users').textContent = mockData.users.newUsers.toLocaleString('pt-BR');
     document.getElementById('activation-rate').textContent = mockData.users.activationRate.toFixed(1) + '%';
     document.getElementById('retention-rate').textContent = mockData.users.retentionRate.toFixed(1) + '%';
-    
-    // Preencher variações
     updateVariation('users-variation', mockData.users.growthRate);
     updateVariation('new-users-variation', mockData.users.newUsersGrowth);
     updateVariation('activation-variation', mockData.users.activationGrowth);
     updateVariation('retention-variation', mockData.users.retentionGrowth);
-    
-    // Criar gráfico de crescimento de usuários
-    createUserGrowthChart(30); // Padrão: últimos 30 dias
+    createUserGrowthChart(30);
 }
 
-// Inicializar a seção de investimentos
 function initializeInvestmentSection() {
-    // Preencher cards com dados
     document.getElementById('total-invested').textContent = formatCurrency(mockData.investments.totalValue);
     document.getElementById('avg-investment').textContent = formatCurrency(mockData.investments.averagePerUser);
     document.getElementById('new-investments').textContent = mockData.investments.newCount.toLocaleString('pt-BR');
     document.getElementById('diversification').textContent = mockData.investments.avgDiversification.toFixed(1) + ' categorias';
-    
-    // Preencher variações
     updateVariation('investment-variation', mockData.investments.growthRate);
     updateVariation('avg-investment-variation', mockData.investments.averageGrowth);
     updateVariation('new-investments-variation', mockData.investments.newCountGrowth);
     updateVariation('diversification-variation', mockData.investments.diversificationGrowth);
-    
-    // Criar gráficos de investimentos
-    createInvestmentChart(30); // Padrão: últimos 30 dias
+    createInvestmentChart(30);
     createInvestmentDistributionChart();
 }
 
-// Inicializar a seção de categorias populares
 function initializeCategoriesSection() {
-    // Obter as 4 categorias mais populares
     const topCategories = Object.entries(mockData.categories.byUsers)
         .sort((a, b) => b[1].count - a[1].count)
         .slice(0, 4);
     
-    // Preencher os cards de categoria
     topCategories.forEach((category, index) => {
         const cardId = `category-card-${index + 1}`;
         const card = document.getElementById(cardId);
@@ -210,74 +181,51 @@ function initializeCategoriesSection() {
             const titleElement = card.querySelector('h3');
             const valueElement = card.querySelector('.value');
             const variationElement = card.querySelector('.variation');
-            
-            // Atualizar ícone
             iconElement.className = `fas fa-${data.icon}`;
-            
-            // Atualizar título e valor
             titleElement.textContent = name;
             valueElement.textContent = `${data.count.toLocaleString('pt-BR')} usuários`;
-            
-            // Atualizar variação
             updateVariation(variationElement, data.growth);
         }
     });
-    
-    // Criar gráficos de categorias
     createCategoriesPopularityChart();
     createInvestmentByCategoryChart();
 }
 
-// Atualizar elemento de variação com valor e classe CSS
 function updateVariation(elementIdOrElement, value) {
     const element = typeof elementIdOrElement === 'string' 
         ? document.getElementById(elementIdOrElement) 
         : elementIdOrElement;
     
     if (element) {
-        // Formatar texto
         element.textContent = (value >= 0 ? '+' : '') + value.toFixed(1) + '%';
-        
-        // Atualizar classe CSS
         element.className = value >= 0 
             ? 'variation positive' 
             : 'variation negative';
     }
 }
 
-// Configurar eventos para filtros de tempo
 function setupFilterEvents() {
-    // Filtro de usuários
     document.getElementById('user-time-filter').addEventListener('change', function() {
         const days = parseInt(this.value);
         createUserGrowthChart(days);
     });
     
-    // Filtro de investimentos
     document.getElementById('investment-time-filter').addEventListener('change', function() {
         const days = parseInt(this.value);
         createInvestmentChart(days);
     });
     
-    // Filtro de categorias
     document.getElementById('category-time-filter').addEventListener('change', function() {
-        // Atualizar dados conforme necessário (no exemplo atual não muda)
     });
 }
 
-// Criar gráfico de crescimento de usuários
 function createUserGrowthChart(days) {
     const ctx = document.getElementById('users-growth-chart').getContext('2d');
-    
-    // Filtrar dados pelo período desejado
     const data = mockData.users.history.slice(-days - 1);
-    
-    // Verificar se já existe um gráfico e destruí-lo
     if (window.usersGrowthChart) {
         window.usersGrowthChart.destroy();
     }
     
-    // Criar novo gráfico
     window.usersGrowthChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -342,19 +290,13 @@ function createUserGrowthChart(days) {
     });
 }
 
-// Criar gráfico de investimentos
 function createInvestmentChart(days) {
     const ctx = document.getElementById('investment-chart').getContext('2d');
-    
-    // Filtrar dados pelo período desejado
     const data = mockData.investments.history.slice(-days - 1);
-    
-    // Verificar se já existe um gráfico e destruí-lo
     if (window.investmentChart) {
         window.investmentChart.destroy();
     }
     
-    // Criar novo gráfico
     window.investmentChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -417,17 +359,13 @@ function createInvestmentChart(days) {
     });
 }
 
-// Criar gráfico de distribuição de investimentos
 function createInvestmentDistributionChart() {
     const ctx = document.getElementById('investment-distribution-chart').getContext('2d');
     const data = mockData.investments.distribution;
-    
-    // Verificar se já existe um gráfico e destruí-lo
     if (window.investmentDistributionChart) {
         window.investmentDistributionChart.destroy();
     }
     
-    // Cores para o gráfico
     const colors = [
         'rgba(255, 177, 0, 0.8)',
         'rgba(0, 123, 255, 0.8)',
@@ -437,7 +375,6 @@ function createInvestmentDistributionChart() {
         'rgba(54, 162, 235, 0.8)'
     ];
     
-    // Criar novo gráfico
     window.investmentDistributionChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -473,21 +410,14 @@ function createInvestmentDistributionChart() {
     });
 }
 
-// Criar gráfico de popularidade de categorias
 function createCategoriesPopularityChart() {
     const ctx = document.getElementById('categories-popularity-chart').getContext('2d');
     const categories = mockData.categories.byUsers;
-    
-    // Verificar se já existe um gráfico e destruí-lo
     if (window.categoriesPopularityChart) {
         window.categoriesPopularityChart.destroy();
     }
-    
-    // Ordenar categorias por contagem
     const sortedCategories = Object.entries(categories)
         .sort((a, b) => b[1].count - a[1].count);
-    
-    // Criar novo gráfico
     window.categoriesPopularityChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -534,21 +464,16 @@ function createCategoriesPopularityChart() {
     });
 }
 
-// Criar gráfico de investimento por categoria
 function createInvestmentByCategoryChart() {
     const ctx = document.getElementById('investment-by-category-chart').getContext('2d');
     const data = mockData.categories.byInvestment;
-    
-    // Verificar se já existe um gráfico e destruí-lo
     if (window.investmentByCategoryChart) {
         window.investmentByCategoryChart.destroy();
     }
     
-    // Ordenar categorias por valor investido
     const sortedData = Object.entries(data)
         .sort((a, b) => b[1] - a[1]);
     
-    // Cores para o gráfico
     const colors = [
         'rgba(255, 177, 0, 0.8)',
         'rgba(0, 123, 255, 0.8)',
@@ -558,7 +483,6 @@ function createInvestmentByCategoryChart() {
         'rgba(54, 162, 235, 0.8)'
     ];
     
-    // Criar novo gráfico
     window.investmentByCategoryChart = new Chart(ctx, {
         type: 'pie',
         data: {

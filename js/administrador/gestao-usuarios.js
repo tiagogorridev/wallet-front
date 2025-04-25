@@ -6,6 +6,7 @@ let totalUsers = 0;
 let users = [];
 let currentUserInfo = null;
 let userToDelete = null;
+let userToEdit = null;
 
 const usersTableBody = document.getElementById('users-table-body');
 const paginationStatus = document.getElementById('pagination-status');
@@ -14,9 +15,12 @@ const perPageSelect = document.getElementById('per-page-select');
 const searchInput = document.getElementById('search-users');
 const searchButton = document.querySelector('.search-btn');
 const deleteConfirmationModal = document.getElementById('delete-confirmation-modal');
+const editUserModal = document.getElementById('edit-user-modal');
 const confirmDeleteButton = document.getElementById('confirm-delete');
 const cancelDeleteButton = document.getElementById('cancel-delete');
 const closeModalButtons = document.querySelectorAll('.close-modal');
+const editUserForm = document.getElementById('edit-user-form');
+const cancelEditButton = document.getElementById('cancel-edit');
 
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('accessToken');
@@ -67,8 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal(modal);
             if (modal === deleteConfirmationModal) {
                 userToDelete = null;
+            } else if (modal === editUserModal) {
+                userToEdit = null;
             }
         });
+    });
+    
+    editUserForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        updateUser();
+    });
+    
+    cancelEditButton.addEventListener('click', () => {
+        closeModal(editUserModal);
+        userToEdit = null;
     });
 });
 
@@ -142,7 +158,11 @@ function displayUsers() {
             <td>${user.id || 'N/A'}</td>
             <td>${user.nome || 'N/A'}</td>
             <td>${user.email || 'N/A'}</td>
+            <td>${user.perfil === 'ADMIN' ? 'Administrador' : 'Usuário'}</td>
             <td class="actions-cell">
+                <button class="edit-btn" data-id="${user.id}" title="Editar usuário">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
                 <button class="delete-btn ${isCurrentUser ? 'disabled' : ''}" 
                   data-id="${user.id}" 
                   title="${isCurrentUser ? 'Não é possível excluir seu próprio usuário' : 'Excluir usuário'}" 
@@ -159,6 +179,13 @@ function displayUsers() {
         button.addEventListener('click', (e) => {
             userToDelete = e.currentTarget.getAttribute('data-id');
             openModal(deleteConfirmationModal);
+        });
+    });
+    
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const userId = e.currentTarget.getAttribute('data-id');
+            openEditModal(userId);
         });
     });
 }
@@ -238,6 +265,57 @@ function closeModal(modal) {
     setTimeout(() => {
         modal.style.display = 'none';
     }, 300);
+}
+
+function openEditModal(userId) {
+    const user = users.find(u => u.id.toString() === userId.toString());
+    
+    if (!user) return;
+    
+    userToEdit = user;
+    
+    document.getElementById('edit-user-id').value = user.id || '';
+    document.getElementById('edit-user-name').value = user.nome || '';
+    document.getElementById('edit-user-email').value = user.email || '';
+    
+    openModal(editUserModal);
+}
+
+async function updateUser() {
+    if (!userToEdit) return;
+    
+    const token = localStorage.getItem('accessToken');
+    const userId = document.getElementById('edit-user-id').value;
+    const nome = document.getElementById('edit-user-name').value;
+    const email = document.getElementById('edit-user-email').value;
+    
+    try {
+        const response = await fetch(`http://${API_URL}/users`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: userId,
+                nome: nome,
+                email: email
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            closeModal(editUserModal);
+            userToEdit = null;
+            fetchUsers();
+        } else {
+            alert(`Erro ao atualizar usuário: ${data.msg || 'Falha na operação'}`);
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar usuário:', error);
+        alert('Erro ao conectar ao servidor. Tente novamente mais tarde.');
+    }
 }
 
 async function deleteUser() {
