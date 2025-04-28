@@ -107,65 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Função para calcular o saldo total com base nas transações
-function calcularSaldoTotal(carteira) {
-    // Verifica se existem transações
-    if (!carteira.transacoes || !Array.isArray(carteira.transacoes) || carteira.transacoes.length === 0) {
-      return 0; // Retorna 0 se não houver transações
-    }
     
-    // Calcula o saldo somando todos os valores totais das transações
-    const saldoTotal = carteira.transacoes.reduce((total, transacao) => {
-      // Verifica se o valor_total existe e é um número
-      const valorTransacao = typeof transacao.valor_total === 'number' ? transacao.valor_total : 0;
-      return total + valorTransacao;
-    }, 0);
-    
-    return saldoTotal;
-  }
-  
-  // Exemplo de como atualizar o saldo total na carteira
-  function atualizarSaldoTotalCarteira(carteira) {
-    carteira.saldo_total = calcularSaldoTotal(carteira);
-    return carteira;
-  }
-  
-  // Para implementação no arquivo carteira-resumo.js, você pode adicionar:
-  document.addEventListener('DOMContentLoaded', function() {
-    // Supondo que a carteira é obtida de uma API ou outro fonte de dados
-    fetch(`${API_URL}/carteiras/${id_carteira}`)
-      .then(response => response.json())
-      .then(carteira => {
-        // Atualiza o saldo total antes de exibir
-        carteira = atualizarSaldoTotalCarteira(carteira);
-        
-        // Exibe as informações da carteira incluindo o saldo total atualizado
-        exibirInformacoesCarteira(carteira);
-      })
-      .catch(error => {
-        console.error("Erro ao obter dados da carteira:", error);
-        mostrarMensagem("Erro ao carregar informações da carteira", "erro");
-      });
-  });
-  
-  // Função para exibir as informações da carteira na interface
-  function exibirInformacoesCarteira(carteira) {
-    document.getElementById('nome-carteira').textContent = carteira.nome;
-    document.getElementById('descricao-carteira').textContent = carteira.descricao;
-    document.getElementById('saldo-total').textContent = formatarValorMonetario(carteira.saldo_total);
-    document.getElementById('rentabilidade').textContent = `${carteira.rentabilidade}%`;
-    document.getElementById('total-aportado').textContent = formatarValorMonetario(carteira.total_aportado);
-    
-    // Exibe a lista de transações, se necessário
-    exibirTransacoes(carteira.transacoes);
-  }
-  
-  // Função auxiliar para formatar valores monetários
-  function formatarValorMonetario(valor) {
-    return valor !== null && valor !== undefined 
-      ? `R$ ${parseFloat(valor).toFixed(2).replace('.', ',')}`
-      : 'R$ 0,00';
-  }
     
     function loadPortfolio() {
         const selectedPortfolioName = localStorage.getItem('selectedPortfolio');
