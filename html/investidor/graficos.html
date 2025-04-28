@@ -112,35 +112,32 @@
       <div class="modal-body">
         <form id="addAssetForm">
           <div class="form-group">
-            <label for="assetSymbol">Símbolo</label>
-            <input type="text" id="assetSymbol" placeholder="Ex: BTCS, AAPL" required>
-          </div>
-          <div class="form-group">
             <label for="assetCategory">Categoria</label>
             <select id="assetCategory" required>
+              <option value="">Selecione uma categoria</option>
               <option value="CRIPTOMOEDAS">Criptomoedas</option>
               <option value="ACOES">Ações</option>
               <option value="RENDA_FIXA">Renda Fixa</option>
             </select>
           </div>
           <div class="form-group">
+            <label for="assetName">Nome</label>
+            <input type="text" id="assetName" placeholder="Ex: Bitcoin, PETR4" required>
+          </div>
+          <div class="form-group">
+            <label for="assetValuePerUnit">Valor por Ativo</label>
+            <input type="number" id="assetValuePerUnit" step="0.01" required>
+          </div>
+          <div class="form-group">
             <label for="assetQuantity">Quantidade</label>
             <input type="number" id="assetQuantity" step="0.00000001" required>
           </div>
           <div class="form-group">
-            <label for="assetPrice">Preço Médio</label>
-            <input type="number" id="assetPrice" step="0.01" required>
-          </div>
-          <div class="form-group">
-            <label for="assetRating">Minha Nota (1-10)</label>
-            <input type="number" id="assetRating" min="1" max="10" step="1" required>
-          </div>
-          <div class="form-group">
-            <label for="assetIdealPercentage">Porcentagem Ideal na Carteira</label>
-            <input type="number" id="assetIdealPercentage" step="0.1" required>
+            <label for="assetPurchaseDate">Data de Compra</label>
+            <input type="date" id="assetPurchaseDate" required>
           </div>
           <div class="form-actions">
-            <button type="button" class="btn btn-secondary">Cancelar</button>
+            <button type="button" class="btn btn-secondary cancel-btn">Cancelar</button>
             <button type="submit" class="btn btn-primary">Adicionar</button>
           </div>
         </form>

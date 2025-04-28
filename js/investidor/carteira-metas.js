@@ -29,7 +29,7 @@ let goals = [
     currentValue: 35000,
     targetValue: 100000,
     targetDate: '01/01/2028',
-    strategy: '100% FIIS',
+    strategy: '100% Criptomoedas',
     status: 'in_progress'
   }
 ];
@@ -111,7 +111,6 @@ function openEditGoalModal(goalId) {
 function mapStrategyToAssetType(strategy) {
   if (strategy.includes('Renda Fixa')) return 'renda_fixa';
   if (strategy.includes('Criptos')) return 'criptoativos';
-  if (strategy.includes('FIIs')) return 'fiis';
   if (strategy.includes('Ações')) return 'acoes';
   return '';
 }
@@ -271,7 +270,6 @@ function getStrategyText(assetType) {
   switch(assetType) {
     case 'renda_fixa': return '100% Renda Fixa';
     case 'criptoativos': return '100% Criptoativos';
-    case 'fiis': return '100% FIIs';
     case 'acoes': return '100% Ações';
     default: return '';
   }

@@ -34,7 +34,7 @@ function cacheElementos() {
         portfolioDesc: document.getElementById('portfolio-description'),
         portfolioToDelete: document.getElementById('portfolio-to-delete'),
         totalAllocation: document.getElementById('total-allocation'),
-        deleteModal: document.getElementById('delete-modal'),
+        deleteModal: document.querySelector('.modal-overlay'),
         cryptoAllocation: document.getElementById('crypto-allocation'),
         fixedIncomeAllocation: document.getElementById('fixed-income-allocation'),
         stocksAllocation: document.getElementById('stocks-allocation')
@@ -127,9 +127,9 @@ function setupEventListeners() {
         elementos.saveAccountBtn.addEventListener('click', saveWalletInfo);
     }
     
-    if (elementos.deletePortfolioBtn && elementos.deleteModal) {
+    if (elementos.deletePortfolioBtn) {
         elementos.deletePortfolioBtn.addEventListener('click', () => {
-            elementos.deleteModal.style.display = 'flex';
+            document.querySelector('.modal-overlay').style.display = 'flex';
         });
     }
     
@@ -141,9 +141,9 @@ function setupEventListeners() {
         elementos.confirmDeleteBtn.addEventListener('click', deleteWallet);
     }
     
-    if (elementos.cancelDeleteBtn && elementos.deleteModal) {
+    if (elementos.cancelDeleteBtn) {
         elementos.cancelDeleteBtn.addEventListener('click', () => {
-            elementos.deleteModal.style.display = 'none';
+            document.querySelector('.modal-overlay').style.display = 'none';
         });
     }
 }
@@ -232,7 +232,7 @@ async function deleteWallet() {
         const response = await requisicaoAPI('DELETE', 'wallets');
         
         if (response.ok) {
-            if (elementos.deleteModal) elementos.deleteModal.style.display = 'none';
+            document.querySelector('.modal-overlay').style.display = 'none';
             localStorage.removeItem('selectedPortfolio');
             localStorage.removeItem('selectedWalletId');
             mostrarSucesso('Carteira excluída com sucesso!');
@@ -249,7 +249,7 @@ async function deleteWallet() {
         console.error('Erro ao excluir carteira:', error);
         mostrarErro('Erro ao conectar ao servidor. Tente novamente mais tarde.');
     } finally {
-        if (elementos.deleteModal) elementos.deleteModal.style.display = 'none';
+        document.querySelector('.modal-overlay').style.display = 'none';
     }
 }
 

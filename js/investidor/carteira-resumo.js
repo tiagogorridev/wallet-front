@@ -7,13 +7,16 @@ document.addEventListener('DOMContentLoaded', function() {
         portfolioNameElement: document.querySelector('.portfolio-selector span'),
         walletNameInput: document.getElementById('wallet-name'),
         walletDescInput: document.getElementById('wallet-description'),
-        pieChartLegend: document.getElementById('pie-chart-legend')
+        pieChartLegend: document.getElementById('pie-chart-legend'),
+        balanceElement: document.getElementById('portfolio-balance'),
+        returnElement: document.getElementById('portfolio-return')
     };
     let evolutionChart = null;
     let distributionChart = null;
 
     initializeCharts();
     loadPortfolio();
+    initializeModalComponents();
     
     document.addEventListener('portfolioChanged', function(e) {
         if (e.detail && e.detail.portfolio) {
@@ -29,6 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const distributionComponent = new AssetsDistributionComponent('assetsDistributionChart', 'pie-chart-legend');
         distributionComponent.initialize();
         distributionChart = distributionComponent.chartInstance;
+    }
+    
+    function initializeModalComponents() {
+        const addAssetModal = new ModalComponent('addAssetModal');
+        addAssetModal.initialize('headerAddAssetBtn');
     }
     
     function loadPortfolio() {
@@ -104,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showErrorMessage(`Erro ao carregar carteiras: ${error.message}`);
             });
     }
-    
+
     function fetchFromAPI(endpoint, method) {
         const token = localStorage.getItem('accessToken');
         if (!token) {
@@ -154,6 +162,18 @@ document.addEventListener('DOMContentLoaded', function() {
             elements.portfolioHeader.textContent = `Carteira: ${portfolioData.nome || "Sem nome"}`;
         }
         
+        if (elements.balanceElement) {
+            const saldoTotal = portfolioData.saldo_total || 0.00;
+            elements.balanceElement.textContent = `R$ ${saldoTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+        
+        if (elements.returnElement) {
+            const rentabilidade = portfolioData.rentabilidade || 0.00;
+            const rentabilidadeClass = rentabilidade >= 0 ? 'positive-return' : 'negative-return';
+            elements.returnElement.textContent = `${rentabilidade.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}%`;
+            elements.returnElement.className = rentabilidadeClass;
+        }
+        
         const portfolioInfo = document.createElement('div');
         portfolioInfo.className = 'portfolio-info';
         
@@ -187,7 +207,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     { class: 'crypto', label: 'Criptomoedas', percentage: 50 },
                     { class: 'fixed-income', label: 'Renda Fixa', percentage: 50 }
                 );
-            }            
+            }
+            
             distributionChart.data.labels = filteredData.map(item => item.label);
             distributionChart.data.datasets[0].data = filteredData.map(item => item.percentage);
             distributionChart.update();
@@ -217,3 +238,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+class ModalComponent {
+    constructor(modalId) {
+        this.modal = document.getElementById(modalId);
+        this.closeButton = this.modal.querySelector('.close-button');
+        this.cancelButton = this.modal.querySelector('.cancel-btn');
+    }
+    
+    initialize(triggerButtonId) {
+        const triggerButton = document.getElementById(triggerButtonId);
+        
+        triggerButton.addEventListener('click', () => this.openModal());
+        this.closeButton.addEventListener('click', () => this.closeModal());
+        
+        if (this.cancelButton) {
+            this.cancelButton.addEventListener('click', () => this.closeModal());
+        }
+        
+        window.addEventListener('click', (event) => {
+            if (event.target === this.modal) {
+                this.closeModal();
+            }
+        });
+    }
+    
+    openModal() {
+        this.modal.style.display = 'block';
+    }
+    
+    closeModal() {
+        this.modal.style.display = 'none';
+    }
+}

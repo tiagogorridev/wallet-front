@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     markActivePage();
     updateInvestmentSummary();
     initializePortfolioDropdown();
-    handleWalletForm(); // Importante: chame esta função aqui
+    handleWalletForm();
   }
 
   function markActivePage() {
@@ -183,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdown.appendChild(option);
       });
       
-      // Nova carteira opção
       const newWalletOption = document.createElement('div');
       newWalletOption.className = 'portfolio-option new-wallet-option';
       newWalletOption.innerHTML = `
@@ -321,11 +320,9 @@ document.addEventListener('DOMContentLoaded', function() {
           alert('Carteira criada com sucesso!');
           walletModal.style.display = 'none';
           
-          // Limpa os campos do formulário
           document.getElementById('wallet-name').value = '';
           document.getElementById('wallet-description').value = '';
           
-          // Recarrega a lista de carteiras
           initializePortfolioDropdown();
         })
         .catch(error => {
@@ -337,7 +334,6 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Formulário de carteira não encontrado');
     }
     
-    // Fecha o modal quando clicado fora dele
     window.addEventListener('click', function(e) {
       if (e.target === walletModal) {
         walletModal.style.display = 'none';

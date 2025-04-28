@@ -56,10 +56,10 @@ document.addEventListener('DOMContentLoaded', function() {
     totalResgatado: document.getElementById('total-resgatado'),
     totalDividendos: document.getElementById('total-dividendos'),
     addAtivoBtn: document.getElementById('adicionar-ativo-btn'),
-    modalOverlay: document.getElementById('modal-overlay'),
-    closeModalBtn: document.getElementById('close-modal'),
-    cancelBtn: document.getElementById('cancel-btn'),
-    adicionarAtivoForm: document.getElementById('adicionar-ativo-form'),
+    addAssetModal: document.getElementById('addAssetModal'),
+    closeModalBtn: document.querySelector('.close-button'),
+    cancelBtn: document.querySelector('.cancel-btn'),
+    addAssetForm: document.getElementById('addAssetForm'),
     periodoDrop: document.querySelector('[data-dropdown="periodo"]'),
     periodoDropdown: document.getElementById('periodo-dropdown'),
     ativosDrop: document.querySelector('[data-dropdown="ativos"]'),
@@ -113,12 +113,40 @@ document.addEventListener('DOMContentLoaded', function() {
     elements.addAtivoBtn.addEventListener('click', openModal);
     elements.closeModalBtn.addEventListener('click', closeModal);
     elements.cancelBtn.addEventListener('click', closeModal);
-    elements.adicionarAtivoForm.addEventListener('submit', handleFormSubmit);
+    elements.addAssetForm.addEventListener('submit', handleFormSubmit);
+    
     document.addEventListener('click', closeDropdowns);
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
         closeModal();
         closeDropdowns();
+      }
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+      if (event.target === elements.addAssetModal) {
+        closeModal();
+      }
+    });
+    
+    // Auto-fill description when asset name changes
+    document.getElementById('assetName').addEventListener('input', function() {
+      const tipo = document.getElementById('tipo').value;
+      const tipoText = tipo === 'Compra' ? 'Compra de ' : 
+                      tipo === 'Venda' ? 'Venda de ' : 
+                      'Dividendo de ';
+      document.getElementById('descricao').value = tipoText + this.value;
+    });
+    
+    // Update description when type changes
+    document.getElementById('tipo').addEventListener('change', function() {
+      const assetName = document.getElementById('assetName').value;
+      if (assetName) {
+        const tipoText = this.value === 'Compra' ? 'Compra de ' : 
+                        this.value === 'Venda' ? 'Venda de ' : 
+                        'Dividendo de ';
+        document.getElementById('descricao').value = tipoText + assetName;
       }
     });
   }
@@ -264,24 +292,24 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function openModal() {
-    elements.modalOverlay.style.display = 'flex';
+    elements.addAssetModal.style.display = 'flex';
   }
 
   function closeModal() {
-    elements.modalOverlay.style.display = 'none';
-    elements.adicionarAtivoForm.reset();
+    elements.addAssetModal.style.display = 'none';
+    elements.addAssetForm.reset();
   }
 
   function handleFormSubmit(e) {
     e.preventDefault();
 
-    const data = document.getElementById('data').value;
+    const data = document.getElementById('assetPurchaseDate').value;
     const tipo = document.getElementById('tipo').value;
-    const ativo = document.getElementById('ativo').value;
+    const ativo = document.getElementById('assetName').value;
     const descricao = document.getElementById('descricao').value;
-    const quantidade = parseFloat(document.getElementById('quantidade').value);
-    const valorUnitario = parseFloat(document.getElementById('valorUnitario').value);
-    const categoria = document.getElementById('categoria').value;
+    const quantidade = parseFloat(document.getElementById('assetQuantity').value);
+    const valorUnitario = parseFloat(document.getElementById('assetValuePerUnit').value);
+    const categoria = document.getElementById('assetCategory').value;
 
     const formattedDate = formatDate(new Date(data));
 

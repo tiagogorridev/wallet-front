@@ -133,59 +133,47 @@
     </main>
   </div>
 
-  <div id="modal-overlay" class="modal-overlay">
+  <div class="modal" id="addAssetModal">
     <div class="modal-content">
-      <div class="modal-header">
-        <h3>Adicionar Novo Ativo</h3>
-        <button id="close-modal" class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form id="adicionar-ativo-form">
-          <div class="form-group">
-            <label for="data">Data</label>
-            <input type="date" id="data" required>
-          </div>
-          <div class="form-group">
-            <label for="tipo">Tipo</label>
-            <select id="tipo" required>
-              <option value="Compra">Compra</option>
-              <option value="Venda">Venda</option>
-              <option value="Dividendo">Dividendo</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="ativo">Ativo</label>
-            <input type="text" id="ativo" required>
-          </div>
-          <div class="form-group">
-            <label for="descricao">Descrição</label>
-            <input type="text" id="descricao" required>
-          </div>
-          <div class="form-group">
-            <label for="quantidade">Quantidade</label>
-            <input type="number" id="quantidade" step="0.01" required>
-          </div>
-          <div class="form-group">
-            <label for="valorUnitario">Valor Unitário</label>
-            <input type="number" id="valorUnitario" step="0.01" required>
-          </div>
-          <div class="form-group">
-            <label for="categoria">Categoria</label>
-            <select id="categoria" required>
-              <option value="Criptomoedas">Criptomoedas</option>
-              <option value="Fundos Imobiliários">Fundos Imobiliários</option>
-              <option value="Ações">Ações</option>
-              <option value="Renda Fixa">Renda Fixa</option>
-            </select>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="submit-btn">Adicionar</button>
-            <button type="button" id="cancel-btn" class="cancel-btn">Cancelar</button>
-          </div>
-        </form>
-      </div>
+        <div class="modal-header">
+            <h2>Adicionar Novo Ativo</h2>
+            <span class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="addAssetForm">
+                <div class="form-group">
+                    <label for="assetCategory">Categoria</label>
+                    <select id="assetCategory" required>
+                        <option value="">Selecione uma categoria</option>
+                        <option value="CRIPTOMOEDAS">Criptomoedas</option>
+                        <option value="ACOES">Ações</option>
+                        <option value="RENDA_FIXA">Renda Fixa</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="assetName">Nome</label>
+                    <input type="text" id="assetName" placeholder="Ex: Bitcoin, PETR4" required>
+                </div>
+                <div class="form-group">
+                    <label for="assetValuePerUnit">Valor por Ativo</label>
+                    <input type="number" id="assetValuePerUnit" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="assetQuantity">Quantidade</label>
+                    <input type="number" id="assetQuantity" step="0.00000001" required>
+                </div>
+                <div class="form-group">
+                    <label for="assetPurchaseDate">Data de Compra</label>
+                    <input type="date" id="assetPurchaseDate" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary cancel-btn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
+</div>
 
   <script src="../../js/auth/acess.js"></script>
   <script src="../../js/investidor/header.js"></script>

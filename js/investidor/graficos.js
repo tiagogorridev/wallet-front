@@ -185,6 +185,7 @@ class AssetsDistributionComponent {
     this.createLegend();
   }
 }
+
 class AssetsComponent {
   constructor(containerId, modalId = null) {
     this.containerId = containerId;
@@ -247,16 +248,13 @@ class AssetsComponent {
   initialize() {
     this.renderAssetCategories();
     if (this.modalId) {
-      this.setupModalListeners();
+      this.setupModal();
     }
   }
 
   getValueClass(value) {
-    if (value.startsWith('+')) {
-      return 'positive';
-    } else if (value.startsWith('-')) {
-      return 'negative';
-    }
+    if (value.startsWith('+')) return 'positive';
+    if (value.startsWith('-')) return 'negative';
     return '';
   }
 
@@ -269,6 +267,7 @@ class AssetsComponent {
     this.assetCategories.forEach(category => {
       const categoryDiv = document.createElement('div');
       categoryDiv.className = `asset-category ${category.isExpanded ? 'expanded' : ''}`;
+      
       const headerDiv = document.createElement('div');
       headerDiv.className = 'category-header';
       headerDiv.innerHTML = `
@@ -288,99 +287,16 @@ class AssetsComponent {
       `;
       headerDiv.addEventListener('click', () => this.toggleCategoryExpansion(category));
       categoryDiv.appendChild(headerDiv);
+      
       if (category.isExpanded) {
         const contentDiv = document.createElement('div');
         contentDiv.className = 'category-content';
         contentDiv.addEventListener('click', (e) => e.stopPropagation());
 
         if (category.name === 'CRIPTOMOEDAS') {
-          const table = document.createElement('table');
-          table.className = 'assets-table';
-          table.innerHTML = `
-            <thead>
-              <tr>
-                <th>Ativo</th>
-                <th>Quantidade</th>
-                <th>Preço Médio</th>
-                <th>Preço Atual</th>
-                <th>Variação</th>
-                <th>Rentabilidade</th>
-                <th>Saldo</th>
-                <th>Variação (24h)</th>
-                <th>Variação (30d)</th>
-                <th>Minha Nota</th>
-                <th>% Carteira</th>
-                <th>% Ideal</th>
-                <th>Comprar?</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${this.cryptoAssets.map(asset => `
-                <tr>
-                  <td class="asset-name">
-                    <div class="asset-icon crypto"></div>
-                    ${asset.symbol}
-                  </td>
-                  <td>${asset.quantidade}</td>
-                  <td>R$ ${asset.precoMedio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                  <td>R$ ${asset.precoAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                  <td class="${this.getValueClass(asset.variacao)}">${asset.variacao}</td>
-                  <td class="${this.getValueClass(asset.rentabilidade)}">${asset.rentabilidade}</td>
-                  <td>R$ ${asset.saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                  <td class="${this.getValueClass(asset.variacao24h)}">${asset.variacao24h}</td>
-                  <td class="${this.getValueClass(asset.variacao30d)}">${asset.variacao30d}</td>
-                  <td><div class="rating">${asset.nota}</div></td>
-                  <td>${asset.percentCarteira}</td>
-                  <td>${asset.percentIdeal}</td>
-                  <td class="buy-status">${asset.comprar}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          `;
-          contentDiv.appendChild(table);
+          contentDiv.appendChild(this.createCryptoTable());
         } else if (category.name === 'FIS') {
-          const table = document.createElement('table');
-          table.className = 'assets-table';
-          table.innerHTML = `
-            <thead>
-              <tr>
-                <th>Ativo</th>
-                <th>Quantidade</th>
-                <th>Preço Médio</th>
-                <th>Preço Atual</th>
-                <th>Variação</th>
-                <th>Rentabilidade</th>
-                <th>Saldo</th>
-                <th>Variação (24h)</th>
-                <th>Variação (30d)</th>
-                <th>Minha Nota</th>
-                <th>% Carteira</th>
-                <th>% Ideal</th>
-                <th>Comprar?</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="asset-name">
-                  <div class="asset-icon fis"></div>
-                  HGLG11
-                </td>
-                <td>0,00</td>
-                <td>R$ 0,00</td>
-                <td>R$ 0,00</td>
-                <td class="negative">-0,00%</td>
-                <td class="negative">-0,00%</td>
-                <td>R$ 0</td>
-                <td class="negative">-0,00%</td>
-                <td class="negative">-0,00%</td>
-                <td><div class="rating">10</div></td>
-                <td>0,00%</td>
-                <td>0,00%</td>
-                <td class="buy-status">NÃO</td>
-              </tr>
-            </tbody>
-          `;
-          contentDiv.appendChild(table);
+          contentDiv.appendChild(this.createFisTable());
         } else {
           const emptyMsg = document.createElement('div');
           emptyMsg.className = 'empty-category-message';
@@ -395,6 +311,98 @@ class AssetsComponent {
     });
   }
 
+  createCryptoTable() {
+    const table = document.createElement('table');
+    table.className = 'assets-table';
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>Ativo</th>
+          <th>Quantidade</th>
+          <th>Preço Médio</th>
+          <th>Preço Atual</th>
+          <th>Variação</th>
+          <th>Rentabilidade</th>
+          <th>Saldo</th>
+          <th>Variação (24h)</th>
+          <th>Variação (30d)</th>
+          <th>Minha Nota</th>
+          <th>% Carteira</th>
+          <th>% Ideal</th>
+          <th>Comprar?</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${this.cryptoAssets.map(asset => `
+          <tr>
+            <td class="asset-name">
+              <div class="asset-icon crypto"></div>
+              ${asset.symbol}
+            </td>
+            <td>${asset.quantidade}</td>
+            <td>R$ ${asset.precoMedio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+            <td>R$ ${asset.precoAtual.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+            <td class="${this.getValueClass(asset.variacao)}">${asset.variacao}</td>
+            <td class="${this.getValueClass(asset.rentabilidade)}">${asset.rentabilidade}</td>
+            <td>R$ ${asset.saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+            <td class="${this.getValueClass(asset.variacao24h)}">${asset.variacao24h}</td>
+            <td class="${this.getValueClass(asset.variacao30d)}">${asset.variacao30d}</td>
+            <td><div class="rating">${asset.nota}</div></td>
+            <td>${asset.percentCarteira}</td>
+            <td>${asset.percentIdeal}</td>
+            <td class="buy-status">${asset.comprar}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    `;
+    return table;
+  }
+
+  createFisTable() {
+    const table = document.createElement('table');
+    table.className = 'assets-table';
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>Ativo</th>
+          <th>Quantidade</th>
+          <th>Preço Médio</th>
+          <th>Preço Atual</th>
+          <th>Variação</th>
+          <th>Rentabilidade</th>
+          <th>Saldo</th>
+          <th>Variação (24h)</th>
+          <th>Variação (30d)</th>
+          <th>Minha Nota</th>
+          <th>% Carteira</th>
+          <th>% Ideal</th>
+          <th>Comprar?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="asset-name">
+            <div class="asset-icon fis"></div>
+            HGLG11
+          </td>
+          <td>0,00</td>
+          <td>R$ 0,00</td>
+          <td>R$ 0,00</td>
+          <td class="negative">-0,00%</td>
+          <td class="negative">-0,00%</td>
+          <td>R$ 0</td>
+          <td class="negative">-0,00%</td>
+          <td class="negative">-0,00%</td>
+          <td><div class="rating">10</div></td>
+          <td>0,00%</td>
+          <td>0,00%</td>
+          <td class="buy-status">NÃO</td>
+        </tr>
+      </tbody>
+    `;
+    return table;
+  }
+
   toggleCategoryExpansion(category) {
     this.assetCategories.forEach(cat => {
       if (cat !== category) {
@@ -405,49 +413,44 @@ class AssetsComponent {
     this.renderAssetCategories();
   }
 
-  setupModalListeners() {
+  setupModal() {
     const modal = document.getElementById(this.modalId);
     if (!modal) return;
 
     const addButtons = document.querySelectorAll('#addAssetBtn, #headerAddAssetBtn');
     const closeButton = modal.querySelector('.close-button');
     const cancelButton = modal.querySelector('.cancel-btn');
-
-    addButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        modal.style.display = 'flex';
-      });
-    });
-
-    [closeButton, cancelButton].forEach(button => {
-      if (button) {
-        button.addEventListener('click', () => {
-          modal.style.display = 'none';
-        });
-      }
-    });
-
-    window.addEventListener('click', (event) => {
-      if (event.target === modal) {
-        modal.style.display = 'none';
-      }
-    });
     const addAssetForm = modal.querySelector('#addAssetForm');
+
+    const openModal = () => modal.style.display = 'flex';
+    
+    const closeModal = (e) => {
+      if (e) e.preventDefault();
+      modal.style.display = 'none';
+      if (addAssetForm) addAssetForm.reset();
+    };
+
+    addButtons.forEach(button => button.addEventListener('click', openModal));
+    
+    if (closeButton) closeButton.addEventListener('click', closeModal);
+    if (cancelButton) cancelButton.addEventListener('click', closeModal);
+    
+    window.addEventListener('click', (event) => {
+      if (event.target === modal) closeModal();
+    });
+    
     if (addAssetForm) {
       addAssetForm.addEventListener('submit', (e) => {
         e.preventDefault();
-
         const formData = {
-          symbol: document.getElementById('assetSymbol').value,
           category: document.getElementById('assetCategory').value,
+          name: document.getElementById('assetName').value,
+          valuePerAsset: parseFloat(document.getElementById('assetValuePerUnit').value),
           quantity: parseFloat(document.getElementById('assetQuantity').value),
-          price: parseFloat(document.getElementById('assetPrice').value),
-          rating: parseInt(document.getElementById('assetRating').value),
-          idealPercentage: parseFloat(document.getElementById('assetIdealPercentage').value)
+          purchaseDate: document.getElementById('assetPurchaseDate').value
         };
         console.log('Novo ativo adicionado:', formData);
-        modal.style.display = 'none';
-        addAssetForm.reset();
+        closeModal();
       });
     }
   }
@@ -521,7 +524,6 @@ class AnnualReturnChartComponent {
 
   updateData(newData) {
     if (!this.chartInstance) return;
-
     this.chartInstance.data.datasets[0].data = newData;
     this.chartInstance.update();
   }
@@ -540,11 +542,8 @@ class PerformanceTableComponent {
   }
 
   getValueClass(value) {
-    if (value.startsWith('+')) {
-      return 'positive';
-    } else if (value.startsWith('-')) {
-      return 'negative';
-    }
+    if (value.startsWith('+')) return 'positive';
+    if (value.startsWith('-')) return 'negative';
     return '';
   }
 
@@ -607,6 +606,7 @@ class PerformanceTableComponent {
     }
   }
 }
+
 window.EvolutionPatrimonyComponent = EvolutionPatrimonyComponent;
 window.AssetsDistributionComponent = AssetsDistributionComponent;
 window.AssetsComponent = AssetsComponent;
