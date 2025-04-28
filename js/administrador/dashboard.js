@@ -26,7 +26,6 @@ const mockData = {
             "Fundos": 22.8,
             "Renda Fixa": 18.5,
             "Criptomoedas": 10.3,
-            "FIIs": 8.9,
             "Tesouro Direto": 4.3
         }
     },
@@ -48,11 +47,6 @@ const mockData = {
                 growth: 9.7,
                 icon: "landmark"
             },
-            "FIIs": {
-                count: 476,
-                growth: 22.6,
-                icon: "building"
-            },
             "Renda Fixa": {
                 count: 387,
                 growth: -2.3,
@@ -69,7 +63,6 @@ const mockData = {
             "Fundos": 1950233.84,
             "Renda Fixa": 1586640.04,
             "Criptomoedas": 883672.57,
-            "FIIs": 762948.51,
             "Tesouro Direto": 368686.6
         }
     }

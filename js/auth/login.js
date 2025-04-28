@@ -9,12 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const icon = this.querySelector('i');
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
-            icon.classList.remove('pi-eye');
-            icon.classList.add('pi-eye-slash');
+            icon.classList.replace('pi-eye', 'pi-eye-slash');
         } else {
             passwordInput.type = 'password';
-            icon.classList.remove('pi-eye-slash');
-            icon.classList.add('pi-eye');
+            icon.classList.replace('pi-eye-slash', 'pi-eye');
         }
     });
 
@@ -23,23 +21,21 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
+        
         if (!email || !password) {
             showMessage('Por favor, preencha todos os campos.', 'error');
             return;
         }
+        
         showMessage('Autenticando...', 'info');
         login(email, password);
     });
     
     async function login(email, password) {
         try {
-            const loginUrl = `http://${API_URL}/auth/login`;
-            
-            const response = await fetch(loginUrl, {
+            const response = await fetch(`http://${API_URL}/auth/login`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     email: email,
                     senha: password
@@ -60,43 +56,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function handleSuccessfulLogin(data) {
-        let token = null;
+        const token = data.token || data.access_token || 
+                    (data.data && (data.data.token || data.data.access_token));
         
-        if (data.token) {
-            token = data.token;
-        } else if (data.access_token) {
-            token = data.access_token;
-        } else if (data.data && data.data.token) {
-            token = data.data.token;
-        } else if (data.data && data.data.access_token) {
-            token = data.data.access_token;
-        }
+        const userData = data.usuario || data.user || 
+                       (data.data && (data.data.usuario || data.data.user));
         
-        let userData = null;
-        if (data.usuario) {
-            userData = data.usuario;
-        } else if (data.user) {
-            userData = data.user;
-        } else if (data.data && data.data.usuario) {
-            userData = data.data.usuario;
-        } else if (data.data && data.data.user) {
-            userData = data.data.user;
-        }
-        
-        if (token) {
-            localStorage.setItem('accessToken', token);
-        } else {
+        if (!token) {
             console.error("Token não encontrado na resposta");
             showMessage('Token não encontrado na resposta do servidor.', 'error');
             return;
         }
         
+        localStorage.setItem('accessToken', token);
+        
         if (userData) {
             localStorage.setItem('userInfo', JSON.stringify(userData));
             showMessage('Login realizado com sucesso!', 'success');
-            setTimeout(() => {
-                redirectUserByProfile(userData.perfil);
-            }, 1000);
+            setTimeout(() => redirectUserByProfile(userData.perfil), 1000);
         } else {
             console.error("Dados do usuário não encontrados na resposta");
             showMessage('Dados do usuário não encontrados na resposta.', 'error');
@@ -104,22 +81,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function redirectUserByProfile(profile) {
-        switch(profile) {
-            case 'ADMIN':
-                window.location.href = '/html/administrador/dashboard.html';
-                break;
-            case 'ANALISTA':
-                window.location.href = '/html/dashboard.html';
-                break;
-            case 'USUARIO':
-            case 'CONSERVADOR':
-            case 'MODERADO':
-            case 'ARROJADO':
-                window.location.href = '/html/investidor/resumo.html';
-                break;
-            default:
-                showMessage('Tipo de perfil desconhecido: ' + profile, 'error');
-                console.error("Perfil desconhecido:", profile);
+        const routes = {
+            'ADMIN': '/html/administrador/dashboard.html',
+            'ANALISTA': '/html/dashboard.html',
+            'USUARIO': '/html/investidor/resumo.html',
+        };
+        
+        const route = routes[profile];
+        if (route) {
+            window.location.href = route;
+        } else {
+            showMessage('Tipo de perfil desconhecido: ' + profile, 'error');
+            console.error("Perfil desconhecido:", profile);
         }
     }
     
@@ -127,12 +100,12 @@ document.addEventListener('DOMContentLoaded', function() {
         loginMessage.textContent = message;
         loginMessage.className = 'feedback-message ' + type;
         
-        if (type === 'error') {
-            loginMessage.style.color = '#c62828';
-        } else if (type === 'success') {
-            loginMessage.style.color = '#2e7d32';
-        } else if (type === 'info') {
-            loginMessage.style.color = '#1565c0';
-        }
+        const colors = {
+            'error': '#c62828',
+            'success': '#2e7d32',
+            'info': '#1565c0'
+        };
+        
+        loginMessage.style.color = colors[type] || '';
     }
 });

@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     markActivePage();
     updateInvestmentSummary();
     initializePortfolioDropdown();
+    handleWalletForm(); // Importante: chame esta função aqui
   }
 
   function markActivePage() {
@@ -85,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function initializePortfolioDropdown() {
     const portfolioSelector = document.querySelector('.portfolio-selector');
     if (!portfolioSelector || portfolioSelector.querySelector('.portfolio-dropdown')) return;
-
+  
     const dropdown = document.createElement('div');
     dropdown.className = 'portfolio-dropdown';
     dropdown.style.display = 'none';
@@ -124,22 +125,34 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       const carteiras = result.data.data || [];
-      if ((!localStorage.getItem('selectedPortfolio') || !localStorage.getItem('selectedWalletId')) && carteiras.length > 0) {
-        localStorage.setItem('selectedPortfolio', carteiras[0].nome);
-        localStorage.setItem('selectedWalletId', carteiras[0].id);
+      const selectedWalletId = localStorage.getItem('selectedWalletId');
+      
+      let selectedCarteira = null;
+      if (selectedWalletId) {
+        const numericId = parseInt(selectedWalletId);
+        selectedCarteira = carteiras.find(c => c.id === numericId);
       }
       
-      const selectedPortfolioName = localStorage.getItem('selectedPortfolio') || (carteiras.length > 0 ? carteiras[0].nome : 'Carteira não encontrada');
+      if (!selectedCarteira && carteiras.length > 0) {
+        selectedCarteira = carteiras[0];
+        localStorage.setItem('selectedPortfolio', selectedCarteira.nome);
+        localStorage.setItem('selectedWalletId', selectedCarteira.id.toString());
+      }
+      
+      const selectedPortfolioName = selectedCarteira ? selectedCarteira.nome : 'Carteira não encontrada';
       if (nameSpan) {
         nameSpan.textContent = selectedPortfolioName;
       }
+      
       carteiras.forEach(carteira => {
         const option = document.createElement('div');
         option.className = 'portfolio-option';
         
+        const isSelected = selectedCarteira && carteira.id === selectedCarteira.id;
+        
         option.innerHTML = `
           <span>${carteira.nome}</span>
-          <i class="fas fa-check ${selectedPortfolioName === carteira.nome ? 'visible' : 'hidden'}"></i>
+          <i class="fas fa-check ${isSelected ? 'visible' : 'hidden'}"></i>
         `;
         
         option.addEventListener('click', function() {
@@ -153,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
           
           localStorage.setItem('selectedPortfolio', carteira.nome);
-          localStorage.setItem('selectedWalletId', carteira.id);
+          localStorage.setItem('selectedWalletId', carteira.id.toString());
           document.dispatchEvent(new CustomEvent('portfolioChanged', {
             detail: { portfolio: carteira }
           }));
@@ -170,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dropdown.appendChild(option);
       });
       
+      // Nova carteira opção
       const newWalletOption = document.createElement('div');
       newWalletOption.className = 'portfolio-option new-wallet-option';
       newWalletOption.innerHTML = `
@@ -200,6 +214,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       portfolioSelector.appendChild(dropdown);
+      
+      if (selectedCarteira) {
+        document.dispatchEvent(new CustomEvent('portfolioChanged', {
+          detail: { portfolio: selectedCarteira }
+        }));
+      }
     })
     .catch(error => {
       console.error('Erro ao buscar carteiras:', error);
@@ -226,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
         icon.classList.toggle('fa-chevron-down', isVisible);
       }
     });
-
+  
     document.addEventListener('click', function(e) {
       if (!portfolioSelector.contains(e.target)) {
         dropdown.style.display = 'none';
@@ -239,166 +259,93 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  function handleWalletForm() {
+    const addWalletForm = document.getElementById('add-wallet-form');
+    const walletModal = document.getElementById('add-wallet-modal');
+    const closeModal = walletModal?.querySelector('.close-modal');
+    
+    if (!walletModal) {
+      console.error('Modal de carteira não encontrado');
+      return;
+    }
+    
+    if (closeModal) {
+      closeModal.addEventListener('click', function() {
+        walletModal.style.display = 'none';
+      });
+    }
+    
+    if (addWalletForm) {
+      addWalletForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        console.log('Formulário enviado');
+        
+        const walletName = document.getElementById('wallet-name').value;
+        const walletDescription = document.getElementById('wallet-description').value;
+        const token = localStorage.getItem('accessToken');
+        
+        if (!token) {
+          alert('Você precisa estar logado para criar uma carteira');
+          return;
+        }
+        
+        console.log('Enviando requisição para criar carteira:', {
+          nome: walletName,
+          descricao: walletDescription
+        });
+        
+        fetch(`${API_URL}/wallets`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            nome: walletName,
+            descricao: walletDescription
+          })
+        })
+        .then(response => {
+          console.log('Resposta recebida:', response);
+          if (!response.ok) {
+            throw new Error('Falha ao criar carteira');
+          }
+          return response.json();
+        })
+        .then(result => {
+          console.log('Resultado:', result);
+          if (result.error) {
+            throw new Error(result.msg || 'Erro ao criar carteira');
+          }
+          
+          alert('Carteira criada com sucesso!');
+          walletModal.style.display = 'none';
+          
+          // Limpa os campos do formulário
+          document.getElementById('wallet-name').value = '';
+          document.getElementById('wallet-description').value = '';
+          
+          // Recarrega a lista de carteiras
+          initializePortfolioDropdown();
+        })
+        .catch(error => {
+          console.error('Erro ao criar carteira:', error);
+          alert('Erro ao criar carteira: ' + error.message);
+        });
+      });
+    } else {
+      console.error('Formulário de carteira não encontrado');
+    }
+    
+    // Fecha o modal quando clicado fora dele
+    window.addEventListener('click', function(e) {
+      if (e.target === walletModal) {
+        walletModal.style.display = 'none';
+      }
+    });
+  }
+
   document.addEventListener('openWalletModal', function() {
     console.log('Modal de carteira não encontrado na página atual');
   });
-  function initializeWalletModal() {
-    const addWalletModal = document.getElementById('add-wallet-modal');
-    if (!addWalletModal) {
-      createWalletModal();
-    }
-    setupWalletModalEvents();
-  }
-
-  function createWalletModal() {
-    const modalHtml = `
-    <div id="add-wallet-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>Nova Carteira</h2>
-            <form id="add-wallet-form">
-                <div class="form-group">
-                    <label for="wallet-name">Nome da Carteira</label>
-                    <input type="text" id="wallet-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="wallet-description">Descrição</label>
-                    <textarea id="wallet-description"></textarea>
-                </div>
-                <button type="submit" class="btn-submit">Criar Carteira</button>
-            </form>
-        </div>
-    </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-  }
-
-  function setupWalletModalEvents() {
-    const walletModal = document.getElementById('add-wallet-modal');
-    const walletCloseModal = walletModal?.querySelector('.close-modal');
-    const addWalletForm = document.getElementById('add-wallet-form');
-    
-    if (!walletModal || !walletCloseModal || !addWalletForm) return;
-    walletCloseModal.addEventListener('click', () => {
-      walletModal.style.display = 'none';
-    });
-    window.addEventListener('click', (event) => {
-      if (event.target === walletModal) {
-        walletModal.style.display = 'none';
-      }
-    });
-    addWalletForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      
-      const walletName = document.getElementById('wallet-name').value;
-      const walletDescription = document.getElementById('wallet-description').value;
-      
-      if (!walletName.trim()) {
-        alert('O nome da carteira é obrigatório');
-        return;
-      }
-      
-      const walletData = {
-        nome: walletName,
-        descricao: walletDescription
-      };
-      
-      try {
-        let loadingMessage = document.createElement('div');
-        loadingMessage.id = 'loading-message';
-        loadingMessage.style.position = 'fixed';
-        loadingMessage.style.top = '50%';
-        loadingMessage.style.left = '50%';
-        loadingMessage.style.transform = 'translate(-50%, -50%)';
-        loadingMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-        loadingMessage.style.color = 'white';
-        loadingMessage.style.padding = '20px';
-        loadingMessage.style.borderRadius = '5px';
-        loadingMessage.style.zIndex = '1000';
-        loadingMessage.textContent = 'Criando carteira...';
-        document.body.appendChild(loadingMessage);
-        
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-          throw new Error('Sessão expirada. Por favor, faça login novamente.');
-        }
-        
-        const response = await fetch(`${API_URL}/wallets`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(walletData)
-        });
-        
-        if (!response.ok) {
-          if (response.status === 401) {
-            localStorage.removeItem('accessToken');
-            window.location.href = '../../index.html';
-            throw new Error('Sessão expirada. Por favor, faça login novamente.');
-          }
-          throw new Error(`Erro HTTP: ${response.status}`);
-        }
-        
-        const result = await response.json();
-        
-        if (result.error) {
-          throw new Error(result.msg || 'Erro ao criar carteira');
-        }
-        
-        console.log('Nova carteira criada:', result.data.data);
-        if (result.data && result.data.data) {
-          localStorage.setItem('selectedWalletId', result.data.data.id);
-          localStorage.setItem('selectedPortfolio', result.data.data.nome);
-          document.dispatchEvent(new CustomEvent('portfolioChanged', {
-            detail: { portfolio: result.data.data }
-          }));
-        }
-        document.querySelector('.portfolio-dropdown')?.remove();
-        initializePortfolioDropdown();
-        walletModal.style.display = 'none';
-        addWalletForm.reset();
-        document.body.removeChild(loadingMessage);
-        let successMessage = document.createElement('div');
-        successMessage.style.position = 'fixed';
-        successMessage.style.top = '50%';
-        successMessage.style.left = '50%';
-        successMessage.style.transform = 'translate(-50%, -50%)';
-        successMessage.style.backgroundColor = 'rgba(40, 167, 69, 0.9)';
-        successMessage.style.color = 'white';
-        successMessage.style.padding = '20px';
-        successMessage.style.borderRadius = '5px';
-        successMessage.style.zIndex = '1000';
-        successMessage.textContent = 'Carteira criada com sucesso!';
-        document.body.appendChild(successMessage);
-        setTimeout(() => {
-          document.body.removeChild(successMessage);
-        }, 3000);
-        
-      } catch (error) {
-        console.error('Erro ao criar carteira:', error);
-        const loadingMsg = document.getElementById('loading-message');
-        if (loadingMsg) {
-          document.body.removeChild(loadingMsg);
-        }
-        let errorMessage = document.createElement('div');
-        errorMessage.style.position = 'fixed';
-        errorMessage.style.top = '50%';
-        errorMessage.style.left = '50%';
-        errorMessage.style.transform = 'translate(-50%, -50%)';
-        errorMessage.style.backgroundColor = 'rgba(220, 53, 69, 0.9)';
-        errorMessage.style.color = 'white';
-        errorMessage.style.padding = '20px';
-        errorMessage.style.borderRadius = '5px';
-        errorMessage.style.zIndex = '1000';
-        errorMessage.textContent = `Erro ao criar carteira: ${error.message}`;
-        document.body.appendChild(errorMessage);
-        setTimeout(() => {
-          document.body.removeChild(errorMessage);
-        }, 5000);
-      }
-    });
-  }
-  initializeWalletModal();
 });

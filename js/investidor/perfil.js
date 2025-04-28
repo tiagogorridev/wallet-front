@@ -1,4 +1,5 @@
 const API_URL = 'http://191.239.116.115:8080';
+
 document.addEventListener('DOMContentLoaded', function() {
     initPasswordToggle();
     loadUserData();
@@ -118,18 +119,14 @@ function updateUserInBackend(userInfo) {
     }
     
     const userData = {
-        nome: userInfo.nome,
-        email: userInfo.email,
-        estilo_investidor: userInfo.estilo_investidor,
-        perfil: userInfo.perfil || 'USUARIO'
+        nome: userInfo.nome
     };
     
     if (userInfo.id && userInfo.id !== 'null' && userInfo.id !== null) {
         userData.id = userInfo.id;
     }
     
-    console.log('Enviando dados para atualização:', userData);
-    fetch(`${API_URL}/usuarios`, {
+    fetch(`${API_URL}/users`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -138,10 +135,8 @@ function updateUserInBackend(userInfo) {
         body: JSON.stringify(userData)
     })
     .then(response => {
-        console.log('Status da resposta:', response.status);
         if (!response.ok) {
             return response.text().then(text => {
-                console.log('Texto da resposta de erro:', text);
                 let errorMsg = 'Erro ao atualizar usuário';
                 try {
                     if (text && text.trim()) {
@@ -158,8 +153,6 @@ function updateUserInBackend(userInfo) {
             });
         }
         return response.text().then(text => {
-            console.log('Texto da resposta de sucesso:', text);
-            
             if (!text || !text.trim()) {
                 return { success: true };
             }
@@ -172,7 +165,6 @@ function updateUserInBackend(userInfo) {
         });
     })
     .then(data => {
-        console.log('Dados processados:', data);
         if (data && data.data && data.data.user) {
             const updatedUserInfo = {
                 ...userInfo,

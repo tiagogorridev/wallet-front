@@ -264,7 +264,17 @@ function closeModal(modal) {
     modal.classList.remove('active');
     setTimeout(() => {
         modal.style.display = 'none';
+        if (modal === editUserModal) {
+            resetEditModalFields();
+        }
     }, 300);
+}
+
+function resetEditModalFields() {
+    const idField = document.getElementById('edit-user-id');
+    const emailField = document.getElementById('edit-user-email');
+    if (idField.parentElement) idField.parentElement.classList.remove('input-readonly-container');
+    if (emailField.parentElement) emailField.parentElement.classList.remove('input-readonly-container');
 }
 
 function openEditModal(userId) {
@@ -274,9 +284,18 @@ function openEditModal(userId) {
     
     userToEdit = user;
     
-    document.getElementById('edit-user-id').value = user.id || '';
-    document.getElementById('edit-user-name').value = user.nome || '';
-    document.getElementById('edit-user-email').value = user.email || '';
+    const idField = document.getElementById('edit-user-id');
+    const emailField = document.getElementById('edit-user-email');
+    const nameField = document.getElementById('edit-user-name');
+    idField.value = user.id || '';
+    nameField.value = user.nome || '';
+    emailField.value = user.email || '';
+    idField.setAttribute('readonly', true);
+    emailField.setAttribute('readonly', true);
+    idField.title = "ID não pode ser alterado";
+    emailField.title = "Email não pode ser alterado";
+    if (idField.parentElement) idField.parentElement.classList.add('input-readonly-container');
+    if (emailField.parentElement) emailField.parentElement.classList.add('input-readonly-container');
     
     openModal(editUserModal);
 }
@@ -289,18 +308,26 @@ async function updateUser() {
     const nome = document.getElementById('edit-user-name').value;
     const email = document.getElementById('edit-user-email').value;
     
+    if (!nome || nome.trim() === '') {
+        alert('O nome do usuário não pode ser vazio.');
+        return;
+    }
+    
     try {
+        const userObj = {
+            id: parseInt(userId),
+            nome: nome
+        };
+        
+        console.log('Enviando dados para atualização:', userObj);
+        
         const response = await fetch(`http://${API_URL}/users`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                id: userId,
-                nome: nome,
-                email: email
-            })
+            body: JSON.stringify(userObj)
         });
         
         const data = await response.json();
@@ -309,7 +336,9 @@ async function updateUser() {
             closeModal(editUserModal);
             userToEdit = null;
             fetchUsers();
+            alert('Usuário atualizado com sucesso!');
         } else {
+            console.error('Resposta de erro:', data);
             alert(`Erro ao atualizar usuário: ${data.msg || 'Falha na operação'}`);
         }
     } catch (error) {
@@ -338,6 +367,7 @@ async function deleteUser() {
             closeModal(deleteConfirmationModal);
             userToDelete = null;
             fetchUsers();
+            alert('Usuário excluído com sucesso!');
         } else {
             alert(`Erro ao excluir usuário: ${data.msg || 'Falha na operação'}`);
         }

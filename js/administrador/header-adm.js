@@ -221,7 +221,6 @@ document.addEventListener('DOMContentLoaded', function() {
               <select id="portfolioType">
                 <option value="geral">Geral</option>
                 <option value="acoes">Ações</option>
-                <option value="fiis">FIIs</option>
                 <option value="internacional">Internacional</option>
                 <option value="cripto">Criptomoedas</option>
               </select>

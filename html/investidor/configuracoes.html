@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyWallet - Configurações </title>
+    <title>MyWallet - Configurações</title>
     <link rel="stylesheet" href="../../css/auth/style.css">
     <link rel="stylesheet" href="../../css/investidor/header.css">
     <link rel="stylesheet" href="../../css/investidor/components-investidor/components-investidor.css">
     <link rel="stylesheet" href="../../css/layout/investidor/configuracoes.css">
     <link rel="shortcut icon" href="../../../assets/favicon-icon.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../../css/configuracoes.css">
 </head>
 <body>
-  <header id="header"></header>
+    <header id="header"></header>
     <div class="dashboard-container">
         <section class="config-section">
             <div class="section-header">
@@ -27,17 +28,17 @@
                         <div class="account-settings">
                             <div class="form-group">
                                 <label>Nome da Carteira</label>
-                                <input type="text" value="Carteira Principal" id="portfolio-name">
+                                <input type="text" value="Carregando..." id="portfolio-name">
                             </div>
                             <div class="form-group">
-                                <label>Moeda Padrão</label>
-                                <select id="currency-select">
-                                    <option selected>R$ (BRL)</option>
-                                    <option>$ (USD)</option>
-                                    <option>€ (EUR)</option>
-                                </select>
+                                <label>Descrição da Carteira</label>
+                                <textarea id="portfolio-description" class="description-field" placeholder="Descreva o objetivo desta carteira..."></textarea>
                             </div>
-                            <div class="form-actions">
+                            <div class="config-card-actions">
+                                <button class="delete-btn" id="delete-portfolio" title="Excluir Carteira">
+                                    <i class="fas fa-trash"></i>
+                                    <span>Excluir Carteira</span>
+                                </button>
                                 <button class="save-account-btn" id="save-account">Salvar Alterações</button>
                             </div>
                         </div>
@@ -117,8 +118,20 @@
         </section>
     </div>
 
+    <div class="modal-overlay" id="delete-modal">
+        <div class="confirm-modal">
+            <h3>Confirmar Exclusão</h3>
+            <p>Tem certeza que deseja excluir a carteira "<span id="portfolio-to-delete">Carregando...</span>"?</p>
+            <p>Esta ação não pode ser desfeita.</p>
+            <div class="modal-buttons">
+                <button class="cancel-delete-btn" id="cancel-delete">Cancelar</button>
+                <button class="confirm-delete-btn" id="confirm-delete">Excluir</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../../js/auth/acess.js"></script>
     <script src="../../js/investidor/header.js"></script>
     <script src="../../js/investidor/carteira-configuracoes.js"></script>
-  </body>
+</body>
 </html>

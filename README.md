@@ -2,7 +2,7 @@
 
 ## Sobre
 
-MyWallet é um sistema centralizado de gerenciamento de carteira que permite aos investidores criar múltiplas carteiras com diferentes objetivos financeiros. Os usuários podem adicionar diversos tipos de investimentos como ações, FIIs (Fundos de Investimento Imobiliário), criptomoedas e instrumentos de renda fixa para acompanhar e calcular seu desempenho.
+MyWallet é um sistema centralizado de gerenciamento de carteira que permite aos investidores criar múltiplas carteiras com diferentes objetivos financeiros. Os usuários podem adicionar diversos tipos de investimentos como ações, criptomoedas e instrumentos de renda fixa para acompanhar e calcular seu desempenho.
 
 ## Funcionalidades
 

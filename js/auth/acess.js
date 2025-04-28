@@ -34,8 +34,8 @@
         if (!auth) return;
         
         const paginaAtual = window.location.pathname;
-        const ehPaginaAdmin = paginaAtual.includes('/administrador/') || paginaAtual.includes('/analista/');
-        const ehPaginaUsuario = paginaAtual.includes('/investidor/') || paginaAtual.includes('/usuario/');
+        const ehPaginaAdmin = paginaAtual.includes('/administrador/')
+        const ehPaginaUsuario = paginaAtual.includes('/investidor/');
         const ehPaginaLogin = paginaAtual.includes('../../index.html');
         if (ehPaginaAdmin && auth.perfil !== 'ADMIN' && auth.perfil !== 'ANALISTA') {
             redirecionarUsuarioPorPerfil(auth.perfil);
@@ -62,9 +62,6 @@
                 window.location.replace('/html/administrador/dashboard.html');
                 break;
             case 'USUARIO':
-            case 'CONSERVADOR':
-            case 'MODERADO':
-            case 'ARROJADO':
                 window.location.replace('/html/investidor/resumo.html');
                 break;
             default:

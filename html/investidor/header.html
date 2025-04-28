@@ -76,5 +76,22 @@
       <span>CONFIGURAÇÕES</span>
     </a>
   </nav>
-  <script src="../../js/investidor/header.js"></script>
+</div>
+
+<div id="add-wallet-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <h2>Nova Carteira</h2>
+    <form id="add-wallet-form">
+      <div class="form-group">
+        <label for="wallet-name">Nome da Carteira</label>
+        <input type="text" id="wallet-name" required>
+      </div>
+      <div class="form-group">
+        <label for="wallet-description">Descrição</label>
+        <textarea id="wallet-description"></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Criar Carteira</button>
+    </form>
+  </div>
 </div>
