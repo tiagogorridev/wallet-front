@@ -163,22 +163,38 @@ async function saveWalletInfo() {
     
     try {
         const walletData = {
-            id: parseInt(walletId),
-            nome: name,
-            descricao: description
+            id: parseInt(walletId)
         };
         
+        if (name !== currentWallet.nome) {
+            walletData.nome = name;
+        }
+        
+        walletData.descricao = description;
         const response = await requisicaoAPI('PUT', 'wallets', walletData);
         
         if (response.ok) {
-            localStorage.setItem('selectedPortfolio', name);
+            const updatedWallet = {
+                ...currentWallet,
+                descricao: description
+            };
+            
+            if (name !== currentWallet.nome) {
+                updatedWallet.nome = name;
+                localStorage.setItem('selectedPortfolio', name);
+            }
+            
+            currentWallet = updatedWallet;
+            
             mostrarSucesso('Carteira atualizada com sucesso!');
             
             document.dispatchEvent(new CustomEvent('portfolioUpdated', {
-                detail: { portfolio: { ...currentWallet, nome: name, descricao: description } }
+                detail: { portfolio: updatedWallet }
             }));
         } else {
-            mostrarErro(`Erro ao atualizar carteira: ${response.data.msg || 'Falha na operação'}`);
+            const errorMsg = response.data.msg || 'Falha na operação';
+            console.error('Erro detalhado:', response.data);
+            mostrarErro(`Erro ao atualizar carteira: ${errorMsg}`);
         }
     } catch (error) {
         console.error('Erro ao atualizar carteira:', error);
@@ -228,8 +244,16 @@ async function saveAllocation() {
 async function deleteWallet() {
     if (!currentWallet) return;
     
+    const walletId = localStorage.getItem('selectedWalletId');
+    
+    if (!walletId) {
+        mostrarErro('ID da carteira não encontrado.');
+        document.querySelector('.modal-overlay').style.display = 'none';
+        return;
+    }
+    
     try {
-        const response = await requisicaoAPI('DELETE', 'wallets');
+        const response = await requisicaoAPI('DELETE', `wallets?id=${walletId}`);
         
         if (response.ok) {
             document.querySelector('.modal-overlay').style.display = 'none';
@@ -238,10 +262,10 @@ async function deleteWallet() {
             mostrarSucesso('Carteira excluída com sucesso!');
             
             document.dispatchEvent(new CustomEvent('walletDeleted', {
-                detail: { walletId: localStorage.getItem('selectedWalletId') }
+                detail: { walletId: walletId }
             }));
             
-            window.location.href = '../../html/investidor/index.html';
+            window.location.href = '../../html/investidor/resumo.html';
         } else {
             mostrarErro(`Erro ao excluir carteira: ${response.data.msg || 'Falha na operação'}`);
         }
