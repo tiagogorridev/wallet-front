@@ -1,18 +1,23 @@
 .add-asset-btn-secondary,
-.add-lancamento-btn,
 .add-goal-btn,
 .submit-btn,
 .btn-primary,
 .save-btn,
-.modal-actions .save-btn {
-  background-color: var(--ambar);
-  color: var(--dark);
+.modal-actions .save-btn,
+.assets-section .btn-primary {
+  background-color: #ffa500;
+  color: #000;
   border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
-  cursor: pointer;
+  border-radius: 50px;
+  padding: 12px 24px;
   font-weight: 600;
-  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(255, 165, 0, 0.2);
 }
 
 .add-asset-btn-secondary:hover,
@@ -21,9 +26,11 @@
 .submit-btn:hover,
 .btn-primary:hover,
 .save-btn:hover,
-.modal-actions .save-btn:hover {
-  background-color: #e69500;
-  opacity: 0.9;
+.modal-actions .save-btn:hover,
+.assets-section .btn-primary:hover {
+  background-color: #ffb733;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(255, 165, 0, 0.3);
 }
 
 .submit-btn,
