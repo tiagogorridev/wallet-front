@@ -206,10 +206,65 @@
     </div>
 </div>
 
+
+
+    <div id="editAssetModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Ativo</h2>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editAssetForm">
+                    <input type="hidden" id="editAssetId">
+                    <input type="hidden" id="editTransactionId">
+
+                    <div class="form-group">
+                        <label for="editAssetName">Nome do Ativo:</label>
+                        <input type="text" id="editAssetName" name="editAssetName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAssetCategory">Categoria:</label>
+                        <select id="editAssetCategory" name="editAssetCategory" required>
+                            <option value="CRIPTOMOEDAS">Criptomoedas</option>
+                            <option value="ACOES">Ações</option>
+                            <option value="RENDA_FIXA">Renda Fixa</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAssetValuePerUnit">Valor por Unidade (R$):</label>
+                        <input type="number" id="editAssetValuePerUnit" name="editAssetValuePerUnit" step="0.01" min="0.01"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAssetQuantity">Quantidade:</label>
+                        <input type="number" id="editAssetQuantity" name="editAssetQuantity" step="0.000001" min="0.000001"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAssetPurchaseDate">Data de Compra:</label>
+                        <input type="date" id="editAssetPurchaseDate" required pattern="\d{4}-\d{2}-\d{2}">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn primary-btn">Salvar Alterações</button>
+                        <button type="button" class="btn secondary-btn cancel-btn">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <script src="../../js/auth/acess.js"></script>
     <script src="../../js/investidor/graficos.js"></script>
     <script src="../../js/investidor/header.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="../../js/investidor/carteira-resumo.js"></script>
+    
 </body>
 </html>
