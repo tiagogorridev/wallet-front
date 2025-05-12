@@ -153,12 +153,26 @@ function displayUsers() {
         const isCurrentUser = currentUserInfo && user.id === currentUserInfo.id;
         const row = document.createElement('tr');
         
+        // Função para converter o tipo de perfil para exibição
+        function getProfileDisplayName(profile) {
+            switch(profile) {
+                case 'ADMIN':
+                    return 'ADMINISTRADOR';
+                case 'USER':
+                    return 'INVESTIDOR';
+                case 'ANALYST':
+                    return 'ANALISTA';
+                default:
+                    return profile || 'N/A';
+            }
+        }
+
         row.innerHTML = `
             <td><input type="checkbox" class="user-select" data-id="${user.id}"></td>
             <td>${user.id || 'N/A'}</td>
             <td>${user.nome || 'N/A'}</td>
             <td>${user.email || 'N/A'}</td>
-            <td>${user.perfil === 'ADMIN' ? 'Administrador' : 'Usuário'}</td>
+            <td>${getProfileDisplayName(user.perfil)}</td>
             <td class="actions-cell">
                 <button class="edit-btn" data-id="${user.id}" title="Editar usuário">
                     <i class="fas fa-pencil-alt"></i>

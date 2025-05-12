@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function redirectUserByProfile(profile) {
         const routes = {
             'ADMIN': '../../html/administrador/dashboard.html',
-            'ANALISTA': '../../html/dashboard.html',
+            'ANALISTA': '../../html/analista/dashboard-analista.html',
             'USUARIO': '../../html/investidor/resumo.html',
         };
         
