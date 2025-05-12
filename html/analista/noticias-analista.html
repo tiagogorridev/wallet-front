@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyWallet - Notícias</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="shortcut icon" href="../../assets/favicon-icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="../../css/auth/style.css">
+    <link rel="stylesheet" href="../../css/analista/header-analista.css">
+    <link rel="stylesheet" href="../../css/analista/noticias-analista.css">
+</head>
+<body>
+    <header id="header-analista"></header>
+    <main class="content-container">
+        <div class="content-title">
+            <h1>Publicação de Notícias e Dicas</h1>
+            <p>Compartilhe informações valiosas com os clientes</p>
+        </div>
+
+        <section class="publication-section">
+            <div class="section-header">
+                <h2>Nova Publicação</h2>
+            </div>
+            
+            <div class="publication-form">
+                <div class="form-group">
+                    <label for="title">Título</label>
+                    <input type="text" id="title" class="form-control" placeholder="Digite o título da publicação">
+                </div>
+                
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <div class="category-selector">
+                        <button class="category-btn active">Notícia</button>
+                        <button class="category-btn">Dica de Investimento</button>
+                        <button class="category-btn">Alerta de Mercado</button>
+                        <button class="category-btn">Educacional</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content">Conteúdo</label>
+                    <textarea id="content" class="form-control" placeholder="Digite o conteúdo da publicação"></textarea>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="highlight">
+                    <label for="highlight">Destacar publicação</label>
+                </div>
+                
+                <div class="btn-controls">
+                    <button class="btn-preview">
+                        <i class="fas fa-eye"></i> Visualizar
+                    </button>
+                    <button class="btn-submit">
+                        <i class="fas fa-paper-plane"></i> Publicar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="publication-section">
+            <div class="section-header">
+                <h2>Publicações Recentes</h2>
+                <div class="view-filters">
+                    <button class="filter-btn active">Todas</button>
+                    <button class="filter-btn">Notícias</button>
+                    <button class="filter-btn">Dicas</button>
+                </div>
+            </div>
+
+            <div class="news-list">
+                <div class="news-item">
+                    <div class="news-header">
+                        <h3 class="news-title">Alta da taxa Selic impacta mercado de renda fixa</h3>
+                        <span class="news-category noticia">Notícia</span>
+                    </div>
+                    <p class="news-content">
+                        O Banco Central decidiu elevar a taxa Selic para 11,25% ao ano, o que impacta diretamente os investimentos em renda fixa. 
+                        Títulos atrelados à Selic, como o Tesouro Selic, tendem a oferecer retornos maiores, tornando-se opções atrativas para investidores conservadores.
+                    </p>
+                    <div class="news-footer">
+                        <span>Publicado em: 05/05/2025</span>
+                        <div class="news-actions">
+                            <button class="action-btn">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-header">
+                        <h3 class="news-title">5 estratégias para diversificar sua carteira em 2025</h3>
+                        <span class="news-category dica">Dica de Investimento</span>
+                    </div>
+                    <p class="news-content">
+                        A diversificação é fundamental para reduzir riscos. Recomendamos: 1) Incluir ativos internacionais; 
+                        2) Combinar renda fixa e variável; 3) Investir em diferentes setores da economia; 
+                        4) Considerar investimentos alternativos como FIIs; 5) Manter reserva de emergência em ativos líquidos.
+                    </p>
+                    <div class="news-footer">
+                        <span>Publicado em: 02/05/2025</span>
+                        <div class="news-actions">
+                            <button class="action-btn">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="news-item">
+                    <div class="news-header">
+                        <h3 class="news-title">Atualização tributária para investidores em 2025</h3>
+                        <span class="news-category">Educacional</span>
+                    </div>
+                    <p class="news-content">
+                        As novas regras tributárias aprovadas pelo governo entrarão em vigor a partir de junho. 
+                        Entre as principais mudanças estão a alteração nas alíquotas de imposto sobre ganhos em renda variável 
+                        e a nova sistemática de tributação para investimentos no exterior. Os investidores devem revisar suas estratégias.
+                    </p>
+                    <div class="news-footer">
+                        <span>Publicado em: 28/04/2025</span>
+                        <div class="news-actions">
+                            <button class="action-btn">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-trash"></i> Excluir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+<script src="../../js/analista/header-analista.js"></script>
+<script src="../../js/analista/noticias-analista.js"></script>
+</html>
