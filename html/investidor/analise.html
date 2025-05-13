@@ -1,181 +1,190 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyWallet - Análise</title>
+    <link rel="stylesheet" href="../../css/configuracoes.css">
     <link rel="stylesheet" href="../../css/auth/style.css">
     <link rel="stylesheet" href="../../css/investidor/header.css">
     <link rel="stylesheet" href="../../css/investidor/components-investidor/components-investidor.css">
     <link rel="shortcut icon" href="../../assets/favicon-icon.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
+
 <body>
-  <header id="header"></header>
-  <div class="dashboard-container">
-    <div class="analysis-header">
-      <div class="header-content">
-        <h1>Análise de Carteira</h1>
-        <p>Serviço de análise completa para otimizar seus investimentos</p>
-      </div>
-      <div class="cta-buttons">
-        <a href="pagamento.html" class="subscribe-btn">Assinar Agora</a>
-      </div>
+    <header id="header"></header>
+    <div class="dashboard-container">
+        <div class="analysis-header">
+            <div class="header-content">
+                <h1>Análise de Carteira</h1>
+                <p>Serviço de análise completa para otimizar seus investimentos</p>
+            </div>
+            <div class="cta-buttons">
+                <a href="pagamento.html" class="subscribe-btn">Assinar Agora</a>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <section class="benefits-section">
+                <div class="section-header">
+                    <h2>Benefícios do Serviço</h2>
+                </div>
+
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon professional"></div>
+                        <h3>Análise Profissional</h3>
+                        <p>Avaliação detalhada da sua carteira por especialistas do mercado financeiro</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon optimization"></div>
+                        <h3>Otimização de Carteira</h3>
+                        <p>Sugestões para balancear seus ativos de acordo com seu perfil de risco</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon alerts"></div>
+                        <h3>Alertas de Mercado</h3>
+                        <p>Receba notificações sobre mudanças significativas nos seus investimentos</p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon report"></div>
+                        <h3>Relatórios Mensais</h3>
+                        <p>Relatórios detalhados sobre o desempenho da sua carteira e recomendações</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="example-analysis">
+                <div class="section-header">
+                    <h2>Exemplo de Análise</h2>
+                </div>
+
+                <div class="analysis-preview">
+                    <div class="analysis-chart">
+                        <div class="chart-placeholder">
+                            <span>Exemplo de gráfico de desempenho com análise</span>
+                        </div>
+                    </div>
+
+                    <div class="analysis-details">
+                        <div class="analysis-stats">
+                            <div class="stat-item">
+                                <h4>Retorno Projetado</h4>
+                                <span class="stat-value positive">12,5%</span>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Risco Atual</h4>
+                                <span class="stat-value neutral">Moderado</span>
+                            </div>
+                            <div class="stat-item">
+                                <h4>Diversificação</h4>
+                                <span class="stat-value negative">Insuficiente</span>
+                            </div>
+                        </div>
+
+                        <div class="analysis-recommendations">
+                            <h4>Recomendações</h4>
+                            <ul>
+                                <li>Aumente exposição em para balancear o portfólio</li>
+                                <li>Reduza concentração em criptomoedas de 50% para 30%</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="plans-section">
+                <div class="section-header">
+                    <h2>Plano Disponível</h2>
+                </div>
+
+                <div class="plans-container">
+                    <div class="plan-card">
+                        <div class="plan-header">
+                            <h3>Profissional</h3>
+                            <div class="plan-price">
+                                <span class="price">R$ 99,90</span>
+                                <span class="period">/mês</span>
+                            </div>
+                        </div>
+                        <div class="plan-features">
+                            <ul>
+                                <li>Análise diária da carteira</li>
+                                <li>Sugestões de balanceamento</li>
+                                <li>Acesso à área de relatórios</li>
+                                <li>Alertas em tempo real</li>
+                                <li>Consultas ilimitadas com especialistas</li>
+                            </ul>
+                        </div>
+                        <a href="pagamento.html" class="plan-select-btn">Escolher Plano</a>
+                    </div>
+                </div>
+            </section>
+
+            <section class="testimonials-section">
+                <div class="section-header">
+                    <h2>O que Dizem Nossos Clientes</h2>
+                </div>
+
+                <div class="testimonials-container">
+                    <div class="testimonial-card">
+                        <div class="testimonial-quote">"Com a análise de carteira, consegui aumentar meus rendimentos em
+                            15% no último trimestre. Os relatórios são claros e as recomendações muito precisas."</div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar"></div>
+                            <div class="author-info">
+                                <div class="author-name">Carlos Silva</div>
+                                <div class="author-title">Investidor desde 2020</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-quote">"O serviço me ajudou a identificar concentrações de risco que eu
+                            não havia percebido. Após seguir as recomendações, minha carteira está muito mais
+                            equilibrada."</div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar"></div>
+                            <div class="author-info">
+                                <div class="author-name">Ana Martins</div>
+                                <div class="author-title">Investidora desde 2018</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-quote">"Os alertas em tempo real me ajudaram a tomar decisões rápidas
+                            durante períodos de alta volatilidade. O investimento no serviço se pagou várias vezes."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar"></div>
+                            <div class="author-info">
+                                <div class="author-name">Marcos Oliveira</div>
+                                <div class="author-title">Investidor desde 2019</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>Pronto para Otimizar seus Investimentos?</h2>
+                <p>Assine agora e receba sua primeira análise de carteira em até 48 horas</p>
+                <a href="pagamento.html" class="subscribe-btn-large">Assinar Análise de Carteira</a>
+            </div>
+        </section>
     </div>
 
-    <main class="main-content">
-      <section class="benefits-section">
-        <div class="section-header">
-          <h2>Benefícios do Serviço</h2>
-        </div>
-
-        <div class="benefits-grid">
-          <div class="benefit-card">
-            <div class="benefit-icon professional"></div>
-            <h3>Análise Profissional</h3>
-            <p>Avaliação detalhada da sua carteira por especialistas do mercado financeiro</p>
-          </div>
-
-          <div class="benefit-card">
-            <div class="benefit-icon optimization"></div>
-            <h3>Otimização de Carteira</h3>
-            <p>Sugestões para balancear seus ativos de acordo com seu perfil de risco</p>
-          </div>
-
-          <div class="benefit-card">
-            <div class="benefit-icon alerts"></div>
-            <h3>Alertas de Mercado</h3>
-            <p>Receba notificações sobre mudanças significativas nos seus investimentos</p>
-          </div>
-
-          <div class="benefit-card">
-            <div class="benefit-icon report"></div>
-            <h3>Relatórios Mensais</h3>
-            <p>Relatórios detalhados sobre o desempenho da sua carteira e recomendações</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="example-analysis">
-        <div class="section-header">
-          <h2>Exemplo de Análise</h2>
-        </div>
-
-        <div class="analysis-preview">
-          <div class="analysis-chart">
-            <div class="chart-placeholder">
-              <span>Exemplo de gráfico de desempenho com análise</span>
-            </div>
-          </div>
-
-          <div class="analysis-details">
-            <div class="analysis-stats">
-              <div class="stat-item">
-                <h4>Retorno Projetado</h4>
-                <span class="stat-value positive">12,5%</span>
-              </div>
-              <div class="stat-item">
-                <h4>Risco Atual</h4>
-                <span class="stat-value neutral">Moderado</span>
-              </div>
-              <div class="stat-item">
-                <h4>Diversificação</h4>
-                <span class="stat-value negative">Insuficiente</span>
-              </div>
-            </div>
-
-            <div class="analysis-recommendations">
-              <h4>Recomendações</h4>
-              <ul>
-                <li>Aumente exposição em  para balancear o portfólio</li>
-                <li>Reduza concentração em criptomoedas de 50% para 30%</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="plans-section">
-        <div class="section-header">
-          <h2>Plano Disponível</h2>
-        </div>
-
-        <div class="plans-container">
-          <div class="plan-card">
-            <div class="plan-header">
-              <h3>Profissional</h3>
-              <div class="plan-price">
-                <span class="price">R$ 99,90</span>
-                <span class="period">/mês</span>
-              </div>
-            </div>
-            <div class="plan-features">
-              <ul>
-                <li>Análise diária da carteira</li>
-                <li>Sugestões de balanceamento</li>
-                <li>Acesso à área de relatórios</li>
-                <li>Alertas em tempo real</li>
-                <li>Consultas ilimitadas com especialistas</li>
-              </ul>
-            </div>
-            <a href="pagamento.html" class="plan-select-btn">Escolher Plano</a>
-          </div>
-        </div>
-      </section>
-
-      <section class="testimonials-section">
-        <div class="section-header">
-          <h2>O que Dizem Nossos Clientes</h2>
-        </div>
-
-        <div class="testimonials-container">
-          <div class="testimonial-card">
-            <div class="testimonial-quote">"Com a análise de carteira, consegui aumentar meus rendimentos em 15% no último trimestre. Os relatórios são claros e as recomendações muito precisas."</div>
-            <div class="testimonial-author">
-              <div class="author-avatar"></div>
-              <div class="author-info">
-                <div class="author-name">Carlos Silva</div>
-                <div class="author-title">Investidor desde 2020</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial-card">
-            <div class="testimonial-quote">"O serviço me ajudou a identificar concentrações de risco que eu não havia percebido. Após seguir as recomendações, minha carteira está muito mais equilibrada."</div>
-            <div class="testimonial-author">
-              <div class="author-avatar"></div>
-              <div class="author-info">
-                <div class="author-name">Ana Martins</div>
-                <div class="author-title">Investidora desde 2018</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial-card">
-            <div class="testimonial-quote">"Os alertas em tempo real me ajudaram a tomar decisões rápidas durante períodos de alta volatilidade. O investimento no serviço se pagou várias vezes."</div>
-            <div class="testimonial-author">
-              <div class="author-avatar"></div>
-              <div class="author-info">
-                <div class="author-name">Marcos Oliveira</div>
-                <div class="author-title">Investidor desde 2019</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <section class="cta-section">
-      <div class="cta-content">
-        <h2>Pronto para Otimizar seus Investimentos?</h2>
-        <p>Assine agora e receba sua primeira análise de carteira em até 48 horas</p>
-        <a href="pagamento.html" class="subscribe-btn-large">Assinar Análise de Carteira</a>
-      </div>
-    </section>
-  </div>
-  
-  <script src="../../js/auth/acess.js"></script>
-  <script src="../../js/investidor/header.js"></script>
-  <script src="../../js/investidor/carteira-analise.js"></script>
+    <script src="../../js/auth/acess.js"></script>
+    <script src="../../js/investidor/header.js"></script>
+    <script src="../../js/investidor/carteira-analise.js"></script>
 </body>
+
 </html>

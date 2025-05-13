@@ -9,7 +9,7 @@ const PortfolioManager = {
 
     setCharts(charts) {
         this.evolutionChart = charts.evolutionChart;
-        this.distributionChart = charts.distributionChart; 
+        this.distributionChart = charts.distributionChart;
     },
 
     loadPortfolio() {
@@ -45,6 +45,8 @@ const PortfolioManager = {
     },
 
     fetchWalletDetails(walletId) {
+        this.showLoading();
+
         APIService.fetchFromAPI('/wallets', 'GET')
             .then(result => {
                 const wallets = result.data.data || [];
@@ -61,6 +63,7 @@ const PortfolioManager = {
                 }
             })
             .catch(error => {
+                this.hideLoading();
                 Utils.showErrorMessage(this.elements.loadingMessage, `Erro ao carregar carteira: ${error.message}`);
                 if (this.elements.portfolioHeader) {
                     this.elements.portfolioHeader.textContent = `Carteira: ${localStorage.getItem('selectedPortfolio') || "Não encontrada"}`;
@@ -69,6 +72,8 @@ const PortfolioManager = {
     },
 
     fetchWallets() {
+        this.showLoading();
+
         APIService.getWallets()
             .then(result => {
                 const wallets = result.data.data || [];
@@ -80,6 +85,7 @@ const PortfolioManager = {
                 }
             })
             .catch(error => {
+                this.hideLoading();
                 Utils.showErrorMessage(this.elements.loadingMessage, `Erro ao carregar carteiras: ${error.message}`);
             });
     },
@@ -92,10 +98,34 @@ const PortfolioManager = {
         }
     },
 
-    updatePortfolioUI(portfolioData) {
+    showLoading() {
+        if (this.elements.loadingMessage) {
+            this.elements.loadingMessage.style.display = 'block';
+        }
+        // Mostrar loading no gráfico
+        const chartContainer = document.querySelector('.pie-chart-container');
+        if (chartContainer) {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading-chart';
+            loadingDiv.className = 'loading-message';
+            loadingDiv.innerHTML = '<p>Carregando distribuição de ativos...</p>';
+            chartContainer.appendChild(loadingDiv);
+        }
+    },
+
+    hideLoading() {
         if (this.elements.loadingMessage) {
             this.elements.loadingMessage.style.display = 'none';
         }
+        // Remover loading do gráfico
+        const loadingChart = document.getElementById('loading-chart');
+        if (loadingChart) {
+            loadingChart.remove();
+        }
+    },
+
+    updatePortfolioUI(portfolioData) {
+        this.hideLoading();
 
         if (this.elements.portfolioHeader) {
             this.elements.portfolioHeader.textContent = `Carteira: ${portfolioData.nome || "Sem nome"}`;
@@ -105,7 +135,16 @@ const PortfolioManager = {
             this.renderPortfolioDetails(portfolioData);
         }
 
-        ChartManagement.updateDistributionChart(portfolioData, this.distributionChart, this.elements.pieChartLegend);
+        // Atualizar o gráfico de distribuição
+        if (this.distributionChart && portfolioData.assetDistribution) {
+            const distributionData = portfolioData.assetDistribution.map(item => ({
+                class: item.category.toLowerCase(),
+                label: item.category,
+                percentage: item.percentage,
+                value: item.value
+            }));
+            this.distributionChart.updateData(distributionData);
+        }
     },
 
     renderPortfolioDetails(portfolioData) {
@@ -130,7 +169,7 @@ const PortfolioManager = {
 
         const assetsListingDiv = this.createAssetsListingContainer();
         assetsListDiv.appendChild(assetsListingDiv);
-        
+
         this.elements.assetsTableContainer.appendChild(assetsListDiv);
 
         const transactions = portfolioData.transacoes || [];

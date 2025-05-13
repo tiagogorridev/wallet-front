@@ -1,60 +1,87 @@
 .assets-section .portfolio-summary {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
 }
 
 .assets-section .summary-item {
-  background-color: #222;
-  border-radius: 10px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #222;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .assets-section .summary-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .assets-section .summary-item h3 {
-  color: #999;
-  font-size: 1rem;
-  margin-bottom: 10px;
-  font-weight: 500;
+    color: #999;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    font-weight: 500;
 }
 
 .assets-section .summary-item p {
-  color: #ffffff;
-  font-size: 1.8rem;
-  margin: 0;
-  font-weight: 700;
+    color: #ffffff;
+    font-size: 1.8rem;
+    margin: 0;
+    font-weight: 700;
 }
 
 .assets-section #portfolio-balance {
-  color: #fff;
-  letter-spacing: -0.5px;
+    color: #fff;
+    letter-spacing: -0.5px;
 }
 
 .assets-section #portfolio-return {
-  font-weight: 700;
+    font-weight: 700;
 }
 
 .assets-section #portfolio-return.positive {
-  color: #4caf50;
+    color: #4caf50;
 }
 
 .assets-section #portfolio-return.negative {
-  color: #f44336;
+    color: #f44336;
 }
 
 .assets-section .portfolio-description {
-  background-color: #222;
-  border-radius: 8px;
-  padding: 16px;
-  margin-top: 16px;
-  display: flex;
-  align-items: center;
+    background-color: #222;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.loading-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #888;
+    font-style: italic;
+}
+
+.pie-chart-container {
+    position: relative;
+    min-height: 300px;
+}
+
+#loading-chart {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(26, 26, 26, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
 }

@@ -1,38 +1,35 @@
-(function() {
-    const API_URL = 'http://191.239.116.115:8080';
-    
+(function () {
     function verificarAutenticacao() {
-        const token = localStorage.getItem('accessToken');
-        const userInfo = localStorage.getItem('userInfo');
-        
-        if (!token || !userInfo) {
+        if (!AuthService.isAuthenticated()) {
             redirecionarParaLogin();
             return false;
         }
-        
-        try {
-            const user = JSON.parse(userInfo);
-            return {
-                autenticado: true,
-                perfil: user.perfil,
-                nome: user.nome,
-                email: user.email
-            };
-        } catch (error) {
-            console.error('Erro ao processar informações do usuário');
+
+        const userInfo = AuthService.getUserInfo();
+        if (!userInfo) {
             redirecionarParaLogin();
             return false;
         }
+
+        // Garantir que o refresh token está ativo
+        AuthService.startRefreshToken();
+
+        return {
+            autenticado: true,
+            perfil: userInfo.perfil,
+            nome: userInfo.nome,
+            email: userInfo.email
+        };
     }
-    
+
     function redirecionarParaLogin() {
         window.location.replace('../../index.html');
     }
-    
+
     function verificarPermissao() {
         const auth = verificarAutenticacao();
         if (!auth) return;
-        
+
         const paginaAtual = window.location.pathname;
         const ehPaginaAdmin = paginaAtual.includes('/administrador/')
         const ehPaginaUsuario = paginaAtual.includes('/investidor/');
@@ -41,9 +38,9 @@
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
-        if (ehPaginaUsuario && (auth.perfil === 'ADMIN' || auth.perfil === 'ANALISTA' || 
-            (auth.perfil !== 'USUARIO' && auth.perfil !== 'CONSERVADOR' && 
-             auth.perfil !== 'MODERADO' && auth.perfil !== 'ARROJADO'))) {
+        if (ehPaginaUsuario && (auth.perfil === 'ADMIN' || auth.perfil === 'ANALISTA' ||
+            (auth.perfil !== 'USUARIO' && auth.perfil !== 'CONSERVADOR' &&
+                auth.perfil !== 'MODERADO' && auth.perfil !== 'ARROJADO'))) {
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
@@ -51,18 +48,18 @@
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
-        
+
         return true;
     }
-    
+
     function redirecionarUsuarioPorPerfil(perfil) {
-        switch(perfil) {
+        switch (perfil) {
             case 'ADMIN':
             case 'ANALISTA':
-                window.location.replace('/html/administrador/dashboard.html');
+                window.location.replace('../html/administrador/dashboard.html');
                 break;
             case 'USUARIO':
-                window.location.replace('/html/investidor/resumo.html');
+                window.location.replace('../html/investidor/resumo.html');
                 break;
             default:
                 redirecionarParaLogin();
@@ -71,51 +68,24 @@
     verificarPermissao();
 })();
 
-document.addEventListener('DOMContentLoaded', function() {
-    function verificarAutenticacao() {
-        const token = localStorage.getItem('accessToken');
-        const userInfo = localStorage.getItem('userInfo');
-        
-        if (!token || !userInfo) {
-            return false;
-        }
-        
-        try {
-            const user = JSON.parse(userInfo);
-            return {
-                autenticado: true,
-                perfil: user.perfil,
-                nome: user.nome,
-                email: user.email
-            };
-        } catch (error) {
-            return false;
-        }
-    }
-    
+document.addEventListener('DOMContentLoaded', function () {
     function atualizarInfoUsuario() {
-        const auth = verificarAutenticacao();
-        if (!auth) return;
-        
+        const userInfo = AuthService.getUserInfo();
+        if (!userInfo) return;
+
         const nomeElement = document.getElementById('nomeUsuario');
         const emailElement = document.getElementById('emailUsuario');
         const perfilElement = document.getElementById('perfilUsuario');
-        
-        if (nomeElement) nomeElement.textContent = auth.nome;
-        if (emailElement) emailElement.textContent = auth.email;
-        if (perfilElement) perfilElement.textContent = auth.perfil;
+
+        if (nomeElement) nomeElement.textContent = userInfo.nome;
+        if (emailElement) emailElement.textContent = userInfo.email;
+        if (perfilElement) perfilElement.textContent = userInfo.perfil;
     }
-    
-    function logout() {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('userInfo');
-        window.location.replace('../../index.html');
-    }
-    
+
     const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
-        logoutButton.addEventListener('click', logout);
+        logoutButton.addEventListener('click', () => AuthService.logout());
     }
-    
+
     atualizarInfoUsuario();
 });
