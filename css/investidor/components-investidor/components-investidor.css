@@ -16,3 +16,48 @@
 @import url('switches.css');
 @import url('tables.css');
 @import url('testimonials.css');
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    color: #FFFFFF;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.legend-label {
+    flex: 1;
+    font-size: 14px;
+}
+
+.legend-value {
+    font-size: 14px;
+    color: #FFA500;
+    margin-left: 8px;
+}
+
+.legend-color.crypto {
+    background-color: #FFA500;
+}
+
+.legend-color.stocks {
+    background-color: #6b7280;
+}
+
+.legend-color.fixed-income {
+    background-color: #22C55E;
+}
+
+.legend-color.fis {
+    background-color: #3b82f6;
+}
+
+.legend-color.other {
+    background-color: #ec4899;
+}

@@ -1,276 +1,332 @@
 class EvolutionPatrimonyComponent {
-  constructor(containerId, filterContainerId = null) {
-    this.containerId = containerId;
-    this.filterContainerId = filterContainerId;
-    this.chartInstance = null;
-    this.months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-  }
-
-  initialize() {
-    this.createChart();
-    if (this.filterContainerId) {
-      this.setupEventListeners();
-    }
-  }
-
-  createChart() {
-    const ctx = document.getElementById(this.containerId).getContext('2d');
-    const today = new Date();
-    const labels = [];
-    const data = [];
-
-    for (let i = 11; i >= 0; i--) {
-      const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
-      labels.push(this.getMonthYearLabel(date));
-      data.push(this.generateMonthlyValue(date));
+    constructor(containerId, filterContainerId = null) {
+        this.containerId = containerId;
+        this.filterContainerId = filterContainerId;
+        this.chartInstance = null;
+        this.months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     }
 
-    this.chartInstance = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Evolução do Patrimônio',
-          data: data,
-          borderColor: '#FFA500',
-          backgroundColor: 'rgba(255, 165, 0, 0.2)',
-          tension: 0.4,
-          fill: true
-        }]
-      },
-      options: this.getLineChartOptions()
-    });
-  }
-
-  getMonthYearLabel(date) {
-    return `${this.months[date.getMonth()]} / ${date.getFullYear()}`;
-  }
-
-  generateMonthlyValue(date) {
-    const baseValue = 10000;
-    const randomVariation = Math.random() * 2000 - 1000;
-    return baseValue + randomVariation;
-  }
-
-  getLineChartOptions() {
-    return {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
+    initialize() {
+        this.createChart();
+        if (this.filterContainerId) {
+            this.setupEventListeners();
         }
-      },
-      scales: {
-        y: {
-          beginAtZero: false,
-          ticks: {
-            color: '#FFFFFF',
-            callback: function(value) {
-              return 'R$ ' + Number(value).toLocaleString();
+    }
+
+    createChart() {
+        const ctx = document.getElementById(this.containerId).getContext('2d');
+        const today = new Date();
+        const labels = [];
+        const data = [];
+
+        for (let i = 11; i >= 0; i--) {
+            const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+            labels.push(this.getMonthYearLabel(date));
+            data.push(this.generateMonthlyValue(date));
+        }
+
+        this.chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Evolução do Patrimônio',
+                    data: data,
+                    borderColor: '#FFA500',
+                    backgroundColor: 'rgba(255, 165, 0, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: this.getLineChartOptions()
+        });
+    }
+
+    getMonthYearLabel(date) {
+        return `${this.months[date.getMonth()]} / ${date.getFullYear()}`;
+    }
+
+    generateMonthlyValue(date) {
+        const baseValue = 10000;
+        const randomVariation = Math.random() * 2000 - 1000;
+        return baseValue + randomVariation;
+    }
+
+    getLineChartOptions() {
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: {
+                        color: '#FFFFFF',
+                        callback: function (value) {
+                            return 'R$ ' + Number(value).toLocaleString();
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#FFFFFF'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
             }
-          },
-          grid: {
-            color: 'rgba(255, 255, 255, 0.1)'
-          }
-        },
-        x: {
-          ticks: {
-            color: '#FFFFFF'
-          },
-          grid: {
-            color: 'rgba(255, 255, 255, 0.1)'
-          }
-        }
-      }
-    };
-  }
-
-  updateChart(monthsToShow) {
-    if (!this.chartInstance) return;
-
-    const today = new Date();
-    const labels = [];
-    const data = [];
-
-    for (let i = monthsToShow - 1; i >= 0; i--) {
-      const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
-      labels.push(this.getMonthYearLabel(date));
-      data.push(this.generateMonthlyValue(date));
+        };
     }
 
-    this.chartInstance.data.labels = labels;
-    this.chartInstance.data.datasets[0].data = data;
-    this.chartInstance.update();
-  }
+    updateChart(monthsToShow) {
+        if (!this.chartInstance) return;
 
-  setupEventListeners() {
-    const filterButtons = document.querySelectorAll(`#${this.filterContainerId} .filter-option`);
-    filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        const monthsValue = button.getAttribute('data-value');
-        this.updateChart(parseInt(monthsValue));
-      });
-    });
-  }
+        const today = new Date();
+        const labels = [];
+        const data = [];
+
+        for (let i = monthsToShow - 1; i >= 0; i--) {
+            const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+            labels.push(this.getMonthYearLabel(date));
+            data.push(this.generateMonthlyValue(date));
+        }
+
+        this.chartInstance.data.labels = labels;
+        this.chartInstance.data.datasets[0].data = data;
+        this.chartInstance.update();
+    }
+
+    setupEventListeners() {
+        const filterButtons = document.querySelectorAll(`#${this.filterContainerId} .filter-option`);
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                const monthsValue = button.getAttribute('data-value');
+                this.updateChart(parseInt(monthsValue));
+            });
+        });
+    }
 }
 
 class AssetsDistributionComponent {
-  constructor(chartContainerId, legendContainerId, data = null) {
-    this.chartContainerId = chartContainerId;
-    this.legendContainerId = legendContainerId;
-    this.chartInstance = null;
-    this.data = data || [
-      { class: 'crypto', label: 'Criptomoedas', percentage: 50 },
-      { class: 'fixed-income', label: 'Renda Fixa', percentage: 50 }
-    ];
-  }
+    constructor(chartContainerId, legendContainerId, data = null) {
+        this.chartContainerId = chartContainerId;
+        this.legendContainerId = legendContainerId;
+        this.chartInstance = null;
+        this.data = data || [];
+    }
 
-  initialize() {
-    this.createChart();
-    this.createLegend();
-  }
+    initialize() {
+        this.fetchAssetsDistribution();
+    }
 
-  createChart() {
-    const ctx = document.getElementById(this.chartContainerId).getContext('2d');
-    this.chartInstance = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: this.data.map(item => item.label),
-        datasets: [{
-          data: this.data.map(item => item.percentage),
-          backgroundColor: ['#FFA500', '#6b7280', '#22C55E', '#3b82f6', '#ec4899'],
-          hoverOffset: 4
-        }]
-      },
-      options: this.getPieChartOptions()
-    });
-  }
+    async fetchAssetsDistribution() {
+        try {
+            const response = await fetch('/wallets/assets-distribution', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
 
-  getPieChartOptions() {
-    return {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
+            if (!response.ok) {
+                throw new Error('Failed to fetch assets distribution');
+            }
+
+            const result = await response.json();
+            if (result.error) {
+                throw new Error(result.msg);
+            }
+
+            const assetsData = result.data.data.map(item => ({
+                class: this.getAssetClass(item.categoria),
+                label: item.categoria,
+                percentage: parseFloat(item.percentual).toFixed(2),
+                value: parseFloat(item.valor_total).toFixed(2)
+            }));
+
+            this.data = assetsData;
+            this.createChart();
+            this.createLegend();
+        } catch (error) {
+            console.error('Error fetching assets distribution:', error);
+            // Fallback to default data if fetch fails
+            this.data = [
+                { class: 'crypto', label: 'Criptomoedas', percentage: 50, value: 0 },
+                { class: 'fixed-income', label: 'Renda Fixa', percentage: 50, value: 0 }
+            ];
+            this.createChart();
+            this.createLegend();
         }
-      }
-    };
-  }
+    }
 
-  createLegend() {
-    const legendContainer = document.getElementById(this.legendContainerId);
-    if (!legendContainer) return;
+    getAssetClass(categoria) {
+        const categoryMap = {
+            'CRIPTOMOEDAS': 'crypto',
+            'ACOES': 'stocks',
+            'RENDA_FIXA': 'fixed-income',
+            'FIS': 'fis'
+        };
+        return categoryMap[categoria] || 'other';
+    }
 
-    legendContainer.innerHTML = '';
-    this.data.forEach(item => {
-      const legendItem = document.createElement('div');
-      legendItem.className = 'legend-item';
-      legendItem.innerHTML = `
+    createChart() {
+        const ctx = document.getElementById(this.chartContainerId).getContext('2d');
+        this.chartInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: this.data.map(item => item.label),
+                datasets: [{
+                    data: this.data.map(item => item.percentage),
+                    backgroundColor: ['#FFA500', '#6b7280', '#22C55E', '#3b82f6', '#ec4899'],
+                    hoverOffset: 4
+                }]
+            },
+            options: this.getPieChartOptions()
+        });
+    }
+
+    getPieChartOptions() {
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            const item = this.data[context.dataIndex];
+                            return `${item.label}: ${item.percentage}% (R$ ${item.value})`;
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    createLegend() {
+        const legendContainer = document.getElementById(this.legendContainerId);
+        if (!legendContainer) return;
+
+        legendContainer.innerHTML = '';
+        this.data.forEach(item => {
+            const legendItem = document.createElement('div');
+            legendItem.className = 'legend-item';
+            legendItem.innerHTML = `
         <span class="legend-color ${item.class}"></span>
         <span class="legend-label">${item.percentage}% ${item.label}</span>
+        <span class="legend-value">R$ ${item.value}</span>
       `;
-      legendContainer.appendChild(legendItem);
-    });
-  }
+            legendContainer.appendChild(legendItem);
+        });
+    }
 
-  updateData(newData) {
-    this.data = newData;
-    this.chartInstance.data.labels = this.data.map(item => item.label);
-    this.chartInstance.data.datasets[0].data = this.data.map(item => item.percentage);
-    this.chartInstance.update();
-    this.createLegend();
-  }
+    updateData(newData) {
+        this.data = newData;
+        this.chartInstance.data.labels = this.data.map(item => item.label);
+        this.chartInstance.data.datasets[0].data = this.data.map(item => item.percentage);
+        this.chartInstance.update();
+        this.createLegend();
+    }
 }
 
 class AssetsComponent {
-  constructor(containerId, modalId = null) {
-    this.containerId = containerId;
-    this.modalId = modalId;
-    this.assetCategories = [
-      { name: 'FIS', isExpanded: false },
-      { name: 'CRIPTOMOEDAS', isExpanded: false },
-      { name: 'AÇÕES', isExpanded: false },
-      { name: 'RENDA FIXA', isExpanded: false }
-    ];
-    this.cryptoAssets = [
-      {
-        symbol: 'BTC',
-        quantidade: 0.05,
-        precoMedio: 78500,
-        precoAtual: 80000,
-        variacao: '+1.91%',
-        rentabilidade: '+1.91%',
-        saldo: 4000,
-        variacao24h: '+2.3%',
-        variacao30d: '+15.7%',
-        nota: 9,
-        percentCarteira: '40.00%',
-        percentIdeal: '30.00%',
-        comprar: 'NÃO'
-      },
-      {
-        symbol: 'ETH',
-        quantidade: 0.5,
-        precoMedio: 4120,
-        precoAtual: 4000,
-        variacao: '-2.91%',
-        rentabilidade: '-2.91%',
-        saldo: 2000,
-        variacao24h: '-1.2%',
-        variacao30d: '+5.4%',
-        nota: 8,
-        percentCarteira: '20.00%',
-        percentIdeal: '15.00%',
-        comprar: 'SIM'
-      },
-      {
-        symbol: 'UNI',
-        quantidade: 20,
-        precoMedio: 50,
-        precoAtual: 45,
-        variacao: '-10.00%',
-        rentabilidade: '-10.00%',
-        saldo: 900,
-        variacao24h: '-2.50%',
-        variacao30d: '-8.70%',
-        nota: 7,
-        percentCarteira: '9.00%',
-        percentIdeal: '5.00%',
-        comprar: 'NÃO'
-      }
-    ];
-  }
-
-  initialize() {
-    this.renderAssetCategories();
-    if (this.modalId) {
-      this.setupModal();
+    constructor(containerId, modalId = null) {
+        this.containerId = containerId;
+        this.modalId = modalId;
+        this.assetCategories = [
+            { name: 'FIS', isExpanded: false },
+            { name: 'CRIPTOMOEDAS', isExpanded: false },
+            { name: 'AÇÕES', isExpanded: false },
+            { name: 'RENDA FIXA', isExpanded: false }
+        ];
+        this.cryptoAssets = [
+            {
+                symbol: 'BTC',
+                quantidade: 0.05,
+                precoMedio: 78500,
+                precoAtual: 80000,
+                variacao: '+1.91%',
+                rentabilidade: '+1.91%',
+                saldo: 4000,
+                variacao24h: '+2.3%',
+                variacao30d: '+15.7%',
+                nota: 9,
+                percentCarteira: '40.00%',
+                percentIdeal: '30.00%',
+                comprar: 'NÃO'
+            },
+            {
+                symbol: 'ETH',
+                quantidade: 0.5,
+                precoMedio: 4120,
+                precoAtual: 4000,
+                variacao: '-2.91%',
+                rentabilidade: '-2.91%',
+                saldo: 2000,
+                variacao24h: '-1.2%',
+                variacao30d: '+5.4%',
+                nota: 8,
+                percentCarteira: '20.00%',
+                percentIdeal: '15.00%',
+                comprar: 'SIM'
+            },
+            {
+                symbol: 'UNI',
+                quantidade: 20,
+                precoMedio: 50,
+                precoAtual: 45,
+                variacao: '-10.00%',
+                rentabilidade: '-10.00%',
+                saldo: 900,
+                variacao24h: '-2.50%',
+                variacao30d: '-8.70%',
+                nota: 7,
+                percentCarteira: '9.00%',
+                percentIdeal: '5.00%',
+                comprar: 'NÃO'
+            }
+        ];
     }
-  }
 
-  getValueClass(value) {
-    if (value.startsWith('+')) return 'positive';
-    if (value.startsWith('-')) return 'negative';
-    return '';
-  }
+    initialize() {
+        this.renderAssetCategories();
+        if (this.modalId) {
+            this.setupModal();
+        }
+    }
 
-  renderAssetCategories() {
-    const container = document.getElementById(this.containerId);
-    if (!container) return;
+    getValueClass(value) {
+        if (value.startsWith('+')) return 'positive';
+        if (value.startsWith('-')) return 'negative';
+        return '';
+    }
 
-    container.innerHTML = '';
+    renderAssetCategories() {
+        const container = document.getElementById(this.containerId);
+        if (!container) return;
 
-    this.assetCategories.forEach(category => {
-      const categoryDiv = document.createElement('div');
-      categoryDiv.className = `asset-category ${category.isExpanded ? 'expanded' : ''}`;
-      
-      const headerDiv = document.createElement('div');
-      headerDiv.className = 'category-header';
-      headerDiv.innerHTML = `
+        container.innerHTML = '';
+
+        this.assetCategories.forEach(category => {
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = `asset-category ${category.isExpanded ? 'expanded' : ''}`;
+
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'category-header';
+            headerDiv.innerHTML = `
         <div class="category-expand-icon">${category.isExpanded ? '▼' : '►'}</div>
         <div class="category-name">${category.name}</div>
         <div class="category-count">
@@ -285,36 +341,36 @@ class AssetsComponent {
           (META: ${category.name === 'CRIPTOMOEDAS' ? '30%' : '20%'})
         </div>
       `;
-      headerDiv.addEventListener('click', () => this.toggleCategoryExpansion(category));
-      categoryDiv.appendChild(headerDiv);
-      
-      if (category.isExpanded) {
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'category-content';
-        contentDiv.addEventListener('click', (e) => e.stopPropagation());
+            headerDiv.addEventListener('click', () => this.toggleCategoryExpansion(category));
+            categoryDiv.appendChild(headerDiv);
 
-        if (category.name === 'CRIPTOMOEDAS') {
-          contentDiv.appendChild(this.createCryptoTable());
-        } else if (category.name === 'FIS') {
-          contentDiv.appendChild(this.createFisTable());
-        } else {
-          const emptyMsg = document.createElement('div');
-          emptyMsg.className = 'empty-category-message';
-          emptyMsg.textContent = 'Não há ativos nesta categoria.';
-          contentDiv.appendChild(emptyMsg);
-        }
+            if (category.isExpanded) {
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'category-content';
+                contentDiv.addEventListener('click', (e) => e.stopPropagation());
 
-        categoryDiv.appendChild(contentDiv);
-      }
+                if (category.name === 'CRIPTOMOEDAS') {
+                    contentDiv.appendChild(this.createCryptoTable());
+                } else if (category.name === 'FIS') {
+                    contentDiv.appendChild(this.createFisTable());
+                } else {
+                    const emptyMsg = document.createElement('div');
+                    emptyMsg.className = 'empty-category-message';
+                    emptyMsg.textContent = 'Não há ativos nesta categoria.';
+                    contentDiv.appendChild(emptyMsg);
+                }
 
-      container.appendChild(categoryDiv);
-    });
-  }
+                categoryDiv.appendChild(contentDiv);
+            }
 
-  createCryptoTable() {
-    const table = document.createElement('table');
-    table.className = 'assets-table';
-    table.innerHTML = `
+            container.appendChild(categoryDiv);
+        });
+    }
+
+    createCryptoTable() {
+        const table = document.createElement('table');
+        table.className = 'assets-table';
+        table.innerHTML = `
       <thead>
         <tr>
           <th>Ativo</th>
@@ -355,13 +411,13 @@ class AssetsComponent {
         `).join('')}
       </tbody>
     `;
-    return table;
-  }
+        return table;
+    }
 
-  createFisTable() {
-    const table = document.createElement('table');
-    table.className = 'assets-table';
-    table.innerHTML = `
+    createFisTable() {
+        const table = document.createElement('table');
+        table.className = 'assets-table';
+        table.innerHTML = `
       <thead>
         <tr>
           <th>Ativo</th>
@@ -400,179 +456,179 @@ class AssetsComponent {
         </tr>
       </tbody>
     `;
-    return table;
-  }
-
-  toggleCategoryExpansion(category) {
-    this.assetCategories.forEach(cat => {
-      if (cat !== category) {
-        cat.isExpanded = false;
-      }
-    });
-    category.isExpanded = !category.isExpanded;
-    this.renderAssetCategories();
-  }
-
-  setupModal() {
-    const modal = document.getElementById(this.modalId);
-    if (!modal) return;
-
-    const addButtons = document.querySelectorAll('#addAssetBtn, #headerAddAssetBtn');
-    const closeButton = modal.querySelector('.close-button');
-    const cancelButton = modal.querySelector('.cancel-btn');
-    const addAssetForm = modal.querySelector('#addAssetForm');
-
-    const openModal = () => modal.style.display = 'flex';
-    
-    const closeModal = (e) => {
-      if (e) e.preventDefault();
-      modal.style.display = 'none';
-      if (addAssetForm) addAssetForm.reset();
-    };
-
-    addButtons.forEach(button => button.addEventListener('click', openModal));
-    
-    if (closeButton) closeButton.addEventListener('click', closeModal);
-    if (cancelButton) cancelButton.addEventListener('click', closeModal);
-    
-    window.addEventListener('click', (event) => {
-      if (event.target === modal) closeModal();
-    });
-    
-    if (addAssetForm) {
-      addAssetForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const formData = {
-          category: document.getElementById('assetCategory').value,
-          name: document.getElementById('assetName').value,
-          valuePerAsset: parseFloat(document.getElementById('assetValuePerUnit').value),
-          quantity: parseFloat(document.getElementById('assetQuantity').value),
-          purchaseDate: document.getElementById('assetPurchaseDate').value
-        };
-        console.log('Novo ativo adicionado:', formData);
-        closeModal();
-      });
+        return table;
     }
-  }
 
-  updateAssets(newAssets) {
-    this.cryptoAssets = newAssets;
-    this.renderAssetCategories();
-  }
+    toggleCategoryExpansion(category) {
+        this.assetCategories.forEach(cat => {
+            if (cat !== category) {
+                cat.isExpanded = false;
+            }
+        });
+        category.isExpanded = !category.isExpanded;
+        this.renderAssetCategories();
+    }
+
+    setupModal() {
+        const modal = document.getElementById(this.modalId);
+        if (!modal) return;
+
+        const addButtons = document.querySelectorAll('#addAssetBtn, #headerAddAssetBtn');
+        const closeButton = modal.querySelector('.close-button');
+        const cancelButton = modal.querySelector('.cancel-btn');
+        const addAssetForm = modal.querySelector('#addAssetForm');
+
+        const openModal = () => modal.style.display = 'flex';
+
+        const closeModal = (e) => {
+            if (e) e.preventDefault();
+            modal.style.display = 'none';
+            if (addAssetForm) addAssetForm.reset();
+        };
+
+        addButtons.forEach(button => button.addEventListener('click', openModal));
+
+        if (closeButton) closeButton.addEventListener('click', closeModal);
+        if (cancelButton) cancelButton.addEventListener('click', closeModal);
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) closeModal();
+        });
+
+        if (addAssetForm) {
+            addAssetForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = {
+                    category: document.getElementById('assetCategory').value,
+                    name: document.getElementById('assetName').value,
+                    valuePerAsset: parseFloat(document.getElementById('assetValuePerUnit').value),
+                    quantity: parseFloat(document.getElementById('assetQuantity').value),
+                    purchaseDate: document.getElementById('assetPurchaseDate').value
+                };
+                console.log('Novo ativo adicionado:', formData);
+                closeModal();
+            });
+        }
+    }
+
+    updateAssets(newAssets) {
+        this.cryptoAssets = newAssets;
+        this.renderAssetCategories();
+    }
 }
 
 class AnnualReturnChartComponent {
-  constructor(containerId) {
-    this.containerId = containerId;
-    this.chartInstance = null;
-  }
+    constructor(containerId) {
+        this.containerId = containerId;
+        this.chartInstance = null;
+    }
 
-  initialize() {
-    this.createChart();
-  }
+    initialize() {
+        this.createChart();
+    }
 
-  createChart() {
-    const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    const ctx = document.getElementById(this.containerId).getContext('2d');
+    createChart() {
+        const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        const ctx = document.getElementById(this.containerId).getContext('2d');
 
-    this.chartInstance = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: months,
-        datasets: [{
-          label: 'Rentabilidade 2025',
-          data: [2.5, -1.2, 3.8, 1.5, 2.1, -0.8, 4.2, 1.9, 2.7, 3.1, -1.5, 2.9],
-          backgroundColor: '#FFA500',
-          borderRadius: 4
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              color: '#FFFFFF',
-              callback: function(value) {
-                return value + '%';
-              }
+        this.chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Rentabilidade 2025',
+                    data: [2.5, -1.2, 3.8, 1.5, 2.1, -0.8, 4.2, 1.9, 2.7, 3.1, -1.5, 2.9],
+                    backgroundColor: '#FFA500',
+                    borderRadius: 4
+                }]
             },
-            grid: {
-              color: 'rgba(255, 255, 255, 0.1)'
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#FFFFFF',
+                            callback: function (value) {
+                                return value + '%';
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#FFFFFF'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    }
+                }
             }
-          },
-          x: {
-            ticks: {
-              color: '#FFFFFF'
-            },
-            grid: {
-              color: 'rgba(255, 255, 255, 0.1)'
-            }
-          }
-        }
-      }
-    });
+        });
 
-    return this.chartInstance;
-  }
+        return this.chartInstance;
+    }
 
-  updateData(newData) {
-    if (!this.chartInstance) return;
-    this.chartInstance.data.datasets[0].data = newData;
-    this.chartInstance.update();
-  }
+    updateData(newData) {
+        if (!this.chartInstance) return;
+        this.chartInstance.data.datasets[0].data = newData;
+        this.chartInstance.update();
+    }
 }
 
 class PerformanceTableComponent {
-  constructor(tableId, filterId, data) {
-    this.tableId = tableId;
-    this.filterId = filterId;
-    this.fullPerformanceData = data;
-  }
+    constructor(tableId, filterId, data) {
+        this.tableId = tableId;
+        this.filterId = filterId;
+        this.fullPerformanceData = data;
+    }
 
-  initialize() {
-    this.setupTable();
-    this.setupEventListeners();
-  }
+    initialize() {
+        this.setupTable();
+        this.setupEventListeners();
+    }
 
-  getValueClass(value) {
-    if (value.startsWith('+')) return 'positive';
-    if (value.startsWith('-')) return 'negative';
-    return '';
-  }
+    getValueClass(value) {
+        if (value.startsWith('+')) return 'positive';
+        if (value.startsWith('-')) return 'negative';
+        return '';
+    }
 
-  setupTable() {
-    const performanceTable = document.getElementById(this.tableId);
-    if (!performanceTable) return;
-    this.updatePerformanceTable('12 MESES');
-  }
+    setupTable() {
+        const performanceTable = document.getElementById(this.tableId);
+        if (!performanceTable) return;
+        this.updatePerformanceTable('12 MESES');
+    }
 
-  updatePerformanceTable(timeframe) {
-    const performanceTable = document.getElementById(this.tableId);
-    if (!performanceTable) return;
+    updatePerformanceTable(timeframe) {
+        const performanceTable = document.getElementById(this.tableId);
+        if (!performanceTable) return;
 
-    const monthsMap = {
-      '3 MESES': 3,
-      '6 MESES': 6,
-      '12 MESES': 12,
-      '24 MESES': 24
-    };
+        const monthsMap = {
+            '3 MESES': 3,
+            '6 MESES': 6,
+            '12 MESES': 12,
+            '24 MESES': 24
+        };
 
-    const monthsToShow = monthsMap[timeframe] || 12;
-    const performanceTableData = this.fullPerformanceData.slice(-monthsToShow);
+        const monthsToShow = monthsMap[timeframe] || 12;
+        const performanceTableData = this.fullPerformanceData.slice(-monthsToShow);
 
-    const tableBody = performanceTable.querySelector('tbody');
-    tableBody.innerHTML = '';
+        const tableBody = performanceTable.querySelector('tbody');
+        tableBody.innerHTML = '';
 
-    performanceTableData.forEach(item => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
+        performanceTableData.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
         <td>${item.periodo}</td>
         <td class="${this.getValueClass(item.rentabilidade)}">${item.rentabilidade}</td>
         <td>${item.cdi}</td>
@@ -580,31 +636,31 @@ class PerformanceTableComponent {
         <td class="${this.getValueClass(item.sp500)}">${item.sp500}</td>
         <td class="${this.getValueClass(item.bitcoin)}">${item.bitcoin}</td>
       `;
-      tableBody.appendChild(row);
-    });
-  }
-
-  setupEventListeners() {
-    const performanceFilterButtons = document.querySelectorAll(`#${this.filterId} .filter-option`);
-    performanceFilterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        performanceFilterButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        const value = button.textContent.trim();
-        this.updatePerformanceTable(value);
-      });
-    });
-  }
-
-  updateData(newData) {
-    this.fullPerformanceData = newData;
-    const activeFilter = document.querySelector(`#${this.filterId} .filter-option.active`);
-    if (activeFilter) {
-      this.updatePerformanceTable(activeFilter.textContent.trim());
-    } else {
-      this.updatePerformanceTable('12 MESES');
+            tableBody.appendChild(row);
+        });
     }
-  }
+
+    setupEventListeners() {
+        const performanceFilterButtons = document.querySelectorAll(`#${this.filterId} .filter-option`);
+        performanceFilterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                performanceFilterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                const value = button.textContent.trim();
+                this.updatePerformanceTable(value);
+            });
+        });
+    }
+
+    updateData(newData) {
+        this.fullPerformanceData = newData;
+        const activeFilter = document.querySelector(`#${this.filterId} .filter-option.active`);
+        if (activeFilter) {
+            this.updatePerformanceTable(activeFilter.textContent.trim());
+        } else {
+            this.updatePerformanceTable('12 MESES');
+        }
+    }
 }
 
 window.EvolutionPatrimonyComponent = EvolutionPatrimonyComponent;
