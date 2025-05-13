@@ -131,28 +131,56 @@ class AssetsDistributionComponent {
 
     async fetchAssetsDistribution() {
         try {
-            const response = await fetch('/wallets/assets-distribution', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-                }
+            const result = await APIService.fetchFromAPI('/wallets', 'GET');
+            const wallets = result.data.data || [];
+
+            if (wallets.length === 0) {
+                throw new Error('Nenhuma carteira encontrada');
+            }
+
+            const selectedWalletId = localStorage.getItem('selectedWalletId');
+            const selectedWallet = wallets.find(wallet => wallet.id === parseInt(selectedWalletId)) || wallets[0];
+
+            // Processar as transações para calcular a distribuição
+            const transactions = selectedWallet.transacoes || [];
+            const assetsMap = {};
+            let totalValue = 0;
+
+            // Primeiro, buscar os ativos para ter informações completas
+            const assetsResult = await APIService.fetchFromAPI('/assets', 'GET');
+            const assets = assetsResult.data.data || [];
+            const assetsById = {};
+            assets.forEach(asset => {
+                assetsById[asset.id] = asset;
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch assets distribution');
-            }
+            // Calcular valores totais por categoria
+            transactions.forEach(transaction => {
+                const assetId = transaction.id_ativo;
+                if (!assetId) return;
 
-            const result = await response.json();
-            if (result.error) {
-                throw new Error(result.msg);
-            }
+                const assetData = assetsById[assetId];
+                const category = transaction.tipo || (assetData && assetData.tipo) || 'OUTROS';
 
-            const assetsData = result.data.data.map(item => ({
-                class: this.getAssetClass(item.categoria),
-                label: item.categoria,
-                percentage: parseFloat(item.percentual).toFixed(2),
-                value: parseFloat(item.valor_total).toFixed(2)
+                if (!assetsMap[category]) {
+                    assetsMap[category] = {
+                        value: 0,
+                        count: 0
+                    };
+                }
+
+                const transactionValue = transaction.valor_total || (transaction.quantidade * transaction.valor_unitario);
+                assetsMap[category].value += transactionValue;
+                assetsMap[category].count++;
+                totalValue += transactionValue;
+            });
+
+            // Converter para o formato necessário para o gráfico
+            const assetsData = Object.entries(assetsMap).map(([category, data]) => ({
+                class: this.getAssetClass(category),
+                label: this.getCategoryLabel(category),
+                percentage: totalValue > 0 ? ((data.value / totalValue) * 100).toFixed(2) : 0,
+                value: data.value.toFixed(2)
             }));
 
             this.data = assetsData;
@@ -160,10 +188,11 @@ class AssetsDistributionComponent {
             this.createLegend();
         } catch (error) {
             console.error('Error fetching assets distribution:', error);
-            // Fallback to default data if fetch fails
+            // Fallback para dados padrão se a busca falhar
             this.data = [
-                { class: 'crypto', label: 'Criptomoedas', percentage: 50, value: 0 },
-                { class: 'fixed-income', label: 'Renda Fixa', percentage: 50, value: 0 }
+                { class: 'crypto', label: 'Criptomoedas', percentage: 0, value: 0 },
+                { class: 'stocks', label: 'Ações', percentage: 0, value: 0 },
+                { class: 'fixed-income', label: 'Renda Fixa', percentage: 0, value: 0 }
             ];
             this.createChart();
             this.createLegend();
@@ -178,6 +207,17 @@ class AssetsDistributionComponent {
             'FIS': 'fis'
         };
         return categoryMap[categoria] || 'other';
+    }
+
+    getCategoryLabel(categoria) {
+        const labelMap = {
+            'CRIPTOMOEDAS': 'Criptomoedas',
+            'ACOES': 'Ações',
+            'RENDA_FIXA': 'Renda Fixa',
+            'FIS': 'FIS',
+            'OUTROS': 'Outros'
+        };
+        return labelMap[categoria] || categoria;
     }
 
     createChart() {
