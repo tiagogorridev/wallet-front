@@ -10,20 +10,17 @@ const AssetManager = {
         APIService.getAssets()
             .then(response => {
                 const assets = response.data?.data || [];
-                console.log('Ativos processados:', assets);
                 
                 assetDropdown.innerHTML = '<option value="">Selecione um ativo</option>';
-                if (!assets || !assets.length) {
+                if (!assets.length) {
                     assetDropdown.innerHTML = '<option value="">Nenhum ativo disponível</option>';
                     return;
                 }
-                const assetsByType = {};
                 
+                const assetsByType = {};
                 assets.forEach(asset => {
                     const type = asset.tipo;
-                    if (!assetsByType[type]) {
-                        assetsByType[type] = [];
-                    }
+                    if (!assetsByType[type]) assetsByType[type] = [];
                     assetsByType[type].push(asset);
                 });
                 
@@ -44,9 +41,9 @@ const AssetManager = {
                     }
                 }
                 
-                assetDropdown.addEventListener('change', function () {
+                assetDropdown.addEventListener('change', function() {
                     const selectedOption = this.options[this.selectedIndex];
-                    if (selectedOption && selectedOption.value) {
+                    if (selectedOption?.value) {
                         const nameInput = document.getElementById('assetName');
                         const valueInput = document.getElementById('assetValuePerUnit');
                         const categorySelect = document.getElementById('assetCategory');
@@ -102,8 +99,7 @@ const AssetManager = {
         editTransactionId.value = transactionId;
         
         const today = new Date();
-        const formattedDate = today.toISOString().substring(0, 10);
-        editAssetPurchaseDate.value = formattedDate;
+        editAssetPurchaseDate.value = today.toISOString().substring(0, 10);
         
         if (window.ModalFunctions) {
             const editModal = window.ModalFunctions.createModal('editAssetModal');
@@ -130,7 +126,6 @@ const AssetManager = {
         }
         
         const walletId = localStorage.getItem('selectedWalletId');
-        
         if (!walletId) {
             alert('Carteira não selecionada. Por favor, faça login novamente.');
             window.location.href = '../../index.html';
@@ -148,42 +143,32 @@ const AssetManager = {
             notas: ""
         };
         
+        const closeModal = () => {
+            if (window.ModalFunctions) {
+                const editModal = window.ModalFunctions.createModal('editAssetModal');
+                editModal.closeModal();
+            } else {
+                document.getElementById('editAssetModal').style.display = 'none';
+            }
+            document.getElementById('editAssetForm').reset();
+            window.location.reload();
+        };
+        
         if (transactionId) {
             APIService.updateTransaction(transactionId, transactionData)
                 .then(() => {
                     alert('Ativo atualizado com sucesso!');
-                    
-                    if (window.ModalFunctions) {
-                        const editModal = window.ModalFunctions.createModal('editAssetModal');
-                        editModal.closeModal();
-                    } else {
-                        document.getElementById('editAssetModal').style.display = 'none';
-                    }
-                    
-                    document.getElementById('editAssetForm').reset();
-                    
-                    window.location.reload();
+                    closeModal();
                 })
                 .catch(error => {
                     alert(`Erro ao atualizar ativo: ${error.message}`);
                 });
         } else {
             transactionData.id_ativo = parseInt(assetId);
-            
             APIService.addTransaction(transactionData)
                 .then(() => {
                     alert('Ativo atualizado com sucesso!');
-                    
-                    if (window.ModalFunctions) {
-                        const editModal = window.ModalFunctions.createModal('editAssetModal');
-                        editModal.closeModal();
-                    } else {
-                        document.getElementById('editAssetModal').style.display = 'none';
-                    }
-                    
-                    document.getElementById('editAssetForm').reset();
-                    
-                    window.location.reload();
+                    closeModal();
                 })
                 .catch(error => {
                     alert(`Erro ao atualizar ativo: ${error.message}`);
@@ -198,20 +183,24 @@ const AssetManager = {
             alert('Por favor, insira um nome para o ativo');
             return;
         }
+        
         const assetCategory = document.getElementById('assetCategory').value;
         const assetValuePerUnit = parseFloat(document.getElementById('assetValuePerUnit').value);
         const assetQuantity = parseFloat(document.getElementById('assetQuantity').value);
         const assetPurchaseDate = document.getElementById('assetPurchaseDate').value;
+        
         if (assetCategory === 'ACOES' && !Number.isInteger(assetQuantity)) {
             alert('Para ações, a quantidade deve ser um número inteiro');
             return;
         }
+        
         const walletId = localStorage.getItem('selectedWalletId');
         if (!walletId) {
             alert('Carteira não selecionada. Por favor, faça login novamente.');
             window.location.href = '../../index.html';
             return;
         }
+        
         const transactionData = {
             id_carteira: parseInt(walletId),
             nome_ativo: assetName,
@@ -222,6 +211,7 @@ const AssetManager = {
             taxa_corretagem: 0.0,
             notas: ""
         };
+        
         APIService.addTransaction(transactionData)
             .then(() => {
                 alert('Ativo adicionado com sucesso!');
@@ -234,7 +224,6 @@ const AssetManager = {
                 }
                 
                 document.getElementById('addAssetForm').reset();
-                
                 window.location.reload();
             })
             .catch(error => {
@@ -252,29 +241,11 @@ const AssetManager = {
             APIService.deleteTransaction(assetId)
                 .then(() => {
                     alert('Ativo removido com sucesso!');
-                    
                     window.location.reload();
                 })
                 .catch(error => {
                     alert(`Erro ao remover ativo: ${error.message}`);
                 });
         }
-    },
-
-    refreshPortfolio() {
-        const walletId = localStorage.getItem('selectedWalletId');
-        if (walletId) {
-            APIService.getWalletById(parseInt(walletId))
-                .then(portfolioData => {
-                    document.dispatchEvent(new CustomEvent('portfolioChanged', {
-                        detail: { portfolio: portfolioData }
-                    }));
-                })
-                .catch(error => {
-                    console.error('Erro ao atualizar portfólio:', error);
-                });
-        }
     }
 };
-
-window.AssetManager = AssetManager;

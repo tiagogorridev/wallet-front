@@ -20,11 +20,9 @@ const PortfolioManager = {
             if (this.elements.portfolioNameElement) {
                 this.elements.portfolioNameElement.textContent = selectedPortfolioName;
             }
-
             if (this.elements.portfolioHeader) {
                 this.elements.portfolioHeader.textContent = `Carteira: ${selectedPortfolioName}`;
             }
-
             if (this.elements.walletNameInput) {
                 this.elements.walletNameInput.value = selectedPortfolioName;
             }
@@ -32,7 +30,6 @@ const PortfolioManager = {
 
         if (selectedWalletId) {
             this.fetchWalletDetails(parseInt(selectedWalletId));
-
             if (this.elements.walletDescInput) {
                 const walletDesc = localStorage.getItem('selectedWalletDescription');
                 if (walletDesc) {
@@ -46,20 +43,14 @@ const PortfolioManager = {
 
     fetchWalletDetails(walletId) {
         this.showLoading();
-
-        APIService.fetchFromAPI('/wallets', 'GET')
+        APIService.getWalletById(walletId)
             .then(result => {
-                const wallets = result.data.data || [];
-                const selectedWallet = wallets.find(wallet => wallet.id === walletId);
-
-                if (selectedWallet) {
-                    this.saveWalletToLocalStorage(selectedWallet);
-                    this.updatePortfolioUI(selectedWallet);
-                } else if (wallets.length > 0) {
-                    this.saveWalletToLocalStorage(wallets[0]);
-                    this.updatePortfolioUI(wallets[0]);
+                const walletData = result.data;
+                if (walletData) {
+                    this.saveWalletToLocalStorage(walletData);
+                    this.updatePortfolioUI(walletData);
                 } else {
-                    Utils.showErrorMessage(this.elements.loadingMessage, 'Nenhuma carteira encontrada');
+                    this.fetchWallets();
                 }
             })
             .catch(error => {
@@ -73,7 +64,6 @@ const PortfolioManager = {
 
     fetchWallets() {
         this.showLoading();
-
         APIService.getWallets()
             .then(result => {
                 const wallets = result.data.data || [];
@@ -102,7 +92,6 @@ const PortfolioManager = {
         if (this.elements.loadingMessage) {
             this.elements.loadingMessage.style.display = 'block';
         }
-        // Mostrar loading no gráfico
         const chartContainer = document.querySelector('.pie-chart-container');
         if (chartContainer) {
             const loadingDiv = document.createElement('div');
@@ -117,7 +106,6 @@ const PortfolioManager = {
         if (this.elements.loadingMessage) {
             this.elements.loadingMessage.style.display = 'none';
         }
-        // Remover loading do gráfico
         const loadingChart = document.getElementById('loading-chart');
         if (loadingChart) {
             loadingChart.remove();
@@ -135,7 +123,44 @@ const PortfolioManager = {
             this.renderPortfolioDetails(portfolioData);
         }
 
-        // Atualizar o gráfico de distribuição
+        let assets = portfolioData.ativos || [];
+        
+        if (!assets.length && portfolioData.transacoes) {
+            const assetsMap = this.createAssetsMapFromTransactions(portfolioData.transacoes);
+            assets = Object.values(assetsMap);
+        }
+        
+        const totalBalance = this.calculateTotalBalance(assets);
+        const balanceToShow = totalBalance > 0 ? totalBalance : (portfolioData.saldo_total || 0);
+
+        if (this.elements.balanceElement) {
+            this.elements.balanceElement.textContent = `R$ ${Utils.formatCurrency(balanceToShow)}`;
+        }
+
+        let rentabilidade = null;
+        
+        if (portfolioData.rentabilidade !== undefined && portfolioData.rentabilidade !== null) {
+            rentabilidade = parseFloat(portfolioData.rentabilidade);
+        } else if (assets.length > 0) {
+            let investimentoInicial = 0;
+            let valorAtual = 0;
+            
+            assets.forEach(asset => {
+                investimentoInicial += asset.investimento_inicial || 0;
+                valorAtual += asset.valor_total || 0;
+            });
+            
+            if (investimentoInicial > 0) {
+                rentabilidade = ((valorAtual - investimentoInicial) / investimentoInicial) * 100;
+            }
+        }
+
+        if (this.elements.returnElement && rentabilidade !== null) {
+            const rentabilidadeClass = rentabilidade >= 0 ? 'positive-return' : 'negative-return';
+            this.elements.returnElement.textContent = `${Utils.formatPercentage(rentabilidade)}%`;
+            this.elements.returnElement.className = rentabilidadeClass;
+        }
+
         if (this.distributionChart && portfolioData.assetDistribution) {
             const distributionData = portfolioData.assetDistribution.map(item => ({
                 class: item.category.toLowerCase(),
@@ -144,7 +169,51 @@ const PortfolioManager = {
                 value: item.value
             }));
             this.distributionChart.updateData(distributionData);
+        } else if (this.distributionChart && assets.length > 0) {
+            const totalValue = this.calculateTotalBalance(assets);
+            const categories = {};
+            
+            assets.forEach(asset => {
+                const category = asset.categoria || 'OUTROS';
+                const value = asset.valor_total || 
+                    (asset.quantidade * (asset.preco_atual || asset.valor_unitario));
+                
+                if (!categories[category]) {
+                    categories[category] = 0;
+                }
+                categories[category] += value;
+            });
+            
+            const distributionData = Object.keys(categories).map(category => {
+                const value = categories[category];
+                const percentage = totalValue > 0 ? (value / totalValue) * 100 : 0;
+                return {
+                    class: Utils.getCategoryClass(category).toLowerCase(),
+                    label: Utils.getCategoryLabel(category),
+                    percentage: percentage,
+                    value: value
+                };
+            });
+            
+            this.distributionChart.updateData(distributionData);
         }
+    },
+
+    calculateTotalBalance(assets) {
+        let totalBalance = 0;
+        
+        if (Array.isArray(assets)) {
+            assets.forEach(asset => {
+                if (asset.quantidade > 0) {
+                    const totalValue = asset.valor_total || 
+                        (asset.quantidade * (asset.preco_atual || asset.valor_unitario));
+                    
+                    totalBalance += totalValue;
+                }
+            });
+        }
+        
+        return totalBalance;
     },
 
     renderPortfolioDetails(portfolioData) {
@@ -152,30 +221,26 @@ const PortfolioManager = {
 
         const portfolioInfo = document.createElement('div');
         portfolioInfo.className = 'portfolio-info';
-
         const descriptionElement = document.createElement('p');
         descriptionElement.className = 'portfolio-description';
         descriptionElement.textContent = `Descrição: ${portfolioData.descricao || "Sem descrição"}`;
         portfolioInfo.appendChild(descriptionElement);
-
         this.elements.assetsTableContainer.appendChild(portfolioInfo);
 
         const assetsListDiv = document.createElement('div');
         assetsListDiv.className = 'assets-list';
-
         const assetsHeader = document.createElement('h3');
         assetsHeader.textContent = 'Ativos na Carteira';
         assetsListDiv.appendChild(assetsHeader);
 
         const assetsListingDiv = this.createAssetsListingContainer();
         assetsListDiv.appendChild(assetsListingDiv);
-
         this.elements.assetsTableContainer.appendChild(assetsListDiv);
 
         const transactions = portfolioData.transacoes || [];
 
         if (transactions.length > 0) {
-            this.processPortfolioTransactions(transactions, assetsListingDiv);
+            this.processPortfolioTransactions(portfolioData, assetsListingDiv);
         } else {
             this.renderEmptyPortfolio(assetsListingDiv);
         }
@@ -195,30 +260,34 @@ const PortfolioManager = {
         return assetsListingDiv;
     },
 
-    processPortfolioTransactions(transactions, assetsListingDiv) {
-        APIService.fetchFromAPI('/assets', 'GET')
-            .then(result => {
-                const assets = result.data.data || [];
-                const assetsById = {};
-
-                assets.forEach(asset => {
-                    assetsById[asset.id] = asset;
+    processPortfolioTransactions(portfolioData, assetsListingDiv) {
+        const assets = portfolioData.ativos || [];
+        if (assets.length > 0) {
+            const tableContainer = this.createAssetsTable(assets);
+            assetsListingDiv.appendChild(tableContainer);
+        } else {
+            const transactions = portfolioData.transacoes || [];
+            APIService.fetchFromAPI('/assets', 'GET')
+                .then(result => {
+                    const assetsApi = result.data.data || [];
+                    const assetsById = {};
+                    assetsApi.forEach(asset => {
+                        assetsById[asset.id] = asset;
+                    });
+                    const assetsMap = this.createAssetsMapFromTransactions(transactions, assetsById);
+                    const tableContainer = this.createAssetsTable(Object.values(assetsMap));
+                    assetsListingDiv.appendChild(tableContainer);
+                })
+                .catch(error => {
+                    const assetsMap = this.createAssetsMapFromTransactions(transactions);
+                    const tableContainer = this.createAssetsTable(Object.values(assetsMap));
+                    assetsListingDiv.appendChild(tableContainer);
                 });
-
-                const assetsMap = this.createAssetsMapFromTransactions(transactions, assetsById);
-                const tableContainer = this.createAssetsTable(assetsMap);
-                assetsListingDiv.appendChild(tableContainer);
-            })
-            .catch(error => {
-                const assetsMap = this.createAssetsMapFromTransactions(transactions);
-                const tableContainer = this.createAssetsTable(assetsMap);
-                assetsListingDiv.appendChild(tableContainer);
-            });
+        }
     },
 
     createAssetsMapFromTransactions(transactions, assetsById = {}) {
         const assetsMap = {};
-        let totalBalance = 0;
 
         transactions.forEach(transaction => {
             const assetId = transaction.id_ativo;
@@ -226,52 +295,39 @@ const PortfolioManager = {
 
             if (!assetsMap[assetId]) {
                 const assetData = assetsById[assetId];
-
                 assetsMap[assetId] = {
                     id: assetId,
                     nome: (assetData && assetData.nome) || transaction.nome_ativo || 'Ativo sem nome',
                     simbolo: (assetData && assetData.simbolo) || '',
                     categoria: transaction.tipo || (assetData && assetData.tipo) || 'OUTROS',
                     quantidade: 0,
-                    valorUnitario: transaction.valor_unitario || 0,
-                    valorTotal: 0,
+                    valor_unitario: transaction.valor_unitario || 0,
+                    preco_atual: (assetData && assetData.preco_atual) || transaction.valor_unitario || 0,
+                    valor_total: 0,
                     rendimento: 0,
-                    investimentoInicial: 0
+                    investimento_inicial: 0,
+                    transaction_id: transaction.id
                 };
             }
 
             assetsMap[assetId].quantidade += transaction.quantidade;
-            assetsMap[assetId].investimentoInicial += transaction.valor_total || (transaction.quantidade * transaction.valor_unitario);
+            assetsMap[assetId].investimento_inicial += transaction.valor_total || (transaction.quantidade * transaction.valor_unitario);
         });
 
         Object.values(assetsMap).forEach(asset => {
             if (asset.quantidade > 0) {
-                const currentValue = asset.valorUnitario;
-                const totalValue = asset.quantidade * currentValue;
-                totalBalance += totalValue;
+                const currentValue = asset.preco_atual || asset.valor_unitario;
+                asset.valor_total = asset.quantidade * currentValue;
+                
+                const profitLoss = asset.valor_total - asset.investimento_inicial;
+                asset.rendimento = asset.investimento_inicial > 0 ? (profitLoss / asset.investimento_inicial) * 100 : 0;
             }
         });
-
-        this.updatePortfolioSummary(assetsMap, totalBalance);
 
         return assetsMap;
     },
 
-    updatePortfolioSummary(assetsMap, totalBalance) {
-        if (this.elements.balanceElement) {
-            this.elements.balanceElement.textContent = `R$ ${Utils.formatCurrency(totalBalance)}`;
-        }
-
-        if (this.elements.returnElement) {
-            const totalInvestment = Object.values(assetsMap).reduce((sum, asset) => sum + asset.investimentoInicial, 0);
-            const rentabilidade = totalInvestment > 0 ? ((totalBalance - totalInvestment) / totalInvestment) * 100 : 0;
-            const rentabilidadeClass = rentabilidade >= 0 ? 'positive-return' : 'negative-return';
-            this.elements.returnElement.textContent = `${Utils.formatPercentage(rentabilidade)}%`;
-            this.elements.returnElement.className = rentabilidadeClass;
-        }
-    },
-
-    createAssetsTable(assetsMap) {
+    createAssetsTable(assets) {
         const assetsTable = document.createElement('table');
         assetsTable.className = 'assets-table';
         assetsTable.id = 'assets-table';
@@ -293,25 +349,36 @@ const PortfolioManager = {
         const tableBody = document.createElement('tbody');
         tableBody.id = 'assets-table-body';
 
-        this.populateTableBody(assetsMap, tableBody);
+        this.populateTableBody(assets, tableBody);
         assetsTable.appendChild(tableBody);
 
         return assetsTable;
     },
 
-    populateTableBody(assetsMap, tableBody) {
+    populateTableBody(assets, tableBody) {
         tableBody.innerHTML = '';
+        let calculatedTotalBalance = 0;
 
-        Object.values(assetsMap).forEach(asset => {
+        assets.forEach(asset => {
             if (asset.quantidade <= 0) return;
 
             const row = document.createElement('tr');
+            row.dataset.assetId = asset.id;
+            if (asset.transaction_id) {
+                row.dataset.transactionId = asset.transaction_id;
+            }
 
-            const currentValue = asset.valorUnitario;
-            const totalValue = asset.quantidade * currentValue;
-            const initialInvestment = asset.investimentoInicial;
-            const profitLoss = totalValue - initialInvestment;
-            const rendimento = initialInvestment > 0 ? (profitLoss / initialInvestment) * 100 : 0;
+            const currentValue = asset.preco_atual || asset.valor_unitario;
+            const totalValue = asset.valor_total || (asset.quantidade * currentValue);
+            
+            calculatedTotalBalance += totalValue;
+            
+            let rendimento = asset.rendimento;
+            if (rendimento === undefined && asset.investimento_inicial > 0) {
+                const initialInvestment = asset.investimento_inicial;
+                const profitLoss = totalValue - initialInvestment;
+                rendimento = (profitLoss / initialInvestment) * 100;
+            }
 
             const displayName = asset.simbolo ? `${asset.nome} (${asset.simbolo})` : asset.nome;
 
@@ -332,7 +399,7 @@ const PortfolioManager = {
                     <button class="btn-icon edit-asset" data-asset-id="${asset.id}">
                         <i class="fas fa-pen"></i>
                     </button>
-                    <button class="btn-icon delete-asset" data-asset-id="${asset.id}">
+                    <button class="btn-icon delete-asset" data-asset-id="${asset.transaction_id || asset.id}">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -340,6 +407,10 @@ const PortfolioManager = {
 
             tableBody.appendChild(row);
         });
+
+        if (this.elements.balanceElement) {
+            this.elements.balanceElement.textContent = `R$ ${Utils.formatCurrency(calculatedTotalBalance)}`;
+        }
 
         if (tableBody.children.length === 0) {
             this.renderEmptyTableMessage(tableBody);
