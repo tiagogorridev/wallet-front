@@ -1,28 +1,25 @@
 (function () {
-    const API_URL = 'http://191.239.116.115:8080';
-
     function verificarAutenticacao() {
-        const token = localStorage.getItem('accessToken');
-        const userInfo = localStorage.getItem('userInfo');
-
-        if (!token || !userInfo) {
+        if (!AuthService.isAuthenticated()) {
             redirecionarParaLogin();
             return false;
         }
 
-        try {
-            const user = JSON.parse(userInfo);
-            return {
-                autenticado: true,
-                perfil: user.perfil,
-                nome: user.nome,
-                email: user.email
-            };
-        } catch (error) {
-            console.error('Erro ao processar informações do usuário');
+        const userInfo = AuthService.getUserInfo();
+        if (!userInfo) {
             redirecionarParaLogin();
             return false;
         }
+
+        // Garantir que o refresh token está ativo
+        AuthService.startRefreshToken();
+
+        return {
+            autenticado: true,
+            perfil: userInfo.perfil,
+            nome: userInfo.nome,
+            email: userInfo.email
+        };
     }
 
     function redirecionarParaLogin() {
@@ -72,49 +69,22 @@
 })();
 
 document.addEventListener('DOMContentLoaded', function () {
-    function verificarAutenticacao() {
-        const token = localStorage.getItem('accessToken');
-        const userInfo = localStorage.getItem('userInfo');
-
-        if (!token || !userInfo) {
-            return false;
-        }
-
-        try {
-            const user = JSON.parse(userInfo);
-            return {
-                autenticado: true,
-                perfil: user.perfil,
-                nome: user.nome,
-                email: user.email
-            };
-        } catch (error) {
-            return false;
-        }
-    }
-
     function atualizarInfoUsuario() {
-        const auth = verificarAutenticacao();
-        if (!auth) return;
+        const userInfo = AuthService.getUserInfo();
+        if (!userInfo) return;
 
         const nomeElement = document.getElementById('nomeUsuario');
         const emailElement = document.getElementById('emailUsuario');
         const perfilElement = document.getElementById('perfilUsuario');
 
-        if (nomeElement) nomeElement.textContent = auth.nome;
-        if (emailElement) emailElement.textContent = auth.email;
-        if (perfilElement) perfilElement.textContent = auth.perfil;
-    }
-
-    function logout() {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('userInfo');
-        window.location.replace('../../index.html');
+        if (nomeElement) nomeElement.textContent = userInfo.nome;
+        if (emailElement) emailElement.textContent = userInfo.email;
+        if (perfilElement) perfilElement.textContent = userInfo.perfil;
     }
 
     const logoutButton = document.getElementById('logoutButton');
     if (logoutButton) {
-        logoutButton.addEventListener('click', logout);
+        logoutButton.addEventListener('click', () => AuthService.logout());
     }
 
     atualizarInfoUsuario();

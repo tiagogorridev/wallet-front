@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const loginMessage = document.getElementById('login-message');
     const passwordToggle = document.querySelector('.password-toggle');
     const passwordInput = document.getElementById('password');
-    const API_URL = '191.239.116.115:8080';
 
     passwordToggle.addEventListener('click', function () {
         const icon = this.querySelector('i');
@@ -16,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    loginForm.addEventListener('submit', function (event) {
+    loginForm.addEventListener('submit', async function (event) {
         event.preventDefault();
 
         const email = document.getElementById('email').value;
@@ -28,57 +27,21 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         showMessage('Autenticando...', 'info');
-        login(email, password);
-    });
 
-    async function login(email, password) {
         try {
-            const response = await fetch(`http://${API_URL}/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: email,
-                    senha: password
-                })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                handleSuccessfulLogin(data);
+            const success = await AuthService.login(email, password);
+            if (success) {
+                showMessage('Login realizado com sucesso!', 'success');
+                const userInfo = AuthService.getUserInfo();
+                setTimeout(() => redirectUserByProfile(userInfo.perfil), 1000);
             } else {
-                showMessage(data.msg || 'Falha na autenticação. Verifique suas credenciais.', 'error');
+                showMessage('Falha na autenticação. Verifique suas credenciais.', 'error');
             }
         } catch (error) {
             console.error('Erro durante o login:', error);
             showMessage('Erro ao conectar ao servidor. Tente novamente mais tarde.', 'error');
         }
-    }
-
-    function handleSuccessfulLogin(data) {
-        const token = data.token || data.access_token ||
-            (data.data && (data.data.token || data.data.access_token));
-
-        const userData = data.usuario || data.user ||
-            (data.data && (data.data.usuario || data.data.user));
-
-        if (!token) {
-            console.error("Token não encontrado na resposta");
-            showMessage('Token não encontrado na resposta do servidor.', 'error');
-            return;
-        }
-
-        localStorage.setItem('accessToken', token);
-
-        if (userData) {
-            localStorage.setItem('userInfo', JSON.stringify(userData));
-            showMessage('Login realizado com sucesso!', 'success');
-            setTimeout(() => redirectUserByProfile(userData.perfil), 1000);
-        } else {
-            console.error("Dados do usuário não encontrados na resposta");
-            showMessage('Dados do usuário não encontrados na resposta.', 'error');
-        }
-    }
+    });
 
     function redirectUserByProfile(profile) {
         const routes = {
