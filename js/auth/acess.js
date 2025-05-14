@@ -32,23 +32,34 @@
         if (!auth) return;
 
         const paginaAtual = window.location.pathname;
-        const ehPaginaAdmin = paginaAtual.includes('/administrador/')
-        const ehPaginaUsuario = paginaAtual.includes('/investidor/');
-        const ehPaginaLogin = paginaAtual.includes('../../index.html');
+        const ehPaginaAdmin = paginaAtual.includes('/administrador/');
+        const ehPaginaAnalista = paginaAtual.includes('/analista/');
+        const ehPaginaInvestidor = paginaAtual.includes('/investidor/');
+        const ehPaginaLogin = paginaAtual.includes('index.html');
         
-        if (ehPaginaAdmin && auth.perfil !== 'ADMIN' && auth.perfil !== 'ANALISTA') {
+        // Regra 1: Apenas ADMIN pode acessar páginas de administrador
+        if (ehPaginaAdmin && auth.perfil !== 'ADMIN') {
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
         
-        if (ehPaginaUsuario && (auth.perfil === 'ADMIN' || auth.perfil === 'ANALISTA' ||
-            (auth.perfil !== 'USUARIO' && auth.perfil !== 'CONSERVADOR' &&
-                auth.perfil !== 'MODERADO' && auth.perfil !== 'ARROJADO'))) {
+        // Regra 2: Apenas ANALISTA pode acessar páginas de analista
+        if (ehPaginaAnalista && auth.perfil !== 'ANALISTA') {
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
         
-        if (!ehPaginaAdmin && !ehPaginaUsuario && !ehPaginaLogin) {
+        // Regra 3: Apenas USUARIO pode acessar páginas de investidor
+        if (ehPaginaInvestidor && auth.perfil !== 'USUARIO') {
+            redirecionarUsuarioPorPerfil(auth.perfil);
+            return false;
+        }
+        
+        // Se estiver em uma página que não corresponde ao seu perfil e não é a página de login
+        if (!ehPaginaLogin && 
+            ((auth.perfil === 'ADMIN' && !ehPaginaAdmin) || 
+             (auth.perfil === 'ANALISTA' && !ehPaginaAnalista) || 
+             (auth.perfil === 'USUARIO' && !ehPaginaInvestidor))) {
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
@@ -59,14 +70,13 @@
     function redirecionarUsuarioPorPerfil(perfil) {
         switch (perfil) {
             case 'ADMIN':
+                window.location.replace('../administrador/dashboard.html');
+                break;
             case 'ANALISTA':
-                window.location.replace('../html/administrador/dashboard.html');
+                window.location.replace('../analista/dashboard-analista.html');
                 break;
             case 'USUARIO':
-            case 'CONSERVADOR':
-            case 'MODERADO':
-            case 'ARROJADO':
-                window.location.replace('../html/investidor/resumo.html');
+                window.location.replace('../investidor/resumo.html');
                 break;
             default:
                 redirecionarParaLogin();

@@ -1,347 +1,241 @@
-document.addEventListener('DOMContentLoaded', function() {
-  const headerContainer = document.getElementById('header');
-  const API_URL = 'http://191.239.116.115:8080';
-
-  if (headerContainer) {
+document.addEventListener('DOMContentLoaded', () => {
+  const API = 'http://191.239.116.115:8080';
+  const token = localStorage.getItem('accessToken');
+  
+  // Carrega header
+  const header = document.getElementById('header');
+  if (header) {
     fetch('../../html/investidor/header.html')
-      .then(response => response.text())
-      .then(data => {
-        headerContainer.innerHTML = data;
-        initializeHeader();
+      .then(r => r.text())
+      .then(html => {
+        header.innerHTML = html;
+        init();
       })
-      .catch(error => console.error('Erro ao carregar o header:', error));
+      .catch(() => init());
   } else {
-    initializeHeader();
+    init();
   }
-
-  function initializeHeader() {
-    const addAssetButton = document.getElementById('headerAddAssetBtn');
-    if (addAssetButton) {
-      addAssetButton.addEventListener('click', function() {
-        const modal = document.getElementById('addAssetModal');
-        if (modal) {
-          modal.style.display = 'flex';
-        } else {
-          document.dispatchEvent(new CustomEvent('openAddAssetModal'));
-        }
-      });
-    }
+  
+  function init() {
+    // Inicializa componentes
+    marcaPaginaAtiva();
+    atualizaResumoInvestimentos();
+    inicializaDropdownCarteiras();
+    configuraFormularioCarteira();
     
-    const logoutButton = document.getElementById('logoutBtn');
-    if (logoutButton) {
-      logoutButton.addEventListener('click', function() {
+    // Logout
+    const btnLogout = document.getElementById('logoutBtn');
+    if (btnLogout) {
+      btnLogout.onclick = () => {
         localStorage.clear();
         window.location.href = '../../index.html';
-      });
+      };
     }
-
-    markActivePage();
-    updateInvestmentSummary();
-    initializePortfolioDropdown();
-    handleWalletForm();
   }
-
-  function markActivePage() {
-    const currentPath = window.location.pathname;
-    const navItems = document.querySelectorAll('.nav-item');
-    
-    navItems.forEach(function(item) {
+  
+  function marcaPaginaAtiva() {
+    // Marca menu ativo
+    const path = window.location.pathname;
+    document.querySelectorAll('.nav-item').forEach(item => {
       const href = item.getAttribute('href') || '';
-      item.classList.remove('active');
-      
-      if (currentPath.includes(href)) {
-        item.classList.add('active');
-      }
+      item.classList.toggle('active', path.includes(href));
     });
     
     if (!document.querySelector('.nav-item.active') && 
-        (currentPath.endsWith('/') || currentPath.endsWith('index.html'))) {
-      const homeItem = document.querySelector('.nav-item:first-child');
-      if (homeItem) homeItem.classList.add('active');
+        (path.endsWith('/') || path.endsWith('index.html'))) {
+      document.querySelector('.nav-item')?.classList.add('active');
     }
   }
-
-  function updateInvestmentSummary() {
-    const patrimonioTotal = document.querySelector('.summary-value:nth-of-type(1)');
-    const rentabilidade = document.querySelector('.summary-value:nth-of-type(2)');
-    const mesAtual = document.querySelector('.summary-value:nth-of-type(3)');
-
-    if (patrimonioTotal && localStorage.getItem('patrimonioTotal')) {
-      patrimonioTotal.textContent = localStorage.getItem('patrimonioTotal');
-    }
-
-    if (rentabilidade && localStorage.getItem('rentabilidade')) {
-      const valor = parseFloat(localStorage.getItem('rentabilidade'));
-      rentabilidade.textContent = (valor >= 0 ? '+' : '') + valor + '%';
-      rentabilidade.className = 'summary-value ' + (valor >= 0 ? 'positive' : 'negative');
-    }
-
-    if (mesAtual && localStorage.getItem('mesAtual')) {
-      const valor = parseFloat(localStorage.getItem('mesAtual'));
-      mesAtual.textContent = (valor >= 0 ? '+' : '') + valor + '%';
-      mesAtual.className = 'summary-value ' + (valor >= 0 ? 'positive' : 'negative');
-    }
-  }
-
-  function initializePortfolioDropdown() {
-    const portfolioSelector = document.querySelector('.portfolio-selector');
-    if (!portfolioSelector || portfolioSelector.querySelector('.portfolio-dropdown')) return;
   
+  function atualizaResumoInvestimentos() {
+    // Atualiza resumo financeiro
+    const formataPorcentagem = (el, key) => {
+      if (!el) return;
+      const valor = parseFloat(localStorage.getItem(key) || '0');
+      el.textContent = (valor >= 0 ? '+' : '') + valor + '%';
+      el.className = 'summary-value ' + (valor >= 0 ? 'positive' : 'negative');
+    };
+    
+    const patrimonio = document.querySelector('.summary-value:nth-of-type(1)');
+    if (patrimonio) {
+      patrimonio.textContent = localStorage.getItem('patrimonioTotal') || 'R$ 0,00';
+    }
+    
+    formataPorcentagem(document.querySelector('.summary-value:nth-of-type(2)'), 'rentabilidade');
+    formataPorcentagem(document.querySelector('.summary-value:nth-of-type(3)'), 'mesAtual');
+  }
+  
+  function inicializaDropdownCarteiras() {
+    // Setup dropdown carteiras
+    const seletor = document.querySelector('.portfolio-selector');
+    if (!seletor || seletor.querySelector('.portfolio-dropdown')) return;
+    
     const dropdown = document.createElement('div');
     dropdown.className = 'portfolio-dropdown';
     dropdown.style.display = 'none';
-    const token = localStorage.getItem('accessToken');
-    const nameSpan = portfolioSelector.querySelector('span');
+    
+    const span = seletor.querySelector('span');
+    
     if (!token) {
-      console.error('Token de autenticação não encontrado');
-      if (nameSpan) {
-        nameSpan.textContent = 'Carteira não encontrada';
-      }
-      
-      const option = document.createElement('div');
-      option.className = 'portfolio-option';
-      option.innerHTML = '<span>Faça login novamente</span>';
-      dropdown.appendChild(option);
-      portfolioSelector.appendChild(dropdown);
+      if (span) span.textContent = 'Carteira não encontrada';
+      dropdown.innerHTML = '<div class="portfolio-option"><span>Faça login novamente</span></div>';
+      seletor.appendChild(dropdown);
       return;
     }
     
-    fetch(`${API_URL}/wallets`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+    fetch(`${API}/wallets`, {
+      headers: { 'Authorization': `Bearer ${token}` }
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Falha ao buscar carteiras');
-      }
-      return response.json();
-    })
-    .then(result => {
-      if (result.error) {
-        throw new Error(result.msg || 'Erro ao buscar carteiras');
-      }
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(res => {
+      if (res.error) throw new Error();
       
-      const carteiras = result.data.data || [];
-      const selectedWalletId = localStorage.getItem('selectedWalletId');
+      const carteiras = res.data.data || [];
+      const selectedId = parseInt(localStorage.getItem('selectedWalletId') || '0');
       
-      let selectedCarteira = null;
-      if (selectedWalletId) {
-        const numericId = parseInt(selectedWalletId);
-        selectedCarteira = carteiras.find(c => c.id === numericId);
+      let selecionada = carteiras.find(c => c.id === selectedId);
+      if (!selecionada && carteiras.length) {
+        selecionada = carteiras[0];
+        localStorage.setItem('selectedPortfolio', selecionada.nome);
+        localStorage.setItem('selectedWalletId', selecionada.id.toString());
       }
       
-      if (!selectedCarteira && carteiras.length > 0) {
-        selectedCarteira = carteiras[0];
-        localStorage.setItem('selectedPortfolio', selectedCarteira.nome);
-        localStorage.setItem('selectedWalletId', selectedCarteira.id.toString());
-      }
+      if (span) span.textContent = selecionada?.nome || 'Carteira não encontrada';
       
-      const selectedPortfolioName = selectedCarteira ? selectedCarteira.nome : 'Carteira não encontrada';
-      if (nameSpan) {
-        nameSpan.textContent = selectedPortfolioName;
-      }
-      
-      carteiras.forEach(carteira => {
+      // Adiciona carteiras ao dropdown
+      carteiras.forEach(c => {
         const option = document.createElement('div');
         option.className = 'portfolio-option';
-        
-        const isSelected = selectedCarteira && carteira.id === selectedCarteira.id;
-        
-        option.innerHTML = `
-          <span>${carteira.nome}</span>
-          <i class="fas fa-check ${isSelected ? 'visible' : 'hidden'}"></i>
-        `;
-        
-        option.addEventListener('click', function() {
-          if (nameSpan) nameSpan.textContent = carteira.nome;
-          
-          dropdown.style.display = 'none';
-          const icon = portfolioSelector.querySelector('i');
-          if (icon) {
-            icon.classList.remove('fa-chevron-up');
-            icon.classList.add('fa-chevron-down');
-          }
-          
-          localStorage.setItem('selectedPortfolio', carteira.nome);
-          localStorage.setItem('selectedWalletId', carteira.id.toString());
-          document.dispatchEvent(new CustomEvent('portfolioChanged', {
-            detail: { portfolio: carteira }
-          }));
-          
-          document.querySelectorAll('.portfolio-option i').forEach(i => {
-            i.classList.add('hidden');
-            i.classList.remove('visible');
-          });
-          
-          option.querySelector('i')?.classList.add('visible');
-          option.querySelector('i')?.classList.remove('hidden');
-        });
-        
+        option.innerHTML = `<span>${c.nome}</span><i class="fas fa-check ${c.id === selecionada?.id ? 'visible' : 'hidden'}"></i>`;
+        option.onclick = () => selecionaCarteira(c, option);
         dropdown.appendChild(option);
       });
       
-      const newWalletOption = document.createElement('div');
-      newWalletOption.className = 'portfolio-option new-wallet-option';
-      newWalletOption.innerHTML = `
-        <span><i class="fas fa-plus"></i> Nova Carteira</span>
-      `;
-      newWalletOption.addEventListener('click', function(e) {
+      // Opção Nova Carteira
+      const novaOpcao = document.createElement('div');
+      novaOpcao.className = 'portfolio-option new-wallet-option';
+      novaOpcao.innerHTML = '<span><i class="fas fa-plus"></i> Nova Carteira</span>';
+      novaOpcao.onclick = e => {
         e.stopPropagation();
-        const walletModal = document.getElementById('add-wallet-modal');
-        if (walletModal) {
-          walletModal.style.display = 'block';
+        const modal = document.getElementById('add-wallet-modal');
+        if (modal) {
+          modal.style.display = 'block';
           dropdown.style.display = 'none';
-          const icon = portfolioSelector.querySelector('i');
-          if (icon) {
-            icon.classList.remove('fa-chevron-up');
-            icon.classList.add('fa-chevron-down');
-          }
-        } else {
-          document.dispatchEvent(new CustomEvent('openWalletModal'));
+          toggleIconDropdown(false);
         }
-      });
-      dropdown.appendChild(newWalletOption);
+      };
+      dropdown.appendChild(novaOpcao);
       
-      if (carteiras.length === 0) {
-        const noPortfolio = document.createElement('div');
-        noPortfolio.className = 'portfolio-option';
-        noPortfolio.innerHTML = '<span>Nenhuma carteira encontrada</span>';
-        dropdown.appendChild(noPortfolio);
+      if (!carteiras.length) {
+        dropdown.innerHTML += '<div class="portfolio-option"><span>Nenhuma carteira encontrada</span></div>';
       }
       
-      portfolioSelector.appendChild(dropdown);
-      
-      if (selectedCarteira) {
+      if (selecionada) {
         document.dispatchEvent(new CustomEvent('portfolioChanged', {
-          detail: { portfolio: selectedCarteira }
+          detail: { portfolio: selecionada }
         }));
       }
     })
-    .catch(error => {
-      console.error('Erro ao buscar carteiras:', error);
-      if (nameSpan) {
-        nameSpan.textContent = 'Carteira não encontrada';
-      }
-      
-      const option = document.createElement('div');
-      option.className = 'portfolio-option';
-      option.innerHTML = '<span>Erro ao carregar carteiras</span>';
-      dropdown.appendChild(option);
-      portfolioSelector.appendChild(dropdown);
+    .catch(() => {
+      if (span) span.textContent = 'Carteira não encontrada';
+      dropdown.innerHTML = '<div class="portfolio-option"><span>Erro ao carregar carteiras</span></div>';
+    })
+    .finally(() => {
+      seletor.appendChild(dropdown);
     });
     
-    portfolioSelector.addEventListener('click', function(e) {
+    // Toggle dropdown
+    seletor.onclick = e => {
       if (e.target.closest('.portfolio-option')) return;
-      
-      const isVisible = dropdown.style.display === 'block';
-      dropdown.style.display = isVisible ? 'none' : 'block';
-      
-      const icon = portfolioSelector.querySelector('i');
-      if (icon) {
-        icon.classList.toggle('fa-chevron-up', !isVisible);
-        icon.classList.toggle('fa-chevron-down', isVisible);
-      }
-    });
-  
-    document.addEventListener('click', function(e) {
-      if (!portfolioSelector.contains(e.target)) {
+      const visivel = dropdown.style.display === 'block';
+      dropdown.style.display = visivel ? 'none' : 'block';
+      toggleIconDropdown(!visivel);
+    };
+    
+    document.addEventListener('click', e => {
+      if (!seletor.contains(e.target)) {
         dropdown.style.display = 'none';
-        const icon = portfolioSelector.querySelector('i');
-        if (icon) {
-          icon.classList.remove('fa-chevron-up');
-          icon.classList.add('fa-chevron-down');
-        }
+        toggleIconDropdown(false);
       }
     });
   }
-
-  function handleWalletForm() {
-    const addWalletForm = document.getElementById('add-wallet-form');
-    const walletModal = document.getElementById('add-wallet-modal');
-    const closeModal = walletModal?.querySelector('.close-modal');
+  
+  function selecionaCarteira(carteira, option) {
+    // Seleciona carteira
+    const span = document.querySelector('.portfolio-selector span');
+    const dropdown = document.querySelector('.portfolio-dropdown');
     
-    if (!walletModal) {
-      console.error('Modal de carteira não encontrado');
-      return;
+    if (span) span.textContent = carteira.nome;
+    if (dropdown) dropdown.style.display = 'none';
+    
+    toggleIconDropdown(false);
+    localStorage.setItem('selectedPortfolio', carteira.nome);
+    localStorage.setItem('selectedWalletId', carteira.id.toString());
+    
+    document.dispatchEvent(new CustomEvent('portfolioChanged', {
+      detail: { portfolio: carteira }
+    }));
+    
+    document.querySelectorAll('.portfolio-option i').forEach(i => {
+      i.className = 'fas fa-check hidden';
+    });
+    
+    const checkIcon = option.querySelector('i');
+    if (checkIcon) checkIcon.classList.replace('hidden', 'visible');
+  }
+  
+  function toggleIconDropdown(mostrarCima) {
+    // Alterna ícone
+    const icon = document.querySelector('.portfolio-selector i');
+    if (icon) {
+      icon.className = `fas fa-chevron-${mostrarCima ? 'up' : 'down'}`;
     }
+  }
+  
+  function configuraFormularioCarteira() {
+    // Setup modal nova carteira
+    const modal = document.getElementById('add-wallet-modal');
+    if (!modal) return;
     
-    if (closeModal) {
-      closeModal.addEventListener('click', function() {
-        walletModal.style.display = 'none';
-      });
-    }
+    const btnFechar = modal.querySelector('.close-modal');
+    if (btnFechar) btnFechar.onclick = () => modal.style.display = 'none';
     
-    if (addWalletForm) {
-      addWalletForm.addEventListener('submit', function(e) {
+    const form = document.getElementById('add-wallet-form');
+    if (form) {
+      form.onsubmit = e => {
         e.preventDefault();
-        console.log('Formulário enviado');
-        
-        const walletName = document.getElementById('wallet-name').value;
-        const walletDescription = document.getElementById('wallet-description').value;
-        const token = localStorage.getItem('accessToken');
         
         if (!token) {
           alert('Você precisa estar logado para criar uma carteira');
           return;
         }
         
-        console.log('Enviando requisição para criar carteira:', {
-          nome: walletName,
-          descricao: walletDescription
-        });
+        const nome = document.getElementById('wallet-name').value;
+        const desc = document.getElementById('wallet-description').value;
         
-        fetch(`${API_URL}/wallets`, {
+        fetch(`${API}/wallets`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            nome: walletName,
-            descricao: walletDescription
-          })
+          body: JSON.stringify({ nome, descricao: desc })
         })
-        .then(response => {
-          console.log('Resposta recebida:', response);
-          if (!response.ok) {
-            throw new Error('Falha ao criar carteira');
-          }
-          return response.json();
-        })
-        .then(result => {
-          console.log('Resultado:', result);
-          if (result.error) {
-            throw new Error(result.msg || 'Erro ao criar carteira');
-          }
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(res => {
+          if (res.error) throw new Error(res.msg);
           
           alert('Carteira criada com sucesso!');
-          walletModal.style.display = 'none';
-          
-          document.getElementById('wallet-name').value = '';
-          document.getElementById('wallet-description').value = '';
-          
-          initializePortfolioDropdown();
+          modal.style.display = 'none';
+          form.reset();
+          inicializaDropdownCarteiras();
         })
-        .catch(error => {
-          console.error('Erro ao criar carteira:', error);
-          alert('Erro ao criar carteira: ' + error.message);
-        });
-      });
-    } else {
-      console.error('Formulário de carteira não encontrado');
+        .catch(err => alert('Erro ao criar carteira: ' + err.message));
+      };
     }
     
-    window.addEventListener('click', function(e) {
-      if (e.target === walletModal) {
-        walletModal.style.display = 'none';
-      }
-    });
+    window.onclick = e => {
+      if (e.target === modal) modal.style.display = 'none';
+    };
   }
-
-  document.addEventListener('openWalletModal', function() {
-    console.log('Modal de carteira não encontrado na página atual');
-  });
 });
