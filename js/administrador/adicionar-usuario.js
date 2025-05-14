@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Constantes e inicialização
     const API_URL = 'http://191.239.116.115:8080';
     const mensagemElement = document.createElement("div");
     mensagemElement.id = "mensagem";
@@ -6,12 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
     mensagemElement.style.display = "none";
     document.querySelector('.users-section').appendChild(mensagemElement);
 
+    // Elementos DOM
     const passwordField = document.getElementById("password");
     const confirmPasswordField = document.getElementById("confirm-password");
-    
     const togglePassword = document.getElementById("togglePassword");
     const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+    const userForm = document.getElementById("user-form");
     
+    // Eventos de visibilidade de senha
     togglePassword.addEventListener('click', function() {
         const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordField.setAttribute('type', type);
@@ -26,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.toggle('fa-eye-slash');
     });
   
+    // Funções auxiliares
     function mostrarMensagem(texto, tipo) {
         mensagemElement.textContent = texto;
         mensagemElement.className = `feedback-message ${tipo}`;
@@ -38,15 +42,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function validarFormulario() {
         const nome = document.getElementById("name").value.trim();
         const email = document.getElementById("email").value.trim();
-        const senha = document.getElementById("password").value;
-        const confirmSenha = document.getElementById("confirm-password").value;
+        const senha = passwordField.value;
+        const confirmSenha = confirmPasswordField.value;
         const perfil = document.getElementById("role").value;
   
         if (!nome || !email || !senha || !confirmSenha || !perfil) {
             mostrarMensagem("Preencha todos os campos obrigatórios.", "erro");
             return false;
         }
-  
   
         if (senha.length < 6) {
             mostrarMensagem("A senha deve ter pelo menos 6 caracteres.", "erro");
@@ -61,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
   
+    // Função de comunicação com a API
     async function enviarCadastro(dadosUsuario) {
         try {
             const response = await fetch(`${API_URL}/auth/signup`, {
@@ -88,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Mapeamento de perfis
     function mapearPerfil(valor) {
         const mapeamento = {
             'admin': 'ADMIN',
@@ -97,7 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return mapeamento[valor] || 'USUARIO';
     }
   
-    document.getElementById("user-form").addEventListener("submit", async function(event) {
+    // Evento de submissão do formulário
+    userForm.addEventListener("submit", async function(event) {
         event.preventDefault();
   
         if (!validarFormulario()) {
@@ -110,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const dadosUsuario = {
             nome: document.getElementById("name").value.trim(),
             email: document.getElementById("email").value.trim(),
-            senha: document.getElementById("password").value,
+            senha: passwordField.value,
             perfil: perfilMapeado
         };
   
@@ -124,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Botão cancelar
     document.querySelector('.cancel-btn').addEventListener('click', function() {
         window.history.back();
     });

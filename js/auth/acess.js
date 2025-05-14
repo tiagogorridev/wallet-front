@@ -11,6 +11,7 @@
             return false;
         }
 
+        // Garante que o refresh token está ativo
         AuthService.startRefreshToken();
 
         return {
@@ -22,6 +23,7 @@
     }
 
     function redirecionarParaLogin() {
+        // Usa replace para evitar problemas com o botão de voltar do navegador
         window.location.replace('../../index.html');
     }
 
@@ -33,16 +35,19 @@
         const ehPaginaAdmin = paginaAtual.includes('/administrador/')
         const ehPaginaUsuario = paginaAtual.includes('/investidor/');
         const ehPaginaLogin = paginaAtual.includes('../../index.html');
+        
         if (ehPaginaAdmin && auth.perfil !== 'ADMIN' && auth.perfil !== 'ANALISTA') {
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
+        
         if (ehPaginaUsuario && (auth.perfil === 'ADMIN' || auth.perfil === 'ANALISTA' ||
             (auth.perfil !== 'USUARIO' && auth.perfil !== 'CONSERVADOR' &&
                 auth.perfil !== 'MODERADO' && auth.perfil !== 'ARROJADO'))) {
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
+        
         if (!ehPaginaAdmin && !ehPaginaUsuario && !ehPaginaLogin) {
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
@@ -58,13 +63,24 @@
                 window.location.replace('../html/administrador/dashboard.html');
                 break;
             case 'USUARIO':
+            case 'CONSERVADOR':
+            case 'MODERADO':
+            case 'ARROJADO':
                 window.location.replace('../html/investidor/resumo.html');
                 break;
             default:
                 redirecionarParaLogin();
         }
     }
+    
+    // Executa verificação ao carregar a página
     verificarPermissao();
+    
+    // Adiciona listener para eventos de atualização de token
+    window.addEventListener('tokenRefreshed', () => {
+        console.log('Token atualizado, verificando permissões');
+        verificarPermissao();
+    });
 })();
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -86,5 +102,9 @@ document.addEventListener('DOMContentLoaded', function () {
         logoutButton.addEventListener('click', () => AuthService.logout());
     }
 
+    // Atualiza informações do usuário
     atualizarInfoUsuario();
+    
+    // Registra listener para atualizar informações quando o token for atualizado
+    window.addEventListener('tokenRefreshed', atualizarInfoUsuario);
 });

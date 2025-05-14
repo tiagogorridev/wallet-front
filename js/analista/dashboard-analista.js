@@ -1,9 +1,9 @@
+// Inicialização do documento
 document.addEventListener('DOMContentLoaded', function() {
     setupPeriodFilter();
-    setupViewButtons();
-    setupTaskButtons();
 });
 
+// Configuração do filtro de período
 function setupPeriodFilter() {
     const periodFilter = document.getElementById('periodFilter');
     if (periodFilter) {
@@ -13,6 +13,7 @@ function setupPeriodFilter() {
     }
 }
 
+// Atualização dos dados do dashboard com base no período selecionado
 function updateDashboardData(days) {
     let statsData;
     
@@ -28,42 +29,9 @@ function updateDashboardData(days) {
             break;
     }
     
+    // Atualização dos elementos de estatísticas na interface
     document.querySelector('.stats-section .stat-card:nth-child(1) .stat-value').textContent = statsData.carteiras;
     document.querySelector('.stats-section .stat-card:nth-child(1) .stat-change').textContent = statsData.carteirasChange;
     document.querySelector('.stats-section .stat-card:nth-child(2) .stat-value').textContent = statsData.clientes;
     document.querySelector('.stats-section .stat-card:nth-child(2) .stat-change').textContent = statsData.clientesChange;
-}
-
-function setupViewButtons() {
-    const viewButtons = document.querySelectorAll('.view-btn');
-    viewButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const portfolioName = this.closest('.portfolio-item').querySelector('h3').textContent;
-            alert(`Visualizando detalhes da carteira: ${portfolioName}`);
-        });
-    });
-}
-
-function setupTaskButtons() {
-    const completeButtons = document.querySelectorAll('.complete-btn');
-    completeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const taskItem = this.closest('.task-item');
-            
-            taskItem.style.opacity = '0.5';
-            setTimeout(() => {
-                taskItem.style.height = '0';
-                taskItem.style.margin = '0';
-                taskItem.style.padding = '0';
-                taskItem.style.overflow = 'hidden';
-                
-                setTimeout(() => {
-                    taskItem.remove();
-                    if (document.querySelectorAll('.task-item').length === 0) {
-                        document.querySelector('.task-list').innerHTML = '<p class="no-tasks">Nenhuma tarefa pendente</p>';
-                    }
-                }, 300);
-            }, 300);
-        });
-    });
 }

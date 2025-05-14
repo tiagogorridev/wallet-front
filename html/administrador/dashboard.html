@@ -15,6 +15,7 @@
 
 <body>
     <header id="admin-header"></header>
+    
     <div class="dashboard-container">
         <div class="dashboard-header">
             <div class="header-content">
@@ -64,15 +65,6 @@
                         <h3>Retenção Mensal</h3>
                         <div class="value" id="retention-rate">0%</div>
                         <div class="variation positive" id="retention-variation">+0%</div>
-                    </div>
-                </div>
-
-                <div class="charts-grid">
-                    <div class="chart-card large">
-                        <h4>Crescimento de Usuários</h4>
-                        <div class="chart-container">
-                            <canvas id="users-growth-chart"></canvas>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -136,68 +128,9 @@
                     </div>
                 </div>
             </section>
-
-            <section class="charts-section">
-                <div class="section-header">
-                    <h2>Categorias de Investimento Mais Populares</h2>
-                    <div class="filter-container">
-                        <select id="category-time-filter" class="time-filter">
-                            <option value="7">Últimos 7 dias</option>
-                            <option value="30" selected>Últimos 30 dias</option>
-                            <option value="90">Últimos 90 dias</option>
-                            <option value="365">Último ano</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="overview-grid">
-                    <div class="overview-card" id="category-card-1">
-                        <i class="fas fa-bitcoin"></i>
-                        <h3>Categoria #1</h3>
-                        <div class="value">0 usuários</div>
-                        <div class="variation positive">+0%</div>
-                    </div>
-
-                    <div class="overview-card" id="category-card-2">
-                        <i class="fas fa-landmark"></i>
-                        <h3>Categoria #2</h3>
-                        <div class="value">0 usuários</div>
-                        <div class="variation positive">+0%</div>
-                    </div>
-
-                    <div class="overview-card" id="category-card-3">
-                        <i class="fas fa-building"></i>
-                        <h3>Categoria #3</h3>
-                        <div class="value">0 usuários</div>
-                        <div class="variation positive">+0%</div>
-                    </div>
-
-                    <div class="overview-card" id="category-card-4">
-                        <i class="fas fa-coins"></i>
-                        <h3>Categoria #4</h3>
-                        <div class="value">0 usuários</div>
-                        <div class="variation positive">+0%</div>
-                    </div>
-                </div>
-
-                <div class="charts-grid">
-                    <div class="chart-card">
-                        <h4>Popularidade das Categorias</h4>
-                        <div class="chart-container">
-                            <canvas id="categories-popularity-chart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="chart-card">
-                        <h4>Investimento por Categoria</h4>
-                        <div class="chart-container">
-                            <canvas id="investment-by-category-chart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </div>
     </div>
+    
     <script src="../../js/auth/auth-service.js"></script>
     <script src="../../js/auth/acess.js"></script>
     <script src="../../js/administrador/header-adm.js"></script>

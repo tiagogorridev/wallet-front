@@ -224,49 +224,94 @@ function voltarEtapa() {
     }
 }
 
-function mostrarResultado() {
-    let perfil = "";
+function getPerfilInvestidor() {
     const pontuacaoMaxima = 40;
     
     if (pontuacao <= pontuacaoMaxima * 0.33) {
-        perfil = "conservative";
+        return "CONSERVADOR";
     } else if (pontuacao <= pontuacaoMaxima * 0.66) {
-        perfil = "moderate";
+        return "MODERADO";
     } else {
-        perfil = "aggressive";
+        return "ARROJADO";
     }
-
-    localStorage.setItem('investorProfile', perfil);
-
-    etapasContainer.innerHTML = `
-        <div class="resultado">
-            <h2>Seu perfil de investidor é: <span class="perfil-resultado">${getPtBrPerfil(perfil)}</span></h2>
-            <p>Obrigado por completar o questionário! Com base nas suas respostas, identificamos seu perfil e agora poderemos oferecer recomendações personalizadas para seus investimentos.</p>
-            <div class="botao-finalizar-container">
-                <button id="btnFinalizar">Finalizar</button>
-            </div>
-        </div>
-    `;
-
-    document.getElementById("btnFinalizar").addEventListener("click", () => {
-        window.location.href = "../../../html/investidor/perfil.html";
-    });
-
-    btnProximo.style.display = "none";
-    btnVoltar.style.display = "none";
-    btnPular.style.display = "none";
-    espacoVoltar.style.display = "none";
-    
-    atualizarBarraProgresso();
 }
 
 function getPtBrPerfil(perfil) {
     switch(perfil) {
-        case 'conservative': return 'Conservador';
-        case 'moderate': return 'Moderado';
-        case 'aggressive': return 'Arrojado';
+        case 'CONSERVADOR': return 'Conservador';
+        case 'MODERADO': return 'Moderado';
+        case 'ARROJADO': return 'Arrojado';
         default: return '';
     }
+}
+
+async function atualizarPerfilNoBackend(perfil) {
+    try {
+        // Obtém o token do localStorage
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error('Token não encontrado. Usuário não está autenticado.');
+            return false;
+        }
+
+        // Faz a requisição PUT para atualizar o perfil do usuário
+        const response = await fetch('/api/user', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                estilo_investidor: perfil
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Erro ao atualizar perfil:', errorData);
+            return false;
+        }
+
+        const data = await response.json();
+        console.log('Perfil atualizado com sucesso:', data);
+        return true;
+    } catch (error) {
+        console.error('Erro ao atualizar perfil do investidor:', error);
+        return false;
+    }
+}
+
+function mostrarResultado() {
+    const perfil = getPerfilInvestidor();
+    
+    // Armazena o perfil no localStorage
+    localStorage.setItem('investorProfile', perfil.toLowerCase());
+
+    // Atualiza o perfil no backend
+    atualizarPerfilNoBackend(perfil)
+        .then(sucesso => {
+            etapasContainer.innerHTML = `
+                <div class="resultado">
+                    <h2>Seu perfil de investidor é: <span class="perfil-resultado">${getPtBrPerfil(perfil)}</span></h2>
+                    <p>Obrigado por completar o questionário! Com base nas suas respostas, identificamos seu perfil e agora poderemos oferecer recomendações personalizadas para seus investimentos.</p>
+                    ${!sucesso ? '<p class="aviso">Não foi possível salvar seu perfil no servidor. Suas preferências serão mantidas apenas localmente.</p>' : ''}
+                    <div class="botao-finalizar-container">
+                        <button id="btnFinalizar">Finalizar</button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById("btnFinalizar").addEventListener("click", () => {
+                window.location.href = "../../../html/investidor/perfil.html";
+            });
+
+            btnProximo.style.display = "none";
+            btnVoltar.style.display = "none";
+            btnPular.style.display = "none";
+            espacoVoltar.style.display = "none";
+            
+            atualizarBarraProgresso();
+        });
 }
 
 btnProximo.addEventListener("click", () => {

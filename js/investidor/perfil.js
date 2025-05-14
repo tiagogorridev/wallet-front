@@ -1,31 +1,23 @@
 const API_URL = 'http://191.239.116.115:8080';
 
-document.addEventListener('DOMContentLoaded', function() {
-    initPasswordToggle();
+// Inicializa tudo quando o DOM carrega
+document.addEventListener('DOMContentLoaded', () => {
     loadUserData();
     initSaveButtons();
     initInvestorProfiles();
 });
 
+// Carrega dados do usuário
 function loadUserData() {
-    const userInfoString = localStorage.getItem('userInfo');
-    if (userInfoString) {
-        const userInfo = JSON.parse(userInfoString);
-        
-        if (userInfo.nome) {
-            document.getElementById('user-name').value = userInfo.nome;
-        }
-        
-        if (userInfo.email) {
-            document.getElementById('user-email').value = userInfo.email;
-        }
-        
-        if (userInfo.estilo_investidor) {
-            selectInvestorProfile(userInfo.estilo_investidor);
-        }
+    const userInfo = getUserInfo();
+    if (userInfo) {
+        if (userInfo.nome) document.getElementById('user-name').value = userInfo.nome;
+        if (userInfo.email) document.getElementById('user-email').value = userInfo.email;
+        if (userInfo.estilo_investidor) selectInvestorProfile(userInfo.estilo_investidor);
     }
 }
 
+// Seleciona perfil de investidor
 function selectInvestorProfile(profileType) {
     const profileOptions = document.querySelectorAll('.profile-option');
     const profileMapping = {
@@ -44,31 +36,11 @@ function selectInvestorProfile(profileType) {
     });
 }
 
-function initPasswordToggle() {
-    const toggleButtons = document.querySelectorAll('.toggle-password-btn');
-    toggleButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-target');
-            const passwordInput = document.getElementById(targetId);
-            const icon = this.querySelector('i');
-
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        });
-    });
-}
-
+// Inicializa botão de salvar dados pessoais
 function initSaveButtons() {
-    const savePersonalDataBtn = document.getElementById('save-personal-data');
-    if (savePersonalDataBtn) {
-        savePersonalDataBtn.addEventListener('click', function() {
+    const saveBtn = document.getElementById('save-personal-data');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
             const userName = document.getElementById('user-name').value;
             
             if (!userName) {
@@ -76,117 +48,17 @@ function initSaveButtons() {
                 return;
             }
             
-            const userInfoString = localStorage.getItem('userInfo');
-            let userInfo = userInfoString ? JSON.parse(userInfoString) : {};
+            const userInfo = getUserInfo() || {};
             userInfo.nome = userName;
-            localStorage.setItem('userInfo', JSON.stringify(userInfo));
-            updateUserInBackend(userInfo);
-        });
-    }
-    
-    const changePasswordBtn = document.getElementById('change-password-btn');
-    if (changePasswordBtn) {
-        changePasswordBtn.addEventListener('click', function() {
-            const currentPassword = document.getElementById('current-password').value;
-            const newPassword = document.getElementById('new-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
+            saveUserInfo(userInfo);
             
-            if (!currentPassword || !newPassword || !confirmPassword) {
-                alert('Por favor, preencha todos os campos de senha!');
-                return;
-            }
-            
-            if (newPassword !== confirmPassword) {
-                alert('As novas senhas não coincidem!');
-                return;
-            }
-            
-            alert('Solicitação de alteração de senha enviada');
-            
-            document.getElementById('current-password').value = '';
-            document.getElementById('new-password').value = '';
-            document.getElementById('confirm-password').value = '';
+            // Atualiza apenas o nome
+            updateUserData({ nome: userName }, 'Nome atualizado com sucesso!');
         });
     }
 }
 
-function updateUserInBackend(userInfo) {
-    const accessToken = localStorage.getItem('accessToken');
-    
-    if (!accessToken) {
-        alert('Erro: Usuário não autenticado');
-        return;
-    }
-    
-    const userData = {
-        nome: userInfo.nome
-    };
-    
-    if (userInfo.id && userInfo.id !== 'null' && userInfo.id !== null) {
-        userData.id = userInfo.id;
-    }
-    
-    fetch(`${API_URL}/users`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
-        },
-        body: JSON.stringify(userData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.text().then(text => {
-                let errorMsg = 'Erro ao atualizar usuário';
-                try {
-                    if (text && text.trim()) {
-                        const errorData = JSON.parse(text);
-                        if (errorData && errorData.msg) {
-                            errorMsg = errorData.msg;
-                        }
-                    }
-                } catch (e) {
-                    console.error('Resposta não é um JSON válido:', text);
-                }
-
-                throw new Error(errorMsg);
-            });
-        }
-        return response.text().then(text => {
-            if (!text || !text.trim()) {
-                return { success: true };
-            }
-            try {
-                return JSON.parse(text);
-            } catch (e) {
-                console.error('Resposta não é um JSON válido:', text);
-                return { success: true };
-            }
-        });
-    })
-    .then(data => {
-        if (data && data.data && data.data.user) {
-            const updatedUserInfo = {
-                ...userInfo,
-                ...data.data.user
-            };
-            localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo));
-        }
-        
-        alert('Nome atualizado com sucesso!');
-        const userNameDisplayElements = document.querySelectorAll('.user-name-display');
-        if (userNameDisplayElements.length > 0) {
-            userNameDisplayElements.forEach(element => {
-                element.textContent = userInfo.nome;
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Erro ao atualizar usuário:', error);
-        alert(`Erro: ${error.message}`);
-    });
-}
-
+// Inicializa perfis de investidor
 function initInvestorProfiles() {
     const profileOptions = document.querySelectorAll('.profile-option');
     if (profileOptions.length > 0) {
@@ -202,26 +74,92 @@ function initInvestorProfiles() {
                     'aggressive': 'ARROJADO'
                 };
                 
-                const userInfoString = localStorage.getItem('userInfo');
-                let userInfo = userInfoString ? JSON.parse(userInfoString) : {};
-                userInfo.estilo_investidor = profileMapping[profileType] || 'CONSERVADOR';
-                localStorage.setItem('userInfo', JSON.stringify(userInfo));
+                const profileName = {
+                    'conservative': 'Conservador',
+                    'moderate': 'Moderado',
+                    'aggressive': 'Arrojado'
+                }[profileType];
                 
-                let profileName = '';
-                switch(profileType) {
-                    case 'conservative':
-                        profileName = 'Conservador';
-                        break;
-                    case 'moderate':
-                        profileName = 'Moderado';
-                        break;
-                    case 'aggressive':
-                        profileName = 'Arrojado';
-                        break;
-                }
-                alert(`Perfil de investidor alterado para ${profileName}`);
-                updateUserInBackend(userInfo);
+                const userInfo = getUserInfo() || {};
+                userInfo.estilo_investidor = profileMapping[profileType];
+                saveUserInfo(userInfo);
+                
+                // Atualiza apenas o perfil de investidor
+                updateUserData(
+                    { estilo_investidor: profileMapping[profileType] },
+                    `Perfil de investidor alterado para ${profileName}`
+                );
             });
         });
     }
+}
+
+// Funções de utilidade
+function getUserInfo() {
+    const userInfoString = localStorage.getItem('userInfo');
+    return userInfoString ? JSON.parse(userInfoString) : null;
+}
+
+function saveUserInfo(userInfo) {
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+}
+
+// Atualiza dados no backend
+function updateUserData(data, successMessage) {
+    const accessToken = localStorage.getItem('accessToken');
+    
+    if (!accessToken) {
+        alert('Erro: Usuário não autenticado');
+        return;
+    }
+    
+    const userInfo = getUserInfo();
+    if (userInfo && userInfo.id && userInfo.id !== 'null') {
+        data.id = userInfo.id;
+    }
+    
+    fetch(`${API_URL}/users`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => {
+                let errorMsg = 'Erro na atualização';
+                try {
+                    if (text && text.trim()) {
+                        const errorData = JSON.parse(text);
+                        if (errorData && errorData.msg) errorMsg = errorData.msg;
+                    }
+                } catch (e) {}
+                throw new Error(errorMsg);
+            });
+        }
+        return response.text().then(text => {
+            return text && text.trim() ? JSON.parse(text) : { success: true };
+        });
+    })
+    .then(responseData => {
+        if (responseData && responseData.data && responseData.data.user) {
+            const userInfo = getUserInfo() || {};
+            saveUserInfo({...userInfo, ...responseData.data.user});
+        }
+        
+        alert(successMessage);
+        
+        // Atualiza exibição do nome se necessário
+        if (data.nome) {
+            document.querySelectorAll('.user-name-display').forEach(element => {
+                element.textContent = data.nome;
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert(`Erro: ${error.message}`);
+    });
 }
