@@ -34,7 +34,7 @@
 
       <section class="section chart-section">
         <div class="section-header">
-          <h2>Ativos na carteira</h2>
+          <h2>Patrimônio por Categoria</h2>
         </div>
         <div class="pie-chart-container">
           <canvas id="assetsDistributionChart"></canvas>
@@ -44,18 +44,21 @@
     </div>
 
     <div class="main-content">
+
+
       <section class="section chart-section">
         <div class="section-header">
-          <h2>Rentabilidade Anual</h2>
+          <h2>Ativos na Carteira</h2>
         </div>
-        <div class="chart-container">
-          <canvas id="annualReturnChart"></canvas>
+        <div class="pie-chart-container">
+          <canvas id="categoryDistributionChart"></canvas>
+          <div class="pie-chart-legend" id="categoryDistributionLegend"></div>
         </div>
       </section>
 
       <section class="section chart-section">
         <div class="section-header">
-          <h2>Patrimônio por Categoria</h2>
+          <h2>Dólar Hoje</h2>
         </div>
         <div class="pie-chart-container">
           <canvas id="categoryDistributionChart"></canvas>
@@ -64,44 +67,6 @@
       </section>
     </div>
 
-    <section class="section historical-performance">
-      <div class="section-header">
-        <h2>Histórico de Performance</h2>
-        <div class="filters">
-          <div class="filter-data" id="performanceFilter">
-            <button class="filter-option" data-value="3">3 MESES</button>
-            <button class="filter-option" data-value="6">6 MESES</button>
-            <button class="filter-option active" data-value="12">12 MESES</button>
-            <button class="filter-option" data-value="24">24 MESES</button>
-          </div>
-        </div>
-      </div>
-      <div class="table-container">
-        <table class="table" id="performanceTable">
-          <thead>
-            <tr>
-              <th>Período</th>
-              <th>Rentabilidade</th>
-              <th>CDI</th>
-              <th>IBOVESPA</th>
-              <th>S&P 500</th>
-              <th>Bitcoin</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="section assets-section">
-      <div class="assets-header">
-        <h2>Ativos</h2>
-        <button class="btn btn-primary btn-round" id="addAssetBtn">Adicionar Ativo</button>
-      </div>
-      <div class="table-container" id="assetCategoriesContainer">
-      </div>
-    </section>
   </div>
 
   <div class="modal" id="addAssetModal">

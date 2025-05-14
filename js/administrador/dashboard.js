@@ -24,7 +24,6 @@ const mockData = {
         distribution: {
             "Ações": 35.2,
             "Fundos": 22.8,
-            "Renda Fixa": 18.5,
             "Criptomoedas": 10.3,
             "Tesouro Direto": 4.3
         }
@@ -46,11 +45,6 @@ const mockData = {
                 count: 592,
                 growth: 9.7,
                 icon: "landmark"
-            },
-            "Renda Fixa": {
-                count: 387,
-                growth: -2.3,
-                icon: "university"
             },
             "Tesouro Direto": {
                 count: 284,
