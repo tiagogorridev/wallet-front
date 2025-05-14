@@ -11,7 +11,6 @@
             return false;
         }
 
-        // Garantir que o refresh token está ativo
         AuthService.startRefreshToken();
 
         return {
