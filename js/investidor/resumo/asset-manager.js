@@ -6,24 +6,23 @@ const AssetManager = {
             return;
         }
         assetDropdown.innerHTML = '<option value="">Carregando ativos...</option>';
-        
+
         APIService.getAssets()
             .then(response => {
                 const assets = response.data?.data || [];
-                
                 assetDropdown.innerHTML = '<option value="">Selecione um ativo</option>';
                 if (!assets.length) {
                     assetDropdown.innerHTML = '<option value="">Nenhum ativo disponível</option>';
                     return;
                 }
-                
+
                 const assetsByType = {};
                 assets.forEach(asset => {
                     const type = asset.tipo;
                     if (!assetsByType[type]) assetsByType[type] = [];
                     assetsByType[type].push(asset);
                 });
-                
+
                 for (const type in assetsByType) {
                     if (assetsByType[type].length > 0) {
                         const optgroup = document.createElement('optgroup');
@@ -40,8 +39,8 @@ const AssetManager = {
                         assetDropdown.appendChild(optgroup);
                     }
                 }
-                
-                assetDropdown.addEventListener('change', function() {
+
+                assetDropdown.addEventListener('change', function () {
                     const selectedOption = this.options[this.selectedIndex];
                     if (selectedOption?.value) {
                         const nameInput = document.getElementById('assetName');
@@ -68,7 +67,7 @@ const AssetManager = {
             console.error('Modal de edição não encontrado');
             return;
         }
-        
+
         const editAssetId = document.getElementById('editAssetId');
         const editAssetName = document.getElementById('editAssetName');
         const editAssetCategory = document.getElementById('editAssetCategory');
@@ -76,31 +75,31 @@ const AssetManager = {
         const editAssetQuantity = document.getElementById('editAssetQuantity');
         const editAssetPurchaseDate = document.getElementById('editAssetPurchaseDate');
         const editTransactionId = document.getElementById('editTransactionId');
-        
+
         const assetRow = document.querySelector(`[data-asset-id="${assetId}"]`).closest('tr');
         if (!assetRow) {
             console.error('Linha do ativo não encontrada');
             return;
         }
-        
+
         const assetName = assetRow.cells[0].textContent;
         const categorySpan = assetRow.cells[1].querySelector('.asset-category');
         const category = categorySpan ? Utils.getCategoryValueFromClass(categorySpan.className) : 'CRIPTOMOEDAS';
         const quantity = parseFloat(assetRow.cells[2].textContent.replace(/\./g, '').replace(',', '.'));
         const valuePerUnit = parseFloat(assetRow.cells[3].textContent.replace('R$ ', '').replace(/\./g, '').replace(',', '.'));
-        
+
         const transactionId = assetRow.dataset.transactionId || null;
-        
+
         editAssetId.value = assetId;
         editAssetName.value = assetName;
         editAssetCategory.value = category;
         editAssetValuePerUnit.value = valuePerUnit;
         editAssetQuantity.value = quantity;
         editTransactionId.value = transactionId;
-        
+
         const today = new Date();
         editAssetPurchaseDate.value = today.toISOString().substring(0, 10);
-        
+
         if (window.ModalFunctions) {
             const editModal = window.ModalFunctions.createModal('editAssetModal');
             editModal.openModal();
@@ -111,7 +110,7 @@ const AssetManager = {
 
     updateAsset(event) {
         event.preventDefault();
-        
+
         const assetId = document.getElementById('editAssetId').value;
         const transactionId = document.getElementById('editTransactionId').value;
         const assetName = document.getElementById('editAssetName').value;
@@ -119,19 +118,19 @@ const AssetManager = {
         const assetValuePerUnit = parseFloat(document.getElementById('editAssetValuePerUnit').value);
         const assetQuantity = parseFloat(document.getElementById('editAssetQuantity').value);
         const assetPurchaseDate = document.getElementById('editAssetPurchaseDate').value;
-        
+
         if (assetCategory === 'ACOES' && !Number.isInteger(assetQuantity)) {
             alert('Para ações, a quantidade deve ser um número inteiro');
             return;
         }
-        
+
         const walletId = localStorage.getItem('selectedWalletId');
         if (!walletId) {
             alert('Carteira não selecionada. Por favor, faça login novamente.');
             window.location.href = '../../index.html';
             return;
         }
-        
+
         const transactionData = {
             id_carteira: parseInt(walletId),
             nome_ativo: assetName,
@@ -142,7 +141,7 @@ const AssetManager = {
             taxa_corretagem: 0.0,
             notas: ""
         };
-        
+
         const closeModal = () => {
             if (window.ModalFunctions) {
                 const editModal = window.ModalFunctions.createModal('editAssetModal');
@@ -153,7 +152,7 @@ const AssetManager = {
             document.getElementById('editAssetForm').reset();
             window.location.reload();
         };
-        
+
         if (transactionId) {
             APIService.updateTransaction(transactionId, transactionData)
                 .then(() => {
@@ -183,24 +182,24 @@ const AssetManager = {
             alert('Por favor, insira um nome para o ativo');
             return;
         }
-        
+
         const assetCategory = document.getElementById('assetCategory').value;
         const assetValuePerUnit = parseFloat(document.getElementById('assetValuePerUnit').value);
         const assetQuantity = parseFloat(document.getElementById('assetQuantity').value);
         const assetPurchaseDate = document.getElementById('assetPurchaseDate').value;
-        
+
         if (assetCategory === 'ACOES' && !Number.isInteger(assetQuantity)) {
             alert('Para ações, a quantidade deve ser um número inteiro');
             return;
         }
-        
+
         const walletId = localStorage.getItem('selectedWalletId');
         if (!walletId) {
             alert('Carteira não selecionada. Por favor, faça login novamente.');
             window.location.href = '../../index.html';
             return;
         }
-        
+
         const transactionData = {
             id_carteira: parseInt(walletId),
             nome_ativo: assetName,
@@ -211,18 +210,18 @@ const AssetManager = {
             taxa_corretagem: 0.0,
             notas: ""
         };
-        
+
         APIService.addTransaction(transactionData)
             .then(() => {
                 alert('Ativo adicionado com sucesso!');
-                
+
                 if (window.ModalFunctions) {
                     const addModal = window.ModalFunctions.createModal('addAssetModal');
                     addModal.closeModal();
                 } else {
                     document.getElementById('addAssetModal').style.display = 'none';
                 }
-                
+
                 document.getElementById('addAssetForm').reset();
                 window.location.reload();
             })
@@ -236,7 +235,7 @@ const AssetManager = {
             console.error('ID do ativo não fornecido');
             return;
         }
-        
+
         if (confirm('Tem certeza que deseja remover este ativo da carteira?')) {
             APIService.deleteTransaction(assetId)
                 .then(() => {

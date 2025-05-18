@@ -17,19 +17,21 @@ document.addEventListener('DOMContentLoaded', function () {
     if (typeof PortfolioManager !== 'undefined') {
         PortfolioManager.setElements(elementsConfig);
     }
-    
-    let charts = {};
+
     if (typeof ChartManager !== 'undefined') {
-        charts = ChartManager.initializeCharts();
+        const chartsManager = new ChartManager();
+        chartsManager.initialize();
+        window.chartsManagerInstance = chartsManager;
+
         if (typeof PortfolioManager !== 'undefined') {
-            PortfolioManager.setCharts(charts);
+            PortfolioManager.setCharts(chartsManager);
         }
     }
-    
+
     if (typeof PortfolioManager !== 'undefined') {
         PortfolioManager.loadPortfolio();
     }
-    
+
     initializeModalComponents();
 
     if (elementsConfig.addAssetButton) {
@@ -41,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (elementsConfig.addAssetForm) {
-        elementsConfig.addAssetForm.addEventListener('submit', function(event) {
+        elementsConfig.addAssetForm.addEventListener('submit', function (event) {
             event.preventDefault();
             if (typeof AssetManager !== 'undefined') {
                 AssetManager.addAsset(event);
@@ -55,25 +57,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('edit-asset') || 
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('edit-asset') ||
             (event.target.parentElement && event.target.parentElement.classList.contains('edit-asset'))) {
-            
-            const button = event.target.classList.contains('edit-asset') ? 
+
+            const button = event.target.classList.contains('edit-asset') ?
                 event.target : event.target.parentElement;
-            
+
             const assetId = button.dataset.assetId;
             if (typeof AssetManager !== 'undefined') {
                 AssetManager.openEditAssetModal(assetId);
             }
         }
-        
-        if (event.target.classList.contains('delete-asset') || 
+
+        if (event.target.classList.contains('delete-asset') ||
             (event.target.parentElement && event.target.parentElement.classList.contains('delete-asset'))) {
-            
-            const button = event.target.classList.contains('delete-asset') ? 
+
+            const button = event.target.classList.contains('delete-asset') ?
                 event.target : event.target.parentElement;
-            
+
             const assetId = button.dataset.assetId;
             if (confirm('Tem certeza que deseja remover este ativo da carteira?')) {
                 if (typeof AssetManager !== 'undefined') {
@@ -88,11 +90,11 @@ function initializeModalComponents() {
     if (typeof createModal === 'function') {
         const addAssetModal = createModal('addAssetModal');
         addAssetModal.initialize('headerAddAssetBtn');
-        
+
         const editAssetModal = createModal('editAssetModal');
         editAssetModal.initialize();
     }
-    
+
     const modalTrigger = document.getElementById('headerAddAssetBtn');
     if (modalTrigger) {
         modalTrigger.addEventListener('click', () => {
@@ -103,10 +105,10 @@ function initializeModalComponents() {
             }, 100);
         });
     }
-    
+
     const editAssetForm = document.getElementById('editAssetForm');
     if (editAssetForm) {
-        editAssetForm.addEventListener('submit', function(event) {
+        editAssetForm.addEventListener('submit', function (event) {
             event.preventDefault();
             if (typeof AssetManager !== 'undefined') {
                 AssetManager.updateAsset(event);

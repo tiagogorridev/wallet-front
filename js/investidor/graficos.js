@@ -6,10 +6,14 @@ class EvolutionPatrimonyComponent {
         this.chartInstance = null;
         this.months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         this.transactions = [];
+        this.allData = { labels: [], data: [] };
     }
 
     initialize() {
         this.fetchTransactions();
+        if (this.filterContainerId) {
+            this.setupEventListeners();
+        }
     }
 
     async fetchTransactions() {
@@ -25,10 +29,8 @@ class EvolutionPatrimonyComponent {
             const selectedWallet = wallets.find(wallet => wallet.id === parseInt(selectedWalletId)) || wallets[0];
             this.transactions = selectedWallet.transacoes || [];
 
+            this.allData = this.processTransactionData();
             this.createChart();
-            if (this.filterContainerId) {
-                this.setupEventListeners();
-            }
         } catch (error) {
             console.error('Error fetching transactions:', error);
             this.createChart(); // Create chart with empty data if fetch fails
@@ -37,7 +39,11 @@ class EvolutionPatrimonyComponent {
 
     createChart() {
         const ctx = document.getElementById(this.containerId).getContext('2d');
-        const { labels, data } = this.processTransactionData();
+        const { labels, data } = this.allData;
+
+        if (this.chartInstance) {
+            this.chartInstance.destroy();
+        }
 
         this.chartInstance = new Chart(ctx, {
             type: 'line',
@@ -115,11 +121,15 @@ class EvolutionPatrimonyComponent {
     updateChart(monthsToShow) {
         if (!this.chartInstance) return;
 
-        const { labels, data } = this.processTransactionData();
+        let filteredLabels, filteredData;
 
-        // Filter data for the selected number of months
-        const filteredLabels = labels.slice(-monthsToShow);
-        const filteredData = data.slice(-monthsToShow);
+        if (monthsToShow === 'all') {
+            filteredLabels = this.allData.labels;
+            filteredData = this.allData.data;
+        } else {
+            filteredLabels = this.allData.labels.slice(-monthsToShow);
+            filteredData = this.allData.data.slice(-monthsToShow);
+        }
 
         this.chartInstance.data.labels = filteredLabels;
         this.chartInstance.data.datasets[0].data = filteredData;
@@ -132,7 +142,8 @@ class EvolutionPatrimonyComponent {
             button.addEventListener('click', () => {
                 filterButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
-                this.updateChart(parseInt(button.getAttribute('data-value')));
+                const value = button.getAttribute('data-value');
+                this.updateChart(value === 'all' ? 'all' : parseInt(value));
             });
         });
     }
@@ -155,7 +166,6 @@ class AssetsDistributionComponent {
         try {
             const result = await APIService.fetchFromAPI('/wallets', 'GET');
             const wallets = result.data.data || [];
-
             if (wallets.length === 0) {
                 throw new Error('Nenhuma carteira encontrada');
             }
@@ -165,8 +175,7 @@ class AssetsDistributionComponent {
 
             // Processar as transações para calcular a distribuição
             const transactions = selectedWallet.transacoes || [];
-            console.log(transactions);
-            const assetsMap = {};
+            const categoriesMap = {};
             let totalValue = 0;
 
             // Primeiro, buscar os ativos para ter informações completas
@@ -185,21 +194,21 @@ class AssetsDistributionComponent {
                 const assetData = assetsById[assetId];
                 const category = transaction.tipo || (assetData && assetData.tipo) || 'OUTROS';
 
-                if (!assetsMap[category]) {
-                    assetsMap[category] = {
+                if (!categoriesMap[category]) {
+                    categoriesMap[category] = {
                         value: 0,
                         count: 0
                     };
                 }
 
                 const transactionValue = transaction.valor_total || (transaction.quantidade * transaction.valor_unitario);
-                assetsMap[category].value += transactionValue;
-                assetsMap[category].count++;
+                categoriesMap[category].value += transactionValue;
+                categoriesMap[category].count++;
                 totalValue += transactionValue;
             });
 
             // Converter para o formato necessário para o gráfico
-            const assetsData = Object.entries(assetsMap).map(([category, data]) => ({
+            const assetsData = Object.entries(categoriesMap).map(([category, data]) => ({
                 class: this.getAssetClass(category),
                 label: this.getCategoryLabel(category),
                 percentage: totalValue > 0 ? ((data.value / totalValue) * 100).toFixed(2) : 0,
@@ -400,10 +409,168 @@ class AnnualReturnChartComponent {
     }
 }
 
+// Componente de Distribuição por Ativos Individuais
+class AssetsIndividualDistributionComponent {
+    constructor(chartContainerId, legendContainerId, data = null) {
+        this.chartContainerId = chartContainerId;
+        this.legendContainerId = legendContainerId;
+        this.chartInstance = null;
+        this.data = data || [];
+    }
+
+    initialize() {
+        this.fetchAssetsDistribution();
+    }
+
+    async fetchAssetsDistribution() {
+        try {
+            const result = await APIService.fetchFromAPI('/wallets', 'GET');
+            const wallets = result.data.data || [];
+            if (wallets.length === 0) {
+                throw new Error('Nenhuma carteira encontrada');
+            }
+
+            const selectedWalletId = localStorage.getItem('selectedWalletId');
+            const selectedWallet = wallets.find(wallet => wallet.id === parseInt(selectedWalletId)) || wallets[0];
+
+            // Processar as transações para calcular a distribuição
+            const transactions = selectedWallet.transacoes || [];
+            const assetsMap = {};
+            let totalValue = 0;
+
+            // Primeiro, buscar os ativos para ter informações completas
+            const assetsResult = await APIService.fetchFromAPI('/assets', 'GET');
+            const assets = assetsResult.data.data || [];
+            const assetsById = {};
+            assets.forEach(asset => {
+                assetsById[asset.id] = asset;
+            });
+
+            // Calcular valores totais por ativo individual
+            transactions.forEach(transaction => {
+                const assetId = transaction.id_ativo;
+                if (!assetId) return;
+
+                const assetData = assetsById[assetId];
+                const assetName = assetData ? `${assetData.nome} (${assetData.simbolo})` : transaction.nome_ativo;
+                const category = transaction.tipo || (assetData && assetData.tipo) || 'OUTROS';
+
+                if (!assetsMap[assetName]) {
+                    assetsMap[assetName] = {
+                        value: 0,
+                        category: category
+                    };
+                }
+
+                const transactionValue = transaction.valor_total || (transaction.quantidade * transaction.valor_unitario);
+                assetsMap[assetName].value += transactionValue;
+                totalValue += transactionValue;
+            });
+
+            // Converter para o formato necessário para o gráfico
+            const assetsData = Object.entries(assetsMap).map(([assetName, data]) => ({
+                class: this.getAssetClass(data.category),
+                label: assetName,
+                percentage: totalValue > 0 ? ((data.value / totalValue) * 100).toFixed(2) : 0,
+                value: data.value.toFixed(2)
+            }));
+
+            this.data = assetsData;
+            this.createChart();
+            this.createLegend();
+        } catch (error) {
+            console.error('Error fetching assets distribution:', error);
+            this.data = [];
+            this.createChart();
+            this.createLegend();
+        }
+    }
+
+    getAssetClass(categoria) {
+        const categoryMap = {
+            'CRIPTOMOEDAS': 'crypto',
+            'ACOES': 'stocks',
+            'RENDA_FIXA': 'fixed-income',
+            'FII': 'reits',
+            'ETF': 'etf'
+        };
+        return categoryMap[categoria] || 'other';
+    }
+
+    createChart() {
+        const ctx = document.getElementById(this.chartContainerId).getContext('2d');
+        this.chartInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: this.data.map(item => item.label),
+                datasets: [{
+                    data: this.data.map(item => item.percentage),
+                    backgroundColor: [
+                        '#FFA500', // crypto
+                        '#6b7280', // stocks
+                        '#10B981', // fixed-income
+                        '#3B82F6', // reits
+                        '#8B5CF6', // etf
+                        '#EF4444'  // other
+                    ],
+                    hoverOffset: 2
+                }]
+            },
+            options: this.getPieChartOptions()
+        });
+    }
+
+    getPieChartOptions() {
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            const item = this.data[context.dataIndex];
+                            return `${item.label}: ${item.percentage}% (R$ ${item.value})`;
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    createLegend() {
+        const legendContainer = document.getElementById(this.legendContainerId);
+        if (!legendContainer) return;
+
+        legendContainer.innerHTML = '';
+        this.data.forEach(item => {
+            const legendItem = document.createElement('div');
+            legendItem.className = 'legend-item';
+            legendItem.innerHTML = `
+                <span class="legend-color ${item.class}"></span>
+                <span class="legend-label">${item.percentage}% ${item.label}</span>
+                <span class="legend-value">R$ ${item.value}</span>
+            `;
+            legendContainer.appendChild(legendItem);
+        });
+    }
+
+    updateData(newData) {
+        this.data = newData;
+        this.chartInstance.data.labels = this.data.map(item => item.label);
+        this.chartInstance.data.datasets[0].data = this.data.map(item => item.percentage);
+        this.chartInstance.update();
+        this.createLegend();
+    }
+}
+
 // Inicialização simplificada
 window.initComponents = () => {
     new EvolutionPatrimonyComponent('evolutionChart', 'evolutionFilter').initialize();
     new AssetsDistributionComponent('distributionChart', 'distributionLegend').initialize();
+    new AssetsIndividualDistributionComponent('grafico-por-ativos', 'grafico-por-ativos-legend').initialize();
 };
 
 // Registrar componentes
@@ -411,3 +578,4 @@ window.EvolutionPatrimonyComponent = EvolutionPatrimonyComponent;
 window.AssetsDistributionComponent = AssetsDistributionComponent;
 window.AssetsComponent = AssetsComponent;
 window.AnnualReturnChartComponent = AnnualReturnChartComponent;
+window.AssetsIndividualDistributionComponent = AssetsIndividualDistributionComponent;
