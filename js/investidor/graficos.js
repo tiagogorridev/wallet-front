@@ -5,25 +5,39 @@ class EvolutionPatrimonyComponent {
         this.filterContainerId = filterContainerId;
         this.chartInstance = null;
         this.months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        this.transactions = [];
     }
 
     initialize() {
-        this.createChart();
-        if (this.filterContainerId) {
-            this.setupEventListeners();
+        this.fetchTransactions();
+    }
+
+    async fetchTransactions() {
+        try {
+            const result = await APIService.fetchFromAPI('/wallets', 'GET');
+            const wallets = result.data.data || [];
+
+            if (wallets.length === 0) {
+                throw new Error('Nenhuma carteira encontrada');
+            }
+
+            const selectedWalletId = localStorage.getItem('selectedWalletId');
+            const selectedWallet = wallets.find(wallet => wallet.id === parseInt(selectedWalletId)) || wallets[0];
+            this.transactions = selectedWallet.transacoes || [];
+
+            this.createChart();
+            if (this.filterContainerId) {
+                this.setupEventListeners();
+            }
+        } catch (error) {
+            console.error('Error fetching transactions:', error);
+            this.createChart(); // Create chart with empty data if fetch fails
         }
     }
 
     createChart() {
         const ctx = document.getElementById(this.containerId).getContext('2d');
-        const labels = [];
-        const data = [];
-
-        for (let i = 11; i >= 0; i--) {
-            const date = new Date(new Date().getFullYear(), new Date().getMonth() - i, 1);
-            labels.push(`${this.months[date.getMonth()]} / ${date.getFullYear()}`);
-            data.push(10000 + Math.random() * 2000 - 1000);
-        }
+        const { labels, data } = this.processTransactionData();
 
         this.chartInstance = new Chart(ctx, {
             type: 'line',
@@ -47,7 +61,7 @@ class EvolutionPatrimonyComponent {
                         beginAtZero: false,
                         ticks: {
                             color: '#FFFFFF',
-                            callback: function(value) { return 'R$ ' + Number(value).toLocaleString(); }
+                            callback: function (value) { return 'R$ ' + Number(value).toLocaleString(); }
                         },
                         grid: { color: 'rgba(255, 255, 255, 0.1)' }
                     },
@@ -60,20 +74,55 @@ class EvolutionPatrimonyComponent {
         });
     }
 
+    processTransactionData() {
+        const labels = [];
+        const data = [];
+        let cumulativeValue = 0;
+
+        // Sort transactions by date
+        const sortedTransactions = [...this.transactions].sort((a, b) =>
+            new Date(a.data_transacao) - new Date(b.data_transacao)
+        );
+
+        // Create monthly data points
+        const monthlyData = {};
+
+        sortedTransactions.forEach(transaction => {
+            const date = new Date(transaction.data_transacao);
+            const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
+
+            if (!monthlyData[monthKey]) {
+                monthlyData[monthKey] = 0;
+            }
+
+            // Add transaction value to monthly total
+            const transactionValue = transaction.valor_total || (transaction.quantidade * transaction.valor_unitario);
+            monthlyData[monthKey] += transactionValue;
+        });
+
+        // Convert monthly data to chart format
+        Object.entries(monthlyData).forEach(([monthKey, value]) => {
+            const [year, month] = monthKey.split('-');
+            cumulativeValue += value;
+
+            labels.push(`${this.months[parseInt(month) - 1]} / ${year}`);
+            data.push(cumulativeValue);
+        });
+
+        return { labels, data };
+    }
+
     updateChart(monthsToShow) {
         if (!this.chartInstance) return;
 
-        const labels = [];
-        const data = [];
+        const { labels, data } = this.processTransactionData();
 
-        for (let i = monthsToShow - 1; i >= 0; i--) {
-            const date = new Date(new Date().getFullYear(), new Date().getMonth() - i, 1);
-            labels.push(`${this.months[date.getMonth()]} / ${date.getFullYear()}`);
-            data.push(10000 + Math.random() * 2000 - 1000);
-        }
+        // Filter data for the selected number of months
+        const filteredLabels = labels.slice(-monthsToShow);
+        const filteredData = data.slice(-monthsToShow);
 
-        this.chartInstance.data.labels = labels;
-        this.chartInstance.data.datasets[0].data = data;
+        this.chartInstance.data.labels = filteredLabels;
+        this.chartInstance.data.datasets[0].data = filteredData;
         this.chartInstance.update();
     }
 
@@ -116,6 +165,7 @@ class AssetsDistributionComponent {
 
             // Processar as transações para calcular a distribuição
             const transactions = selectedWallet.transacoes || [];
+            console.log(transactions);
             const assetsMap = {};
             let totalValue = 0;
 
