@@ -10,10 +10,8 @@ class EvolutionPatrimonyComponent {
     }
 
     initialize() {
+        this.setupEventListeners();
         this.fetchTransactions();
-        if (this.filterContainerId) {
-            this.setupEventListeners();
-        }
     }
 
     async fetchTransactions() {
@@ -31,9 +29,16 @@ class EvolutionPatrimonyComponent {
 
             this.allData = this.processTransactionData();
             this.createChart();
+
+            // Aplicar o filtro ativo inicial
+            const activeFilter = document.querySelector(`#${this.filterContainerId} .filter-option.active`);
+            if (activeFilter) {
+                const value = activeFilter.getAttribute('data-value');
+                this.updateChart(value === 'all' ? 'all' : parseInt(value));
+            }
         } catch (error) {
             console.error('Error fetching transactions:', error);
-            this.createChart(); // Create chart with empty data if fetch fails
+            this.createChart();
         }
     }
 
@@ -119,7 +124,7 @@ class EvolutionPatrimonyComponent {
     }
 
     updateChart(monthsToShow) {
-        if (!this.chartInstance) return;
+        if (!this.chartInstance || !this.allData.labels.length) return;
 
         let filteredLabels, filteredData;
 
@@ -137,6 +142,8 @@ class EvolutionPatrimonyComponent {
     }
 
     setupEventListeners() {
+        if (!this.filterContainerId) return;
+
         const filterButtons = document.querySelectorAll(`#${this.filterContainerId} .filter-option`);
         filterButtons.forEach(button => {
             button.addEventListener('click', () => {
