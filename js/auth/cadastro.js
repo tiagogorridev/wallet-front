@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(dadosUsuario),
+                credentials: 'include'
             });
 
             console.log("Status da resposta:", response.status);
@@ -96,6 +97,55 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    async function loginAposCadastro(email, senha) {
+        try {
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, senha }),
+                credentials: 'include'
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                if (window.AuthService) {
+                    window.AuthService.handleSuccessfulLogin(data);
+                } else {
+                    const token = data.token || data.access_token || (data.data && (data.data.token || data.data.access_token));
+                    const userData = data.usuario || data.user || (data.data && (data.data.usuario || data.data.user));
+                    
+                    localStorage.setItem('accessToken', token);
+                    localStorage.setItem('userInfo', JSON.stringify(userData));
+                    localStorage.setItem('authTimestamp', Date.now().toString());
+                }
+                return true;
+            }
+            
+            console.error('Falha no login após cadastro:', data.message || 'Erro desconhecido');
+            return false;
+        } catch (error) {
+            console.error('Erro durante o login automático:', error);
+            return false;
+        }
+    }
+
+    function redirecionarPorPerfil(perfil) {
+        switch(perfil) {
+            case "USUARIO":
+                window.location.href = "../investidor/resumo.html";
+                break;
+            case "ADMINISTRADOR":
+                window.location.href = "../administrador/resumo.html";
+                break;
+            case "ANALISTA":
+                window.location.href = "../analista/dashboard-analista.html";
+                break;
+            default:
+                window.location.href = "../index.html";
+        }
+    }
+
     document.getElementById("cadastroForm").addEventListener("submit", async function (event) {
         event.preventDefault();
 
@@ -103,20 +153,39 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        const perfilSelecionado = document.getElementById("perfil") ? 
+            document.getElementById("perfil").value : "USUARIO";
+
+        const nome = document.getElementById("nome").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const senha = document.getElementById("password").value;
+
         const dadosUsuario = {
-            nome: document.getElementById("nome").value.trim(),
-            email: document.getElementById("email").value.trim(),
-            senha: document.getElementById("password").value,
-            perfil: "USUARIO"
+            nome: nome,
+            email: email,
+            senha: senha,
+            perfil: perfilSelecionado
         };
 
         const resultado = await enviarCadastro(dadosUsuario);
 
         if (resultado) {
-            mostrarMensagem("Cadastro realizado com sucesso!", "sucesso");
-            setTimeout(() => {
-                window.location.href = "./html/investidor/resumo.html";
-            }, 2000);
+            mostrarMensagem("Cadastro realizado com sucesso! Realizando login automático...", "sucesso");
+            
+            const loginSucesso = await loginAposCadastro(email, senha);
+            
+            if (loginSucesso) {
+                mostrarMensagem("Login realizado com sucesso! Redirecionando...", "sucesso");
+                setTimeout(() => {
+                    redirecionarPorPerfil(perfilSelecionado);
+                }, 2000);
+            } else {
+                mostrarMensagem("Cadastro realizado, mas o login automático falhou. Redirecionando para a página de login...", "aviso");
+                setTimeout(() => {
+                    window.location.href = "../../index.html";
+                }, 3000);
+            }
+            
             this.reset();
         }
     });
