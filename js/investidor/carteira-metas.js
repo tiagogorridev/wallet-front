@@ -1,509 +1,390 @@
 const API_URL = 'http://191.239.116.115:8080';
-let filteredGoals = [];
-let currentFilter = 'all';
-let currentEditingGoal = null;
+const endpoint = '/goals';
 
-const addGoalModal = document.getElementById('addGoalModal');
-const editGoalModal = document.getElementById('editGoalModal');
-const addGoalForm = document.getElementById('addGoalForm');
-const editGoalForm = document.getElementById('editGoalForm');
-const openAddGoalModalBtn = document.getElementById('openAddGoalModalBtn');
-const closeAddModalBtn = document.getElementById('closeAddModalBtn');
-const closeEditModalBtn = document.getElementById('closeEditModalBtn');
-const closeModalBtns = document.querySelectorAll('.close-modal-btn');
-const goalsList = document.getElementById('goalsList');
-const goalTabs = document.querySelectorAll('.goal-tab');
+const GoalManager = {
+    goals: [],
+    activeGoals: 0,
+    completedGoals: 0,
+    totalValue: 0,
 
-document.addEventListener('DOMContentLoaded', () => {
-  initializeApp();
-});
+    init() {
+        this.setupEventListeners();
+        this.loadGoals();
+    },
 
-function initializeApp() {
-  fetchGoals().then((goals) => {
-    console.log('goals carregadas:', goals);
-    filteredGoals = goals;
-    applyFilter('all');
-    updateGoalStats();
-    setupEventListeners();
-  }).catch(error => {
-    console.error('Erro ao inicializar aplicação:', error);
-  });
-}
+    setupEventListeners() {
+        // Botões para abrir modais
+        document.getElementById('openAddGoalModalBtn').addEventListener('click', () => this.openModal('addGoalModal'));
+        
+        // Botões para fechar modais
+        document.querySelectorAll('.close-btn, .close-modal-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const modalId = e.target.closest('.modal-overlay').id;
+                this.closeModal(modalId);
+            });
+        });
 
-async function fetchGoals() {
-  try {
-    const response = await fetch(`${API_URL}/goals`);
-    if (!response.ok) {
-      throw new Error('Falha ao carregar as goals');
-    }
-    const data = await response.json();
-    
-    // Verifica se data é um array
-    if (!Array.isArray(data)) {
-      console.warn('API não retornou um array de goals:', data);
-      // Se data não for um array, mas tiver uma propriedade que seja um array
-      if (data && typeof data === 'object') {
-        for (const key in data) {
-          if (Array.isArray(data[key])) {
-            return data[key];
-          }
+        // Submissão de formulários
+        document.getElementById('addGoalForm').addEventListener('submit', (e) => this.addGoal(e));
+        document.getElementById('editGoalForm').addEventListener('submit', (e) => this.updateGoal(e));
+        
+        // Filtros de metas
+        document.querySelectorAll('.goal-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                document.querySelector('.goal-tab.active').classList.remove('active');
+                e.target.classList.add('active');
+                this.filterGoals(e.target.dataset.filter);
+            });
+        });
+    },
+
+    openModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+    },
+
+    closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    },
+
+    // Função auxiliar para obter o ID do usuário do localStorage ou fazer uma chamada API para buscar por email
+    getUserId() {
+        // Primeiro, tenta obter diretamente do localStorage
+        let userId = localStorage.getItem('userId');
+        
+        if (userId) {
+            return userId;
         }
-      }
-      // Se não conseguir encontrar um array, retorna array vazio
-      return [];
+        
+        // Tenta obter o email do usuário do objeto userInfo
+        const userInfoStr = localStorage.getItem('userInfo');
+        if (userInfoStr) {
+            try {
+                const userInfo = JSON.parse(userInfoStr);
+                
+                // Se tivermos o email, podemos usá-lo para identificar o usuário
+                if (userInfo && userInfo.email) {
+                    // Retorna o email, que será usado como identificador temporário
+                    return userInfo.email;
+                }
+            } catch (e) {
+                console.error('Erro ao analisar userInfo:', e);
+            }
+        }
+        
+        return null;
+    },
+
+    loadGoals() {
+        const walletId = localStorage.getItem('selectedWalletId');
+        if (!walletId) {
+            alert('Carteira não selecionada. Por favor, faça login novamente.');
+            window.location.href = '../../index.html';
+            return;
+        }
+
+        fetch(`${API_URL}${endpoint}?id_carteira=${walletId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.msg || 'Erro ao carregar metas');
+            }
+            this.goals = data.data.data || [];
+            this.updateGoalStats();
+            this.renderGoals();
+        })
+        .catch(error => {
+            console.error('Erro ao carregar metas:', error);
+            alert(`Erro ao carregar metas: ${error.message}`);
+        });
+    },
+
+    updateGoalStats() {
+        this.activeGoals = this.goals.filter(goal => goal.meta_status === 'ATIVA').length;
+        this.completedGoals = this.goals.filter(goal => goal.meta_status === 'CONCLUIDA').length;
+        this.totalValue = this.goals.reduce((sum, goal) => sum + parseFloat(goal.valor_meta || 0), 0);
+
+        document.querySelectorAll('.goal-stat-card .stat-value')[0].textContent = this.activeGoals;
+        document.querySelectorAll('.goal-stat-card .stat-value')[1].textContent = this.completedGoals;
+        document.querySelectorAll('.goal-stat-card .stat-value')[2].textContent = `R$ ${this.totalValue.toFixed(2).replace('.', ',')}`;
+    },
+
+    renderGoals() {
+        const goalsList = document.getElementById('goalsList');
+        goalsList.innerHTML = '';
+
+        if (this.goals.length === 0) {
+            goalsList.innerHTML = '<div class="empty-goals">Nenhuma meta encontrada.</div>';
+            return;
+        }
+
+        const filter = document.querySelector('.goal-tab.active').dataset.filter;
+        const filteredGoals = filter === 'all' ? this.goals : 
+                             filter === 'active' ? this.goals.filter(goal => goal.meta_status === 'ATIVA') : 
+                             this.goals.filter(goal => goal.meta_status === 'CONCLUIDA');
+
+        filteredGoals.forEach(goal => {
+            const progress = goal.progresso ? parseFloat(goal.progresso) / parseFloat(goal.valor_meta) * 100 : 0;
+            const formattedProgress = (goal.progresso || 0).toFixed(2).replace('.', ',');
+            const formattedTarget = parseFloat(goal.valor_meta).toFixed(2).replace('.', ',');
+            
+            const goalCard = document.createElement('div');
+            goalCard.className = `goal-card ${goal.meta_status === 'CONCLUIDA' ? 'completed' : ''}`;
+            goalCard.dataset.id = goal.id;
+            
+            goalCard.innerHTML = `
+                <div class="goal-header">
+                    <h3>${goal.descricao}</h3>
+                    <div class="goal-actions">
+                        <button class="edit-goal" onclick="GoalManager.openEditModal(${goal.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="delete-goal" onclick="GoalManager.deleteGoal(${goal.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="goal-progress">
+                    <div class="progress-bar">
+                        <div class="progress" style="width: ${progress}%;"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span class="current-value">R$ ${formattedProgress}</span>
+                        <span class="target-value">R$ ${formattedTarget}</span>
+                    </div>
+                </div>
+                <div class="goal-dates">
+                    <div class="date-item">
+                        <span class="date-label">Início:</span>
+                        <span class="date-value">${new Date(goal.data_inicial).toLocaleDateString('pt-BR')}</span>
+                    </div>
+                    <div class="date-item">
+                        <span class="date-label">Status:</span>
+                        <span class="status-badge ${goal.meta_status === 'ATIVA' ? 'active' : 'completed'}">
+                            ${goal.meta_status === 'ATIVA' ? 'Ativa' : 'Concluída'}
+                        </span>
+                    </div>
+                </div>
+            `;
+            
+            goalsList.appendChild(goalCard);
+        });
+    },
+
+    filterGoals(filter) {
+        this.renderGoals();
+    },
+
+addGoal(event) {
+    event.preventDefault();
+    
+    const walletId = localStorage.getItem('selectedWalletId');
+    if (!walletId) {
+        alert('Carteira não selecionada. Por favor, faça login novamente.');
+        return;
     }
     
-    return data;
-  } catch (error) {
-    console.error('Erro ao buscar goals:', error);
-    return [];
-  }
-}
-
-function setupEventListeners() {
-  openAddGoalModalBtn.addEventListener('click', openAddGoalModal);
-  closeAddModalBtn.addEventListener('click', closeModal);
-  closeEditModalBtn.addEventListener('click', closeModal);
-
-  closeModalBtns.forEach(btn => {
-    btn.addEventListener('click', closeModal);
-  });
-
-  addGoalForm.addEventListener('submit', onSubmitAdd);
-  editGoalForm.addEventListener('submit', onSubmitEdit);
-
-  goalTabs.forEach(tab => {
-    tab.addEventListener('click', (event) => {
-      const filter = event.target.dataset.filter;
-      applyFilter(filter);
-
-      goalTabs.forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
+    const description = document.getElementById('description').value;
+    const completionDate = document.getElementById('completionDate').value;
+    const targetValue = parseFloat(document.getElementById('targetValue').value);
+    
+    // Validações
+    if (!description) {
+        document.getElementById('descriptionError').style.display = 'block';
+        return;
+    }
+    
+    if (!completionDate) {
+        document.getElementById('completionDateError').style.display = 'block';
+        return;
+    }
+    
+    if (!targetValue || targetValue <= 0) {
+        document.getElementById('targetValueError').style.display = 'block';
+        return;
+    }
+    
+    // Obter o identificador do usuário
+    const userInfoStr = localStorage.getItem('userInfo');
+    let userId = null;
+    
+    if (userInfoStr) {
+        try {
+            const userInfo = JSON.parse(userInfoStr);
+            userId = userInfo.id; // Certifique-se de que este é o ID numérico do usuário
+        } catch (e) {
+            console.error('Erro ao analisar userInfo:', e);
+        }
+    }
+    
+    if (!userId) {
+        userId = localStorage.getItem('userId');
+    }
+    
+    if (!userId) {
+        alert('Usuário não identificado. Por favor, faça login novamente.');
+        return;
+    }
+    
+    // Preparar dados da meta
+    const goalData = {
+        id_usuario: parseInt(userId), // Garantir que é um número
+        id_carteira: parseInt(walletId),
+        descricao: description,
+        valor_meta: targetValue,
+        data_final: completionDate,
+        meta_status: 'ATIVA'
+    };
+    
+    console.log('Enviando dados da meta:', goalData); // Para depuração
+    
+    fetch(`${API_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(goalData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.msg || 'Erro ao criar meta');
+        }
+        alert('Meta criada com sucesso!');
+        this.closeModal('addGoalModal');
+        document.getElementById('addGoalForm').reset();
+        this.loadGoals();
+    })
+    .catch(error => {
+        console.error('Erro ao criar meta:', error);
+        alert(`Erro ao criar meta: ${error.message}`);
     });
-  });
-}
+},
 
-function openAddGoalModal() {
-  addGoalModal.style.display = 'flex';
-}
+    openEditModal(goalId) {
+        const goal = this.goals.find(g => g.id === goalId);
+        if (!goal) {
+            alert('Meta não encontrada');
+            return;
+        }
+        
+        document.getElementById('edit-id').value = goal.id;
+        document.getElementById('edit-title').value = goal.descricao;
+        document.getElementById('edit-targetValue').value = goal.valor_meta;
+        document.getElementById('edit-status').value = goal.meta_status;
+        
+        if (goal.data_final) {
+            const date = new Date(goal.data_final);
+            const formattedDate = date.toISOString().split('T')[0];
+            document.getElementById('edit-completionDate').value = formattedDate;
+        }
+        
+        this.openModal('editGoalModal');
+    },
 
-async function openEditGoalModal(goalId) {
-  try {
-    console.log('Buscando detalhes da meta:', goalId);
-    
-    const response = await fetch(`${API_URL}/goals/${goalId}`, {
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Resposta de erro da API (buscar meta):', errorText);
-      throw new Error(`Falha ao carregar os detalhes da meta: ${response.status} ${response.statusText}`);
+    updateGoal(event) {
+        event.preventDefault();
+        
+        const goalId = document.getElementById('edit-id').value;
+        const description = document.getElementById('edit-title').value;
+        const completionDate = document.getElementById('edit-completionDate').value;
+        const targetValue = parseFloat(document.getElementById('edit-targetValue').value);
+        const status = document.getElementById('edit-status').value;
+        
+        // Validações
+        if (!description) {
+            document.getElementById('edit-titleError').style.display = 'block';
+            return;
+        }
+        
+        if (!completionDate) {
+            document.getElementById('edit-completionDateError').style.display = 'block';
+            return;
+        }
+        
+        if (!targetValue || targetValue <= 0) {
+            document.getElementById('edit-targetValueError').style.display = 'block';
+            return;
+        }
+        
+        const walletId = localStorage.getItem('selectedWalletId');
+        // Obter o identificador do usuário
+        const userIdentifier = this.getUserId();
+        if (!userIdentifier) {
+            alert('Usuário não identificado. Por favor, faça login novamente.');
+            return;
+        }
+        
+        // Preparar dados da meta
+        const goalData = {
+            id: parseInt(goalId),
+            id_carteira: parseInt(walletId),
+            descricao: description,
+            valor_meta: targetValue,
+            data_final: completionDate,
+            meta_status: status
+        };
+        
+        // Se o identificador parece ser um ID numérico, inclui id_usuario
+        if (!isNaN(userIdentifier)) {
+            goalData.id_usuario = parseInt(userIdentifier);
+        }
+        
+        fetch(`${API_URL}${endpoint}/${goalId}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(goalData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.msg || 'Erro ao atualizar meta');
+            }
+            alert('Meta atualizada com sucesso!');
+            this.closeModal('editGoalModal');
+            this.loadGoals();
+        })
+        .catch(error => {
+            console.error('Erro ao atualizar meta:', error);
+            alert(`Erro ao atualizar meta: ${error.message}`);
+        });
+    },
+
+    deleteGoal(goalId) {
+        if (confirm('Tem certeza que deseja excluir esta meta?')) {
+            fetch(`${API_URL}${endpoint}/${goalId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.msg || 'Erro ao excluir meta');
+                }
+                alert('Meta excluída com sucesso!');
+                this.loadGoals();
+            })
+            .catch(error => {
+                console.error('Erro ao excluir meta:', error);
+                alert(`Erro ao excluir meta: ${error.message}`);
+            });
+        }
     }
-    
-    const goal = await response.json();
-    console.log('Meta carregada:', goal);
-    
-    currentEditingGoal = goal;
+};
 
-    if (!currentEditingGoal) {
-      console.error('Meta não encontrada ou inválida');
-      return;
-    }
-
-    // Formata a data para o formato esperado pelo input type="date"
-    let [day, month, year] = currentEditingGoal.data_final.split('/');
-    let formattedDate = `${year}-${month}-${day}`;
-    
-    // Extrair o tipo de ativo da descrição
-    let assetType = getAssetTypeFromDescription(currentEditingGoal.descricao);
-
-    document.getElementById('edit-id').value = currentEditingGoal.id;
-    document.getElementById('edit-title').value = getGoalTitle(currentEditingGoal.descricao);
-    document.getElementById('edit-completionDate').value = formattedDate;
-    document.getElementById('edit-targetValue').value = currentEditingGoal.valor_meta;
-    document.getElementById('edit-assetType').value = assetType;
-
-    editGoalModal.style.display = 'flex';
-  } catch (error) {
-    console.error('Erro ao buscar detalhes da meta:', error);
-  }
-}
-
-function getAssetTypeFromDescription(description) {
-  if (description) {
-    description = description.toLowerCase();
-    if (description.includes('cripto') || description.includes('bitcoin')) return 'criptoativos';
-    if (description.includes('ações') || description.includes('acoes')) return 'acoes';
-  }
-}
-
-function closeModal() {
-  addGoalModal.style.display = 'none';
-  editGoalModal.style.display = 'none';
-
-  addGoalForm.reset();
-  editGoalForm.reset();
-
-  clearValidationErrors(addGoalForm);
-  clearValidationErrors(editGoalForm);
-
-  currentEditingGoal = null;
-}
-
-function clearValidationErrors(form) {
-  const errorMessages = form.querySelectorAll('.error-message');
-  errorMessages.forEach(element => {
-    element.style.display = 'none';
-  });
-
-  const inputs = form.querySelectorAll('input, select');
-  inputs.forEach(input => {
-    input.classList.remove('invalid');
-  });
-}
-
-function validateForm(form) {
-  let isValid = true;
-
-  clearValidationErrors(form);
-
-  const fields = form.querySelectorAll('input[required], select[required]');
-  fields.forEach(field => {
-    const errorId = field.id.includes('edit-') ?
-      `${field.id}Error` :
-      `${field.id.replace('edit-', '')}Error`;
-
-    const errorElement = document.getElementById(errorId);
-
-    if (!field.value.trim()) {
-      field.classList.add('invalid');
-      if (errorElement) errorElement.style.display = 'block';
-      isValid = false;
-    }
-    else if (field.type === 'text' && field.minLength && field.value.length < field.minLength) {
-      field.classList.add('invalid');
-      if (errorElement) errorElement.style.display = 'block';
-      isValid = false;
-    }
-    else if (field.type === 'number' && field.min && Number(field.value) < Number(field.min)) {
-      field.classList.add('invalid');
-      if (errorElement) errorElement.style.display = 'block';
-      isValid = false;
-    }
-  });
-
-  return isValid;
-}
-
-async function onSubmitAdd(event) {
-  event.preventDefault();
-
-  if (!validateForm(addGoalForm)) return;
-
-  const title = document.getElementById('title').value;
-  const assetType = document.getElementById('assetType').value;
-  const completionDate = document.getElementById('completionDate').value;
-  const targetValue = parseFloat(document.getElementById('targetValue').value);
-
-  const formattedEndDate = formatDate(completionDate);
-  const description = createDescription(title, assetType);
-
-  // Criar objeto de meta conforme a estrutura do banco de dados
-  const newGoal = {
-    valor_meta: targetValue,
-    data_final: formattedEndDate,
-    descricao: description,
-    id_carteira: 1  // Presumindo um valor padrão, ajuste conforme necessário
-  };
-
-  try {
-    console.log('Enviando meta para API:', JSON.stringify(newGoal));
-    
-    const response = await fetch(`${API_URL}/goals`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(newGoal)
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Resposta de erro da API:', errorText);
-      throw new Error(`Falha ao adicionar meta: ${response.status} ${response.statusText}`);
-    }
-
-    const goals = await fetchGoals();
-    applyFilter(currentFilter);
-    updateGoalStats();
-    closeModal();
-  } catch (error) {
-    console.error('Erro ao adicionar meta:', error);
-  }
-}
-
-async function onSubmitEdit(event) {
-  event.preventDefault();
-
-  if (!validateForm(editGoalForm) || !currentEditingGoal) return;
-
-  const id = parseInt(document.getElementById('edit-id').value);
-  const title = document.getElementById('edit-title').value;
-  const targetValue = parseFloat(document.getElementById('edit-targetValue').value);
-  const completionDate = document.getElementById('edit-completionDate').value;
-  const assetType = document.getElementById('edit-assetType').value;
-  const status = document.getElementById('edit-status').value;
-  
-  const description = createDescription(title, assetType);
-  
-  const updatedGoal = {
-    id,
-    valor_meta: targetValue,
-    data_final: formatDate(completionDate),
-    descricao: description,
-    id_carteira: currentEditingGoal.id_carteira || 1
-  };
-
-  try {
-    console.log('Enviando atualização para API:', JSON.stringify(updatedGoal));
-    
-    const response = await fetch(`${API_URL}/goals/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(updatedGoal)
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Resposta de erro da API (edição):', errorText);
-      throw new Error(`Falha ao atualizar meta: ${response.status} ${response.statusText}`);
-    }
-
-    const goals = await fetchGoals();
-    applyFilter(currentFilter);
-    updateGoalStats();
-    closeModal();
-  } catch (error) {
-    console.error('Erro ao atualizar meta:', error);
-  }
-}
-
-async function deleteGoal(goalId) {
-  try {
-    const response = await fetch(`${API_URL}/goals/${goalId}`, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Resposta de erro da API (exclusão):', errorText);
-      throw new Error(`Falha ao deletar meta: ${response.status} ${response.statusText}`);
-    }
-
-    const goals = await fetchGoals();
-    applyFilter(currentFilter);
-    updateGoalStats();
-  } catch (error) {
-    console.error('Erro ao deletar meta:', error);
-  }
-}
-
-function formatDate(dateString) {
-  const dateObj = new Date(dateString);
-  return `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${dateObj.getFullYear()}`;
-}
-
-function createDescription(title, assetType) {
-  const strategyText = getStrategyText(assetType);
-  return `${title} - ${strategyText}`;
-}
-
-function getStrategyText(assetType) {
-  switch(assetType) {
-    case 'criptoativos': return '100% Criptoativos';
-    case 'acoes': return '100% Ações';
-  }
-}
-
-async function applyFilter(filter) {
-  currentFilter = filter;
-  
-  try {
-    const goals = await fetchGoals();
-    
-    if (!Array.isArray(goals)) {
-      console.error('Goals não é um array:', goals);
-      filteredGoals = [];
-    } else {
-      switch (filter) {
-        case 'all':
-          filteredGoals = [...goals];
-          break;
-        default:
-          filteredGoals = [...goals];
-      }
-    }
-
-    renderGoals();
-  } catch (error) {
-    console.error('Erro ao aplicar filtro:', error);
-  }
-}
-
-function renderGoals() {
-  goalsList.innerHTML = '';
-
-  filteredGoals.forEach(goal => {
-    const progressPercentage = goal.progresso || 0;
-    
-    // Não calculamos o valor atual - vem do backend
-    const currentValue = goal.valor_atual || 0;
-
-    const goalCard = document.createElement('div');
-    goalCard.className = 'goal-card';
-    goalCard.dataset.id = goal.id;
-
-    // Determinar o ícone com base na descrição
-    let iconClass = getIconForGoal(goal.descricao);
-
-    goalCard.innerHTML = `
-      <div class="goal-header">
-        <div class="goal-icon">
-          <i class="${iconClass}"></i>
-        </div>
-        <div class="goal-title">
-          <h3>${getGoalTitle(goal.descricao)}</h3>
-          <p>${getGoalSubtitle(goal.descricao)}</p>
-        </div>
-        <div class="goal-actions">
-          <button class="edit-goal-btn" onclick="openEditGoalModal(${goal.id})">
-            <i class="fas fa-pencil"></i>
-          </button>
-          <button class="delete-goal-btn" onclick="deleteGoal(${goal.id})">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      </div>
-      <div class="goal-body">
-        <div class="goal-progress">
-          <div class="progress-bar ${progressClass}">
-            <div class="progress" style="width: ${progressPercentage}%"></div>
-          </div>
-          <div class="progress-label">
-            <span>${progressPercentage.toFixed(0)}%</span>
-          </div>
-        </div>
-        <div class="goal-details">
-          <div class="goal-detail">
-            <span class="detail-label">Valor atual:</span>
-            <span class="detail-value">R$ ${parseFloat(currentValue).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
-          </div>
-          <div class="goal-detail">
-            <span class="detail-label">Meta:</span>
-            <span class="detail-value">R$ ${parseFloat(goal.valor_meta).toLocaleString('pt-BR', {minimumFractionDigits: 2})}</span>
-          </div>
-          <div class="goal-detail">
-            <span class="detail-label">Data conclusão:</span>
-            <span class="detail-value">${goal.data_final}</span>
-          </div>
-          <div class="goal-detail">
-            <span class="detail-label">Estratégia:</span>
-            <span class="detail-value">${getStrategyFromDescription(goal.descricao)}</span>
-          </div>
-        </div>
-      </div>
-    `;
-
-    goalsList.appendChild(goalCard);
-  });
-}
-
-function getIconForGoal(description) {
-  if (!description) return 'fa-regular fa-circle-dot';
-  
-  description = description.toLowerCase();
-  if (description.includes('emergência') || description.includes('emergencia') || description.includes('reserva')) {
-    return 'fa-regular fa-piggy-bank';
-  }
-  if (description.includes('férias') || description.includes('ferias') || description.includes('viagem')) {
-    return 'fa-regular fa-plane';
-  }
-  if (description.includes('casa') || description.includes('imóvel') || description.includes('imovel')) {
-    return 'fa-regular fa-house';
-  }
-  return 'fa-regular fa-circle-dot';
-}
-
-function getGoalTitle(description) {
-  if (!description) return 'Meta';
-  
-  // Extrai o título da descrição (assumindo que é a primeira parte até o primeiro hífen)
-  const parts = description.split('-');
-  return parts[0].trim();
-}
-
-function getGoalSubtitle(description) {
-  if (!description) return '';
-  
-  // Extrai o subtítulo da descrição (assumindo que é o restante após o primeiro hífen)
-  const parts = description.split('-');
-  if (parts.length > 1) {
-    return parts.slice(1).join('-').trim();
-  }
-  return '';
-}
-
-function getStrategyFromDescription(description) {
-  if (!description) return '';
-  
-  // Extrai a estratégia da descrição (assumindo que é a última parte após o último hífen)
-  const parts = description.split('-');
-  if (parts.length > 1) {
-    return parts[parts.length - 1].trim();
-  }
-  return '';
-}
-
-async function updateGoalStats() {
-  try {
-    const goals = await fetchGoals();
-    
-    if (!Array.isArray(goals)) {
-      console.error('Goals não é um array em updateGoalStats:', goals);
-      return;
-    }
-    
-
-    // Obter o total a alcançar diretamente da API, sem cálculos
-    const totalTarget = goals.reduce((sum, goal) => {
-        return sum + goal.valor_meta;
-    }, 0);
-
-    const statCards = document.querySelectorAll('.goal-stat-card');
-    if (statCards.length >= 3) {
-      statCards[0].querySelector('.stat-value').textContent = activeGoals;
-      statCards[1].querySelector('.stat-value').textContent = completedGoals;
-      statCards[2].querySelector('.stat-value').textContent = `R$ ${totalTarget.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-
-      const totalGoals = activeGoals + completedGoals;
-      const overallProgress = totalGoals > 0 ? (completedGoals / totalGoals) * 100 : 0;
-      statCards[0].querySelector('.progress').style.width = `${totalGoals > 0 ? (activeGoals / totalGoals) * 100 : 0}%`;
-      statCards[1].querySelector('.progress').style.width = `${overallProgress}%`;
-    }
-  } catch (error) {
-    console.error('Erro ao atualizar estatísticas:', error);
-  }
-}
-
-window.openEditGoalModal = openEditGoalModal;
-window.deleteGoal = deleteGoal;
+// Inicialização quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', () => {
+    GoalManager.init();
+});

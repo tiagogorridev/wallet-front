@@ -1,28 +1,18 @@
-/**
- * Enhanced Authentication Service
- * Handles login, token refresh, and session management with improved error handling
- * and support for both localStorage and cookies
- */
 const AuthService = {
     API_URL: 'http://191.239.116.115:8080',
-    REFRESH_INTERVAL: 4 * 60 * 1000, // 4 minutes
-    refreshTimer: null,
-    isRefreshing: false,
-    failedAttempts: 0,
-    maxFailedAttempts: 5,
+    TOKEN_EXPIRY_TIME: 4.5 * 60 * 1000, // Token expires in 5 minutes (set to 4.5 for safety)
     
     initialize() {
+        // Check token expiration on initialization
         if (this.isAuthenticated()) {
-            this.startRefreshToken();
-            this.setupTokenRefreshListener();
+            const tokenTimestamp = parseInt(localStorage.getItem('tokenTimestamp') || '0');
+            const now = Date.now();
+            
+            // If token is about to expire or has expired, attempt login with stored credentials
+            if (now - tokenTimestamp > this.TOKEN_EXPIRY_TIME) {
+                this.handleTokenExpiration();
+            }
         }
-    },
-    
-    setupTokenRefreshListener() {
-        window.addEventListener('tokenRefreshed', () => {
-            this.failedAttempts = 0;
-            console.log('Token atualizado com sucesso');
-        });
     },
     
     async login(email, password) {
@@ -31,215 +21,113 @@ const AuthService = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, senha: password }),
-                // Enable credentials to allow cookie storage from response
                 credentials: 'include'
             });
             
-            const data = await response.json();
-            
-            if (response.ok) {
-                this.handleSuccessfulLogin(data);
-                return true;
-            }
-            
-            console.error('Falha no login:', data.message || 'Erro desconhecido');
-            return false;
-        } catch (error) {
-            console.error('Erro durante o login:', error);
-            return false;
-        }
-    },
-    
-    handleSuccessfulLogin(data) {
-        const token = data.token || data.access_token || (data.data && (data.data.token || data.data.access_token));
-        const userData = data.usuario || data.user || (data.data && (data.data.usuario || data.data.user));
-        
-        if (!token || !userData) {
-            throw new Error('Dados de autenticação incompletos');
-        }
-        
-        // Store in localStorage
-        localStorage.setItem('accessToken', token);
-        localStorage.setItem('userInfo', JSON.stringify(userData));
-        
-        // For some browser scenarios that might use cookies, store a timestamp
-        // to detect if cookies were cleared while localStorage persists
-        localStorage.setItem('authTimestamp', Date.now().toString());
-        
-        this.startRefreshToken();
-        this.setupTokenRefreshListener();
-    },
-    
-    async refreshToken() {
-        if (this.isRefreshing) return true;
-        
-        try {
-            this.isRefreshing = true;
-            const token = this.getToken();
-            
-            if (!token) {
-                console.error('Não há token para atualizar');
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Login error:', errorData);
                 return false;
             }
             
-            const response = await fetch(`${this.API_URL}/auth/refresh`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                // Enable credentials to ensure cookies are sent
-                credentials: 'include'
-            });
+            const data = await response.json();
             
-            if (response.ok) {
-                const data = await response.json();
-                const newToken = data.token || data.access_token;
-                
-                if (newToken) {
-                    localStorage.setItem('accessToken', newToken);
-                    localStorage.setItem('authTimestamp', Date.now().toString());
-                    
-                    const event = new CustomEvent('tokenRefreshed', { 
-                        detail: { token: newToken } 
-                    });
-                    window.dispatchEvent(event);
-                    
-                    this.failedAttempts = 0;
-                    return true;
-                }
-            } else {
-                // Check specific auth errors
-                if (response.status === 401 || response.status === 403) {
-                    this.failedAttempts++;
-                    
-                    // Check for specific error messages
-                    try {
-                        const errorData = await response.json();
-                        if (errorData && errorData.message) {
-                            if (errorData.message.includes('cookie') || 
-                                errorData.message.includes('Cookie')) {
-                                console.error('Erro de cookies detectado:', errorData.message);
-                                // Force logout on cookie issues
-                                this.logout();
-                                return false;
-                            }
-                        }
-                    } catch (e) {
-                        // If can't parse response, continue with normal flow
-                    }
-                    
-                    console.warn(`Falha na atualização do token: ${this.failedAttempts}/${this.maxFailedAttempts}`);
-                }
-                
-                if (this.failedAttempts >= this.maxFailedAttempts) {
-                    console.error('Limite máximo de falhas de autenticação atingido');
-                    this.logout(); // Full logout is safer than silent
-                    return false;
-                }
-                
-                return true;
+            // Store credentials for silent refresh
+            if (email && password) {
+                this.storeCredentials(email, password);
             }
+            
+            this.storeAuthData(data);
+            return true;
         } catch (error) {
-            console.error('Erro ao refresh token:', error);
-            this.failedAttempts++;
-            
-            // On network errors, be more lenient
-            if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-                console.warn('Erro de rede durante refresh. Tentativa:', this.failedAttempts);
-                return this.failedAttempts < this.maxFailedAttempts * 2; // Double tolerance for network errors
-            }
-            
-            return this.failedAttempts < this.maxFailedAttempts;
-        } finally {
-            this.isRefreshing = false;
-        }
-    },
-    
-    startRefreshToken() {
-        this.stopRefreshToken(); // Ensure we don't have multiple timers
-        
-        this.refreshTimer = setInterval(async () => {
-            // Check for token-cookie mismatch before refresh
-            if (!this.validateTokenIntegrity()) {
-                console.error('Inconsistência detectada entre token e cookies');
-                this.logout();
-                return;
-            }
-            
-            const success = await this.refreshToken();
-            
-            if (success) {
-                console.log('Token ainda válido, próximo refresh em 4 minutos');
-            } else {
-                console.warn('Falha completa no refresh do token, parando o timer');
-                this.stopRefreshToken();
-            }
-        }, this.REFRESH_INTERVAL);
-        
-        console.log('Timer de refresh iniciado');
-    },
-    
-    stopRefreshToken() {
-        if (this.refreshTimer) {
-            clearInterval(this.refreshTimer);
-            this.refreshTimer = null;
-            console.log('Timer de refresh parado');
-        }
-    },
-    
-    // Validate that we don't have a situation where localStorage has a token but cookies were cleared
-    validateTokenIntegrity() {
-        const token = localStorage.getItem('accessToken');
-        const timestamp = localStorage.getItem('authTimestamp');
-        
-        // If we have a token but no timestamp, something is wrong
-        if (token && !timestamp) {
-            console.error('Token existe mas não há timestamp de autenticação');
+            console.error('Login error:', error);
             return false;
         }
-        
-        // Check if cookies exist by testing document.cookie
-        // This is a basic check and might need to be adjusted based on your specific cookie setup
-        const hasCookies = document.cookie.length > 0;
-        
-        // If API requires cookies but they're not present despite having a token, consider it invalid
-        if (token && !hasCookies) {
-            console.warn('Token existe mas não há cookies - potencial dessincronização');
-            // We're returning true here as some setups might not use cookies,
-            // but this is where you'd add additional validation if needed
-        }
-        
-        return true;
     },
     
-    // Always do a full logout for consistency
-    logout() {
-        this.clearAuthData();
+    storeCredentials(email, password) {
+        // Store encrypted credentials for silent refresh
+        // This is a simple encoding - in production, use more secure methods
+        const encodedCreds = btoa(`${email}:${password}`);
+        sessionStorage.setItem('auth_creds', encodedCreds);
+    },
+    
+    getStoredCredentials() {
+        const encodedCreds = sessionStorage.getItem('auth_creds');
+        if (!encodedCreds) return null;
         
-        // Try to clear any session cookies by sending a logout request
-        if (this.getToken()) {
-            // Fire and forget - don't wait for response
-            fetch(`${this.API_URL}/auth/logout`, {
-                method: 'POST',
-                headers: this.getAuthHeaders(),
-                credentials: 'include'
-            }).catch(e => console.warn('Erro ao fazer logout no servidor:', e));
+        try {
+            const decodedCreds = atob(encodedCreds);
+            const [email, password] = decodedCreds.split(':');
+            return { email, password };
+        } catch (e) {
+            return null;
+        }
+    },
+    
+    storeAuthData(data) {
+        const token = data.access_token || data.data?.access_token;
+        const userData = data.usuario || data.user || data.data?.usuario || data.data?.user;
+        
+        if (!token || !userData) {
+            throw new Error('Incomplete authentication data');
         }
         
-        window.location.href = '../../index.html';
+        localStorage.setItem('accessToken', token);
+        localStorage.setItem('userInfo', JSON.stringify(userData));
+        localStorage.setItem('tokenTimestamp', Date.now().toString());
+    },
+    
+    async handleTokenExpiration() {
+        const credentials = this.getStoredCredentials();
+        
+        // If we have stored credentials, attempt silent login
+        if (credentials) {
+            const success = await this.login(credentials.email, credentials.password);
+            
+            if (!success) {
+                this.logout(false); // Logout without redirect
+                return false;
+            }
+            return true;
+        } else {
+            this.logout();
+            return false;
+        }
+    },
+    
+    logout(redirect = true) {
+        // Clear all auth data from storage
+        this.clearAuthData();
+        
+        // Call the logout endpoint (if it's implemented)
+        try {
+            fetch(`${this.API_URL}/auth/logout`, {
+                method: 'DELETE', // Notice: Changed from POST to DELETE based on backend code
+                headers: this.getAuthHeaders(),
+                credentials: 'include'
+            }).catch(() => {});
+        } finally {
+            if (redirect) {
+                window.location.href = '../../index.html';
+            }
+        }
     },
     
     clearAuthData() {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userInfo');
-        localStorage.removeItem('authTimestamp');
-        this.stopRefreshToken();
-        this.failedAttempts = 0;
+        localStorage.removeItem('tokenTimestamp');
+        sessionStorage.removeItem('auth_creds');
     },
     
     isAuthenticated() {
-        return !!this.getToken() && this.validateTokenIntegrity();
+        const token = this.getToken();
+        const timestamp = parseInt(localStorage.getItem('tokenTimestamp') || '0');
+        const now = Date.now();
+        
+        // Check if token exists and hasn't expired
+        return !!token && (now - timestamp < this.TOKEN_EXPIRY_TIME);
     },
     
     getUserInfo() {
@@ -257,88 +145,82 @@ const AuthService = {
     }
 };
 
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     AuthService.initialize();
 });
 
-// Enhanced fetch interceptor with better error handling
+// Create a timer to check token expiration every minute
+setInterval(() => {
+    if (AuthService.isAuthenticated()) {
+        const tokenTimestamp = parseInt(localStorage.getItem('tokenTimestamp') || '0');
+        const now = Date.now();
+        const timeElapsed = now - tokenTimestamp;
+        
+        // If token is about to expire (within 30 seconds), perform silent refresh
+        if (timeElapsed > (AuthService.TOKEN_EXPIRY_TIME - 30000)) {
+            console.log('Token about to expire, attempting silent refresh');
+            AuthService.handleTokenExpiration();
+        }
+    }
+}, 60000); // Check every minute
+
 const originalFetch = window.fetch;
 window.fetch = async function(url, options = {}) {
-    // Don't intercept auth endpoints
     const isAuthEndpoint = url.includes('/auth/');
-    if (isAuthEndpoint && !url.includes('/auth/refresh')) {
+    
+    if (isAuthEndpoint) {
         return originalFetch(url, options);
     }
     
-    // Check authentication for protected routes
-    if (!AuthService.isAuthenticated() && !isAuthEndpoint) {
-        console.warn('Tentativa de requisição sem autenticação. Redirecionando para login...');
-        window.location.href = '../../index.html';
-        throw new Error('Não autenticado');
+    // Check for authentication before making request
+    if (!AuthService.isAuthenticated()) {
+        // Try silent login if we have credentials
+        const credentials = AuthService.getStoredCredentials();
+        if (credentials) {
+            const success = await AuthService.handleTokenExpiration();
+            if (!success) {
+                window.location.href = '../../index.html';
+                throw new Error('Session expired');
+            }
+        } else {
+            window.location.href = '../../index.html';
+            throw new Error('Not authenticated');
+        }
     }
     
-    // Add auth headers and ensure credentials are included
+    // Add authorization header
     options.headers = options.headers || {};
-    if (!options.headers['Authorization'] && AuthService.isAuthenticated()) {
+    if (!options.headers['Authorization']) {
         options.headers['Authorization'] = `Bearer ${AuthService.getToken()}`;
     }
     
-    // Always include credentials to ensure cookies are sent
-    // options.credentials = options.credentials || 'include';
+    options.credentials = options.credentials || 'include';
     
     try {
         const response = await originalFetch(url, options);
         
-        // Handle auth errors
-        if ((response.status === 401 || response.status === 403) && !isAuthEndpoint) {
-            console.log('Erro de autenticação detectado, tentando refresh do token...');
+        // Handle 401/403 responses
+        if (response.status === 401 || response.status === 403) {
+            // Try silent login
+            const success = await AuthService.handleTokenExpiration();
             
-            // Check for cookie-specific errors
-            const contentType = response.headers.get('content-type');
-            if (contentType && contentType.includes('application/json')) {
-                try {
-                    const clone = response.clone();
-                    const errorData = await clone.json();
-                    
-                    if (errorData && errorData.message && 
-                        (errorData.message.includes('cookie') || errorData.message.includes('Cookie'))) {
-                        console.error('Erro de cookies detectado:', errorData.message);
-                        AuthService.logout();
-                        throw new Error('Sessão expirada - problema com cookies');
-                    }
-                } catch (e) {
-                    // Continue with normal flow if we can't parse the response
-                }
-            }
-            
-            // Try to refresh the token
-            const refreshSuccess = await AuthService.refreshToken();
-            
-            if (refreshSuccess) {
-                console.log('Refresh bem-sucedido, refazendo a requisição original');
+            if (success) {
                 options.headers['Authorization'] = `Bearer ${AuthService.getToken()}`;
                 return originalFetch(url, options);
             } else {
-                console.error('Refresh falhou, redirecionando para login');
                 AuthService.logout();
-                throw new Error('Sessão expirada');
+                throw new Error('Session expired');
             }
         }
         
         return response;
     } catch (error) {
-        if (['Sessão expirada', 'Não autenticado'].includes(error.message)) {
-            throw error; // Already handled
+        if (error.message === 'Session expired' || error.message === 'Not authenticated') {
+            throw error;
         }
         
-        console.error('Erro na requisição:', error);
-        
-        // Handle network errors without automatic redirect
         if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-            console.warn('Erro de conexão detectado. Continuando a navegação...');
-            // Create a custom error with a flag for UI handling
-            const networkError = new Error('Erro de conexão com o servidor');
+            const networkError = new Error('Server connection error');
             networkError.isNetworkError = true;
             throw networkError;
         }
