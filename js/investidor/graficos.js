@@ -95,28 +95,16 @@ class EvolutionPatrimonyComponent {
             new Date(a.data_transacao) - new Date(b.data_transacao)
         );
 
-        // Create monthly data points
-        const monthlyData = {};
-
+        // Process each transaction individually
         sortedTransactions.forEach(transaction => {
             const date = new Date(transaction.data_transacao);
-            const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
+            const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
 
-            if (!monthlyData[monthKey]) {
-                monthlyData[monthKey] = 0;
-            }
-
-            // Add transaction value to monthly total
+            // Add transaction value to cumulative total
             const transactionValue = transaction.valor_total || (transaction.quantidade * transaction.valor_unitario);
-            monthlyData[monthKey] += transactionValue;
-        });
+            cumulativeValue += transactionValue;
 
-        // Convert monthly data to chart format
-        Object.entries(monthlyData).forEach(([monthKey, value]) => {
-            const [year, month] = monthKey.split('-');
-            cumulativeValue += value;
-
-            labels.push(`${this.months[parseInt(month) - 1]} / ${year}`);
+            labels.push(formattedDate);
             data.push(cumulativeValue);
         });
 
@@ -199,7 +187,7 @@ class AssetsDistributionComponent {
                 if (!assetId) return;
 
                 const assetData = assetsById[assetId];
-                const category = transaction.tipo || (assetData && assetData.tipo) || 'OUTROS';
+                const category = (assetData && assetData.tipo) || transaction.tipo || 'OUTROS';
 
                 if (!categoriesMap[category]) {
                     categoriesMap[category] = {
@@ -241,14 +229,20 @@ class AssetsDistributionComponent {
         const categoryMap = {
             'CRIPTOMOEDAS': 'crypto',
             'ACOES': 'stocks',
+            'COMPRA': 'crypto',
+            'VENDA': 'crypto',
+            'OUTROS': 'other'
         };
         return categoryMap[categoria] || 'other';
     }
 
     getCategoryLabel(categoria) {
         const labelMap = {
-            'CRIPTOMOEDAS': 'Criptomoedas',
+            'CRIPTOMOEDAS': 'Crypto',
             'ACOES': 'Ações',
+            'COMPRA': 'Crypto',
+            'VENDA': 'Crypto',
+            'OUTROS': 'Outros'
         };
         return labelMap[categoria] || categoria;
     }
@@ -460,7 +454,7 @@ class AssetsIndividualDistributionComponent {
 
                 const assetData = assetsById[assetId];
                 const assetName = assetData ? `${assetData.nome} (${assetData.simbolo})` : transaction.nome_ativo;
-                const category = transaction.tipo || (assetData && assetData.tipo) || 'OUTROS';
+                const category = (assetData && assetData.tipo) || transaction.tipo || 'OUTROS';
 
                 if (!assetsMap[assetName]) {
                     assetsMap[assetName] = {
