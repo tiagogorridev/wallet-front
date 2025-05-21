@@ -6,10 +6,12 @@ const GoalManager = {
     activeGoals: 0,
     completedGoals: 0,
     totalValue: 0,
+    walletBalance: 0, // Campo para armazenar o saldo total da carteira
 
     init() {
         this.setupEventListeners();
         this.loadGoals();
+        this.loadWalletBalance(); // Carregar saldo da carteira
     },
 
     setupEventListeners() {
@@ -46,46 +48,59 @@ const GoalManager = {
         document.getElementById(modalId).style.display = 'none';
     },
 
-    // Função auxiliar para obter o ID do usuário do localStorage ou fazer uma chamada API para buscar por email
-    getUserId() {
-        // Primeiro, tenta obter diretamente do localStorage
-        let userId = localStorage.getItem('userId');
+    // Função para carregar o saldo total da carteira
+    loadWalletBalance() {
+        const token = localStorage.getItem('token') || localStorage.getItem('accessToken');
+        const walletId = localStorage.getItem('selectedWalletId') || localStorage.getItem('walletId') || localStorage.getItem('id_carteira');
         
-        if (userId) {
-            return userId;
+        if (!token || !walletId) {
+            console.log('Token ou ID da carteira não encontrado para carregar saldo');
+            return;
         }
-        
-        // Tenta obter o email do usuário do objeto userInfo
-        const userInfoStr = localStorage.getItem('userInfo');
-        if (userInfoStr) {
-            try {
-                const userInfo = JSON.parse(userInfoStr);
-                
-                // Se tivermos o email, podemos usá-lo para identificar o usuário
-                if (userInfo && userInfo.email) {
-                    // Retorna o email, que será usado como identificador temporário
-                    return userInfo.email;
-                }
-            } catch (e) {
-                console.error('Erro ao analisar userInfo:', e);
+
+        // Buscar dados da carteira
+        fetch(`${API_URL}/wallets/${walletId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
-        }
-        
-        return null;
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Erro ao carregar saldo da carteira:', data.msg);
+                return;
+            }
+            
+            const walletData = data.data;
+            // Usar o saldo_total da carteira como saldo disponível
+            this.walletBalance = walletData.saldo_total || 0;
+            
+            console.log('Saldo da carteira carregado:', this.walletBalance);
+            
+            // Atualizar os cards das metas com o novo saldo
+            this.updateGoalStats();
+            this.renderGoals();
+        })
+        .catch(error => {
+            console.error('Erro ao buscar saldo da carteira:', error);
+        });
     },
 
     loadGoals() {
-        const walletId = localStorage.getItem('selectedWalletId');
-        if (!walletId) {
-            alert('Carteira não selecionada. Por favor, faça login novamente.');
+        const token = localStorage.getItem('token') || localStorage.getItem('accessToken');
+        
+        if (!token) {
+            alert('Token não encontrado. Por favor, faça login novamente.');
             window.location.href = '../../index.html';
             return;
         }
 
-        fetch(`${API_URL}${endpoint}?id_carteira=${walletId}`, {
+        fetch(`${API_URL}${endpoint}`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         })
@@ -129,9 +144,14 @@ const GoalManager = {
                              this.goals.filter(goal => goal.meta_status === 'CONCLUIDA');
 
         filteredGoals.forEach(goal => {
-            const progress = goal.progresso ? parseFloat(goal.progresso) / parseFloat(goal.valor_meta) * 100 : 0;
-            const formattedProgress = (goal.progresso || 0).toFixed(2).replace('.', ',');
-            const formattedTarget = parseFloat(goal.valor_meta).toFixed(2).replace('.', ',');
+            // Usar o saldo da carteira como progresso atual
+            const currentProgress = this.walletBalance;
+            const targetValue = parseFloat(goal.valor_meta);
+            const progress = targetValue > 0 ? (currentProgress / targetValue) * 100 : 0;
+            
+            // Formatação dos valores
+            const formattedCurrentProgress = currentProgress.toFixed(2).replace('.', ',');
+            const formattedTarget = targetValue.toFixed(2).replace('.', ',');
             
             const goalCard = document.createElement('div');
             goalCard.className = `goal-card ${goal.meta_status === 'CONCLUIDA' ? 'completed' : ''}`;
@@ -151,20 +171,15 @@ const GoalManager = {
                 </div>
                 <div class="goal-progress">
                     <div class="progress-bar">
-                        <div class="progress" style="width: ${progress}%;"></div>
+                        <div class="progress" style="width: ${Math.min(progress, 100)}%;"></div>
                     </div>
                     <div class="progress-info">
-                        <span class="current-value">R$ ${formattedProgress}</span>
+                        <span class="current-value">R$ ${formattedCurrentProgress}</span>
                         <span class="target-value">R$ ${formattedTarget}</span>
                     </div>
                 </div>
                 <div class="goal-dates">
                     <div class="date-item">
-                        <span class="date-label">Início:</span>
-                        <span class="date-value">${new Date(goal.data_inicial).toLocaleDateString('pt-BR')}</span>
-                    </div>
-                    <div class="date-item">
-                        <span class="date-label">Status:</span>
                         <span class="status-badge ${goal.meta_status === 'ATIVA' ? 'active' : 'completed'}">
                             ${goal.meta_status === 'ATIVA' ? 'Ativa' : 'Concluída'}
                         </span>
@@ -180,92 +195,75 @@ const GoalManager = {
         this.renderGoals();
     },
 
-addGoal(event) {
-    event.preventDefault();
-    
-    const walletId = localStorage.getItem('selectedWalletId');
-    if (!walletId) {
-        alert('Carteira não selecionada. Por favor, faça login novamente.');
-        return;
-    }
-    
-    const description = document.getElementById('description').value;
-    const completionDate = document.getElementById('completionDate').value;
-    const targetValue = parseFloat(document.getElementById('targetValue').value);
-    
-    // Validações
-    if (!description) {
-        document.getElementById('descriptionError').style.display = 'block';
-        return;
-    }
-    
-    if (!completionDate) {
-        document.getElementById('completionDateError').style.display = 'block';
-        return;
-    }
-    
-    if (!targetValue || targetValue <= 0) {
-        document.getElementById('targetValueError').style.display = 'block';
-        return;
-    }
-    
-    // Obter o identificador do usuário
-    const userInfoStr = localStorage.getItem('userInfo');
-    let userId = null;
-    
-    if (userInfoStr) {
-        try {
-            const userInfo = JSON.parse(userInfoStr);
-            userId = userInfo.id; // Certifique-se de que este é o ID numérico do usuário
-        } catch (e) {
-            console.error('Erro ao analisar userInfo:', e);
+    addGoal(event) {
+        event.preventDefault();
+        
+        const token = localStorage.getItem('token') || localStorage.getItem('accessToken');
+        const walletId = localStorage.getItem('selectedWalletId') || localStorage.getItem('walletId') || localStorage.getItem('id_carteira');
+        
+        if (!token) {
+            alert('Token não encontrado. Por favor, faça login novamente.');
+            return;
         }
-    }
-    
-    if (!userId) {
-        userId = localStorage.getItem('userId');
-    }
-    
-    if (!userId) {
-        alert('Usuário não identificado. Por favor, faça login novamente.');
-        return;
-    }
-    
-    // Preparar dados da meta
-    const goalData = {
-        id_usuario: parseInt(userId), // Garantir que é um número
-        id_carteira: parseInt(walletId),
-        descricao: description,
-        valor_meta: targetValue,
-        data_final: completionDate,
-        meta_status: 'ATIVA'
-    };
-    
-    console.log('Enviando dados da meta:', goalData); // Para depuração
-    
-    fetch(`${API_URL}${endpoint}`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(goalData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            throw new Error(data.msg || 'Erro ao criar meta');
+        
+        const description = document.getElementById('description').value;
+        const completionDate = document.getElementById('completionDate').value;
+        const targetValue = parseFloat(document.getElementById('targetValue').value);
+        
+        // Validações
+        if (!description) {
+            document.getElementById('descriptionError').style.display = 'block';
+            return;
         }
-        alert('Meta criada com sucesso!');
-        this.closeModal('addGoalModal');
-        document.getElementById('addGoalForm').reset();
-        this.loadGoals();
-    })
-    .catch(error => {
-        console.error('Erro ao criar meta:', error);
-        alert(`Erro ao criar meta: ${error.message}`);
-    });
-},
+        
+        if (!completionDate) {
+            document.getElementById('completionDateError').style.display = 'block';
+            return;
+        }
+        
+        if (!targetValue || targetValue <= 0) {
+            document.getElementById('targetValueError').style.display = 'block';
+            return;
+        }
+        
+        // Preparar dados da meta (incluindo carteira se disponível)
+        const goalData = {
+            descricao: description,
+            valor_meta: targetValue,
+            data_final: completionDate
+        };
+        
+        // Adicionar carteira se disponível
+        if (walletId) {
+            goalData.id_carteira = parseInt(walletId);
+        }
+        
+        console.log('Enviando dados da meta:', goalData); // Para depuração
+        
+        fetch(`${API_URL}${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(goalData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.msg || 'Erro ao criar meta');
+            }
+            alert('Meta criada com sucesso!');
+            this.closeModal('addGoalModal');
+            document.getElementById('addGoalForm').reset();
+            this.loadGoals();
+            this.loadWalletBalance(); // Recarregar saldo após criar meta
+        })
+        .catch(error => {
+            console.error('Erro ao criar meta:', error);
+            alert(`Erro ao criar meta: ${error.message}`);
+        });
+    },
 
     openEditModal(goalId) {
         const goal = this.goals.find(g => g.id === goalId);
@@ -292,7 +290,6 @@ addGoal(event) {
         event.preventDefault();
         
         const goalId = document.getElementById('edit-id').value;
-        const description = document.getElementById('edit-title').value;
         const completionDate = document.getElementById('edit-completionDate').value;
         const targetValue = parseFloat(document.getElementById('edit-targetValue').value);
         const status = document.getElementById('edit-status').value;
@@ -313,33 +310,31 @@ addGoal(event) {
             return;
         }
         
-        const walletId = localStorage.getItem('selectedWalletId');
-        // Obter o identificador do usuário
-        const userIdentifier = this.getUserId();
-        if (!userIdentifier) {
-            alert('Usuário não identificado. Por favor, faça login novamente.');
+        const token = localStorage.getItem('token') || localStorage.getItem('accessToken');
+        const walletId = localStorage.getItem('selectedWalletId') || localStorage.getItem('walletId') || localStorage.getItem('id_carteira');
+        
+        if (!token) {
+            alert('Token não encontrado. Por favor, faça login novamente.');
             return;
         }
         
         // Preparar dados da meta
         const goalData = {
             id: parseInt(goalId),
-            id_carteira: parseInt(walletId),
             descricao: description,
             valor_meta: targetValue,
-            data_final: completionDate,
-            meta_status: status
+            data_final: completionDate
         };
         
-        // Se o identificador parece ser um ID numérico, inclui id_usuario
-        if (!isNaN(userIdentifier)) {
-            goalData.id_usuario = parseInt(userIdentifier);
+        // Adicionar carteira se disponível
+        if (walletId) {
+            goalData.id_carteira = parseInt(walletId);
         }
         
         fetch(`${API_URL}${endpoint}/${goalId}`, {
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(goalData)
@@ -352,6 +347,7 @@ addGoal(event) {
             alert('Meta atualizada com sucesso!');
             this.closeModal('editGoalModal');
             this.loadGoals();
+            this.loadWalletBalance(); // Recarregar saldo após atualizar meta
         })
         .catch(error => {
             console.error('Erro ao atualizar meta:', error);
@@ -361,10 +357,17 @@ addGoal(event) {
 
     deleteGoal(goalId) {
         if (confirm('Tem certeza que deseja excluir esta meta?')) {
+            const token = localStorage.getItem('token') || localStorage.getItem('accessToken');
+            
+            if (!token) {
+                alert('Token não encontrado. Por favor, faça login novamente.');
+                return;
+            }
+            
             fetch(`${API_URL}${endpoint}/${goalId}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             })
@@ -381,10 +384,25 @@ addGoal(event) {
                 alert(`Erro ao excluir meta: ${error.message}`);
             });
         }
+    },
+
+    // Função para atualizar o saldo manualmente (pode ser chamada quando houver mudanças na carteira)
+    refreshWalletBalance() {
+        this.loadWalletBalance();
     }
 };
 
 // Inicialização quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', () => {
     GoalManager.init();
+});
+
+// Escutar mudanças na carteira para atualizar o saldo automaticamente
+document.addEventListener('portfolioChanged', function(e) {
+    if (e.detail && e.detail.portfolio) {
+        // Atualizar o saldo da carteira quando houver mudanças no portfólio
+        GoalManager.walletBalance = e.detail.portfolio.saldo_total || 0;
+        console.log('Saldo atualizado via evento portfolioChanged:', GoalManager.walletBalance);
+        GoalManager.renderGoals();
+    }
 });

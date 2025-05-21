@@ -1,6 +1,6 @@
 const AuthService = {
     API_URL: 'http://191.239.116.115:8080',
-    TOKEN_EXPIRY_TIME: 4.5 * 60 * 1000, // Token expires in 5 minutes (set to 4.5 for safety)
+    TOKEN_EXPIRY_TIME: 15 * 60 * 1000,
     
     initialize() {
         // Check token expiration on initialization

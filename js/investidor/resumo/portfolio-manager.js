@@ -305,6 +305,21 @@ const PortfolioManager = {
         return assetsMap;
     },
 
+    // New method to format quantity with smart decimal places
+    formatSmartQuantity(quantity) {
+        // If it's a whole number, show without decimals
+        if (quantity % 1 === 0) {
+            return quantity.toLocaleString('pt-BR');
+        }
+        
+        // For decimal numbers, show up to 2 decimal places, removing trailing zeros
+        const formatted = quantity.toFixed(2);
+        return parseFloat(formatted).toLocaleString('pt-BR', { 
+            minimumFractionDigits: 0, 
+            maximumFractionDigits: 2 
+        });
+    },
+
     createAssetsTable(assets) {
         const assetsTable = document.createElement('table');
         assetsTable.className = 'assets-table';
@@ -316,9 +331,8 @@ const PortfolioManager = {
                 <th>Nome</th>
                 <th>Categoria</th>
                 <th>Quantidade</th>
-                <th>Valor Atual</th>
-                <th>Valor Total</th>
-                <th>Rendimento</th>
+                <th>Valor de Compra</th>
+                <th>Valor Comprado</th>
                 <th>Ações</th>
             </tr>
         `;
@@ -345,12 +359,14 @@ const PortfolioManager = {
                 row.dataset.transactionId = asset.transaction_id;
             }
 
-            const currentValue = asset.preco_atual || asset.valor_unitario;
-            const totalValue = asset.valor_total || (asset.quantidade * currentValue);
-            
-            let rendimento = asset.rentabilidade !== undefined ? parseFloat(asset.rentabilidade) * 100 : 0;
+            const purchaseValue = asset.valor_unitario; // Valor de compra unitário
+            const currentPrice = asset.preco_atual || asset.valor_unitario; // Preço atual unitário
+            const currentTotalValue = asset.quantidade * currentPrice; // Valor atual total (quantidade × preço atual)
             
             const displayName = asset.simbolo ? `${asset.nome} (${asset.simbolo})` : asset.nome;
+
+            // Use the new smart quantity formatting
+            const formattedQuantity = this.formatSmartQuantity(asset.quantidade);
 
             row.innerHTML = `
                 <td>${displayName}</td>
@@ -359,12 +375,9 @@ const PortfolioManager = {
                         ${Utils.getCategoryLabel(asset.categoria)}
                     </span>
                 </td>
-                <td>${Utils.formatQuantity(asset.quantidade)}</td>
-                <td>R$ ${Utils.formatCurrency(currentValue)}</td>
-                <td>R$ ${Utils.formatCurrency(totalValue)}</td>
-                <td class="${rendimento >= 0 ? 'positive-value' : 'negative-value'}">
-                    ${Utils.formatPercentage(rendimento)}%
-                </td>
+                <td>${formattedQuantity}</td>
+                <td>R$ ${Utils.formatCurrency(purchaseValue)}</td>
+                <td>R$ ${Utils.formatCurrency(currentTotalValue)}</td>
                 <td>
                     <button class="btn-icon edit-asset" data-asset-id="${asset.id}">
                         <i class="fas fa-pen"></i>
@@ -386,7 +399,7 @@ const PortfolioManager = {
     renderEmptyTableMessage(tableBody) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="7" class="no-assets-message">
+                <td colspan="6" class="no-assets-message">
                     Nenhum ativo nesta carteira. Clique em "Adicionar Ativo" para começar.
                 </td>
             </tr>
@@ -413,9 +426,8 @@ const PortfolioManager = {
                 <th>Nome</th>
                 <th>Categoria</th>
                 <th>Quantidade</th>
-                <th>Valor Atual</th>
-                <th>Valor Total</th>
-                <th>Rendimento</th>
+                <th>Valor de Compra</th>
+                <th>Valor Comprado</th>
                 <th>Ações</th>
             </tr>
         `;
