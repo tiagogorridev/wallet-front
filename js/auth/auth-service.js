@@ -285,7 +285,7 @@ window.fetch = async function(url, options = {}) {
     }
     
     // Always include credentials to ensure cookies are sent
-    options.credentials = options.credentials || 'include';
+    // options.credentials = options.credentials || 'include';
     
     try {
         const response = await originalFetch(url, options);
