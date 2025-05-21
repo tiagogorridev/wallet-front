@@ -130,32 +130,14 @@ const PortfolioManager = {
             assets = Object.values(assetsMap);
         }
         
-        const totalBalance = this.calculateTotalBalance(assets);
-        const balanceToShow = totalBalance > 0 ? totalBalance : (portfolioData.saldo_total || 0);
+        const balanceToShow = portfolioData.saldo_total || 0;
 
         if (this.elements.balanceElement) {
             this.elements.balanceElement.textContent = `R$ ${Utils.formatCurrency(balanceToShow)}`;
         }
-
-        let rentabilidade = null;
         
-        if (portfolioData.rentabilidade !== undefined && portfolioData.rentabilidade !== null) {
-            rentabilidade = parseFloat(portfolioData.rentabilidade);
-        } else if (assets.length > 0) {
-            let investimentoInicial = 0;
-            let valorAtual = 0;
-            
-            assets.forEach(asset => {
-                investimentoInicial += asset.investimento_inicial || 0;
-                valorAtual += asset.valor_total || 0;
-            });
-            
-            if (investimentoInicial > 0) {
-                rentabilidade = ((valorAtual - investimentoInicial) / investimentoInicial) * 100;
-            }
-        }
-
-        if (this.elements.returnElement && rentabilidade !== null) {
+        if (this.elements.returnElement && portfolioData.rentabilidade !== undefined) {
+            const rentabilidade = parseFloat(portfolioData.rentabilidade) * 100;
             const rentabilidadeClass = rentabilidade >= 0 ? 'positive-return' : 'negative-return';
             this.elements.returnElement.textContent = `${Utils.formatPercentage(rentabilidade)}%`;
             this.elements.returnElement.className = rentabilidadeClass;
@@ -304,7 +286,6 @@ const PortfolioManager = {
                     valor_unitario: transaction.valor_unitario || 0,
                     preco_atual: (assetData && assetData.preco_atual) || transaction.valor_unitario || 0,
                     valor_total: 0,
-                    rendimento: 0,
                     investimento_inicial: 0,
                     transaction_id: transaction.id
                 };
@@ -318,9 +299,6 @@ const PortfolioManager = {
             if (asset.quantidade > 0) {
                 const currentValue = asset.preco_atual || asset.valor_unitario;
                 asset.valor_total = asset.quantidade * currentValue;
-                
-                const profitLoss = asset.valor_total - asset.investimento_inicial;
-                asset.rendimento = asset.investimento_inicial > 0 ? (profitLoss / asset.investimento_inicial) * 100 : 0;
             }
         });
 
@@ -357,7 +335,6 @@ const PortfolioManager = {
 
     populateTableBody(assets, tableBody) {
         tableBody.innerHTML = '';
-        let calculatedTotalBalance = 0;
 
         assets.forEach(asset => {
             if (asset.quantidade <= 0) return;
@@ -371,15 +348,8 @@ const PortfolioManager = {
             const currentValue = asset.preco_atual || asset.valor_unitario;
             const totalValue = asset.valor_total || (asset.quantidade * currentValue);
             
-            calculatedTotalBalance += totalValue;
+            let rendimento = asset.rentabilidade !== undefined ? parseFloat(asset.rentabilidade) * 100 : 0;
             
-            let rendimento = asset.rendimento;
-            if (rendimento === undefined && asset.investimento_inicial > 0) {
-                const initialInvestment = asset.investimento_inicial;
-                const profitLoss = totalValue - initialInvestment;
-                rendimento = (profitLoss / initialInvestment) * 100;
-            }
-
             const displayName = asset.simbolo ? `${asset.nome} (${asset.simbolo})` : asset.nome;
 
             row.innerHTML = `
@@ -407,10 +377,6 @@ const PortfolioManager = {
 
             tableBody.appendChild(row);
         });
-
-        if (this.elements.balanceElement) {
-            this.elements.balanceElement.textContent = `R$ ${Utils.formatCurrency(calculatedTotalBalance)}`;
-        }
 
         if (tableBody.children.length === 0) {
             this.renderEmptyTableMessage(tableBody);
