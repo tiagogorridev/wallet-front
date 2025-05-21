@@ -116,19 +116,14 @@ async function openEditGoalModal(goalId) {
     // Formata a data para o formato esperado pelo input type="date"
     let [day, month, year] = currentEditingGoal.data_final.split('/');
     let formattedDate = `${year}-${month}-${day}`;
-
-    // Mapeia o tipo de ativo a partir da descrição da meta ou usa um valor padrão
-    let assetType = getAssetTypeFromDescription(currentEditingGoal.descricao);
     
-    // Mapeia o prazo com base na data inicial e final
-    let term = getTermFromDates(currentEditingGoal.data_inicial, currentEditingGoal.data_final);
+    // Extrair o tipo de ativo da descrição
+    let assetType = getAssetTypeFromDescription(currentEditingGoal.descricao);
 
     document.getElementById('edit-id').value = currentEditingGoal.id;
-    document.getElementById('edit-title').value = currentEditingGoal.descricao;
-    document.getElementById('edit-term').value = term;
+    document.getElementById('edit-title').value = getGoalTitle(currentEditingGoal.descricao);
     document.getElementById('edit-completionDate').value = formattedDate;
     document.getElementById('edit-targetValue').value = currentEditingGoal.valor_meta;
-    document.getElementById('edit-currentValue').value = (currentEditingGoal.valor_meta * currentEditingGoal.progresso / 100).toFixed(2);
     document.getElementById('edit-assetType').value = assetType;
 
     editGoalModal.style.display = 'flex';
@@ -140,43 +135,9 @@ async function openEditGoalModal(goalId) {
 function getAssetTypeFromDescription(description) {
   if (description) {
     description = description.toLowerCase();
-    if (description.includes('renda fixa')) return 'renda_fixa';
     if (description.includes('cripto') || description.includes('bitcoin')) return 'criptoativos';
     if (description.includes('ações') || description.includes('acoes')) return 'acoes';
   }
-  // Valor padrão
-  return 'renda_fixa';
-}
-
-function getTermFromDates(startDate, endDate) {
-  try {
-    // Converte as datas para objetos Date
-    const start = parseDate(startDate);
-    const end = parseDate(endDate);
-    
-    // Calcula a diferença em meses
-    const diffMonths = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
-    
-    if (diffMonths <= 12) return 'curto';
-    if (diffMonths <= 36) return 'medio';
-    return 'longo';
-  } catch (e) {
-    console.error('Erro ao calcular prazo:', e);
-    return 'medio'; // Valor padrão
-  }
-}
-
-function parseDate(dateString) {
-  if (!dateString) return new Date();
-  
-  // Tenta fazer o parse da data em formato DD/MM/YYYY
-  const parts = dateString.split('/');
-  if (parts.length === 3) {
-    return new Date(parts[2], parts[1] - 1, parts[0]);
-  }
-  
-  // Se falhar, tenta fazer o parse direto
-  return new Date(dateString);
 }
 
 function closeModal() {
@@ -244,23 +205,17 @@ async function onSubmitAdd(event) {
 
   const title = document.getElementById('title').value;
   const assetType = document.getElementById('assetType').value;
-  const term = document.getElementById('term').value;
   const completionDate = document.getElementById('completionDate').value;
   const targetValue = parseFloat(document.getElementById('targetValue').value);
 
-  const today = new Date();
-  const formattedStartDate = formatDate(today);
   const formattedEndDate = formatDate(completionDate);
-  const description = createDescription(title, term, assetType);
+  const description = createDescription(title, assetType);
 
   // Criar objeto de meta conforme a estrutura do banco de dados
   const newGoal = {
-    data_inicial: formattedStartDate,
     valor_meta: targetValue,
     data_final: formattedEndDate,
-    progresso: 0,
     descricao: description,
-    meta_status: 'EM_ANDAMENTO',
     id_carteira: 1  // Presumindo um valor padrão, ajuste conforme necessário
   };
 
@@ -298,28 +253,18 @@ async function onSubmitEdit(event) {
 
   const id = parseInt(document.getElementById('edit-id').value);
   const title = document.getElementById('edit-title').value;
-  const term = document.getElementById('edit-term').value;
   const targetValue = parseFloat(document.getElementById('edit-targetValue').value);
-  const currentValue = parseFloat(document.getElementById('edit-currentValue').value);
   const completionDate = document.getElementById('edit-completionDate').value;
   const assetType = document.getElementById('edit-assetType').value;
-
-  // Calcular o progresso com base no valor atual e valor alvo
-  const progress = Math.min(100, Math.round((currentValue / targetValue) * 100));
+  const status = document.getElementById('edit-status').value;
   
-  // Definir o status com base no progresso
-  const status = progress >= 100 ? 'CONCLUIDA' : 'EM_ANDAMENTO';
-  
-  const description = createDescription(title, term, assetType);
+  const description = createDescription(title, assetType);
   
   const updatedGoal = {
     id,
-    data_inicial: currentEditingGoal.data_inicial,
     valor_meta: targetValue,
     data_final: formatDate(completionDate),
-    progresso: progress,
     descricao: description,
-    meta_status: status,
     id_carteira: currentEditingGoal.id_carteira || 1
   };
 
@@ -378,27 +323,15 @@ function formatDate(dateString) {
   return `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${dateObj.getFullYear()}`;
 }
 
-function createDescription(title, term, assetType) {
-  const termText = getTermText(term);
+function createDescription(title, assetType) {
   const strategyText = getStrategyText(assetType);
-  return `${title} - ${termText} - ${strategyText}`;
-}
-
-function getTermText(term) {
-  switch(term) {
-    case 'curto': return 'Curto prazo';
-    case 'medio': return 'Médio prazo';
-    case 'longo': return 'Longo prazo';
-    default: return 'Médio prazo';
-  }
+  return `${title} - ${strategyText}`;
 }
 
 function getStrategyText(assetType) {
   switch(assetType) {
-    case 'renda_fixa': return '100% Renda Fixa';
     case 'criptoativos': return '100% Criptoativos';
     case 'acoes': return '100% Ações';
-    default: return '100% Renda Fixa';
   }
 }
 
@@ -416,12 +349,6 @@ async function applyFilter(filter) {
         case 'all':
           filteredGoals = [...goals];
           break;
-        case 'in_progress':
-          filteredGoals = goals.filter(goal => goal.meta_status === 'EM_ANDAMENTO');
-          break;
-        case 'completed':
-          filteredGoals = goals.filter(goal => goal.meta_status === 'CONCLUIDA');
-          break;
         default:
           filteredGoals = [...goals];
       }
@@ -438,10 +365,9 @@ function renderGoals() {
 
   filteredGoals.forEach(goal => {
     const progressPercentage = goal.progresso || 0;
-    const progressClass = goal.meta_status === 'CONCLUIDA' ? 'completed' : '';
     
-    // Calcular o valor atual baseado no progresso e valor meta
-    const currentValue = (goal.valor_meta * progressPercentage / 100).toFixed(2);
+    // Não calculamos o valor atual - vem do backend
+    const currentValue = goal.valor_atual || 0;
 
     const goalCard = document.createElement('div');
     goalCard.className = 'goal-card';
@@ -557,26 +483,21 @@ async function updateGoalStats() {
       return;
     }
     
-    const totalGoals = goals.length;
-    const inProgressGoals = goals.filter(g => g.meta_status === 'EM_ANDAMENTO').length;
-    const completedGoals = goals.filter(g => g.meta_status === 'CONCLUIDA').length;
 
+    // Obter o total a alcançar diretamente da API, sem cálculos
     const totalTarget = goals.reduce((sum, goal) => {
-      if (goal.meta_status === 'EM_ANDAMENTO') {
-        const currentValue = (goal.valor_meta * (goal.progresso || 0)) / 100;
-        return sum + (goal.valor_meta - currentValue);
-      }
-      return sum;
+        return sum + goal.valor_meta;
     }, 0);
 
     const statCards = document.querySelectorAll('.goal-stat-card');
     if (statCards.length >= 3) {
-      statCards[0].querySelector('.stat-value').textContent = inProgressGoals;
+      statCards[0].querySelector('.stat-value').textContent = activeGoals;
       statCards[1].querySelector('.stat-value').textContent = completedGoals;
       statCards[2].querySelector('.stat-value').textContent = `R$ ${totalTarget.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
 
+      const totalGoals = activeGoals + completedGoals;
       const overallProgress = totalGoals > 0 ? (completedGoals / totalGoals) * 100 : 0;
-      statCards[0].querySelector('.progress').style.width = `${totalGoals > 0 ? (inProgressGoals / totalGoals) * 100 : 0}%`;
+      statCards[0].querySelector('.progress').style.width = `${totalGoals > 0 ? (activeGoals / totalGoals) * 100 : 0}%`;
       statCards[1].querySelector('.progress').style.width = `${overallProgress}%`;
     }
   } catch (error) {
