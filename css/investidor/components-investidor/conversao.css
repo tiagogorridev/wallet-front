@@ -1,0 +1,295 @@
+/* Container principal - Dark Theme */
+.conversao-box {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+.titulo-box {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+}
+
+.titulo-box h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.titulo-box h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #00d4ff, #00ff88);
+    border-radius: 2px;
+    box-shadow: 0 2px 10px rgba(0, 212, 255, 0.3);
+}
+
+/* Container das conversões */
+.conversoes-moedas {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.conversoes-moedas::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #00d4ff, #00ff88, #ffaa00, #ff4757, #c44569);
+    box-shadow: 0 2px 15px rgba(0, 212, 255, 0.3);
+}
+
+/* Lista de cotações */
+#cotacoes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+#cotacoes li {
+    background: linear-gradient(135deg, #3a3a3a 0%, #2e2e2e 100%);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border-left: 5px solid;
+    transition: all 0.3s ease;
+    position: relative;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #404040;
+}
+
+/* Cores específicas para cada moeda - Dark Theme */
+#cotacoes li:nth-child(1) {
+    border-left-color: #00d4ff;
+}
+
+#cotacoes li:nth-child(2) {
+    border-left-color: #00ff88;
+}
+
+#cotacoes li:nth-child(3) {
+    border-left-color: #ffaa00;
+}
+
+#cotacoes li:nth-child(4) {
+    border-left-color: #ff4757;
+}
+
+#cotacoes li:nth-child(5) {
+    border-left-color: #c44569;
+}
+
+/* Ícones das moedas */
+#cotacoes li::before {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+    display: inline-block;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+#cotacoes li:nth-child(1)::before {
+    background: linear-gradient(135deg, #00d4ff, #0099cc);
+    content: '$';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#cotacoes li:nth-child(2)::before {
+    background: linear-gradient(135deg, #00ff88, #00cc66);
+    content: '€';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#cotacoes li:nth-child(3)::before {
+    background: linear-gradient(135deg, #ffaa00, #cc8800);
+    content: '£';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#cotacoes li:nth-child(4)::before {
+    background: linear-gradient(135deg, #ff4757, #cc3344);
+    content: 'C$';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#cotacoes li:nth-child(5)::before {
+    background: linear-gradient(135deg, #c44569, #992244);
+    content: '¥';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Hover effects - Dark Theme */
+#cotacoes li:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #454545 0%, #3a3a3a 100%);
+    border-color: #555;
+}
+
+#cotacoes li:hover::before {
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+#cotacoes li:nth-child(1):hover {
+    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
+}
+
+#cotacoes li:nth-child(2):hover {
+    box-shadow: 0 15px 40px rgba(0, 255, 136, 0.2);
+}
+
+#cotacoes li:nth-child(3):hover {
+    box-shadow: 0 15px 40px rgba(255, 170, 0, 0.2);
+}
+
+#cotacoes li:nth-child(4):hover {
+    box-shadow: 0 15px 40px rgba(255, 71, 87, 0.2);
+}
+
+#cotacoes li:nth-child(5):hover {
+    box-shadow: 0 15px 40px rgba(196, 69, 105, 0.2);
+}
+
+/* Valores das cotações - Dark Theme */
+#cotacoes span {
+    font-weight: 700;
+    font-size: 1.3rem;
+    background: linear-gradient(90deg, #00ff88, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: right;
+    min-width: 100px;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .conversao-box {
+        padding: 20px 10px;
+    }
+
+    .conversoes-moedas {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    #cotacoes {
+        grid-template-columns: 1fr;
+    }
+
+    #cotacoes li {
+        padding: 20px;
+        font-size: 1rem;
+    }
+
+    #cotacoes span {
+        font-size: 1.2rem;
+    }
+
+    .titulo-box h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #cotacoes li {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    #cotacoes li::before {
+        margin-right: 0;
+    }
+
+    #cotacoes span {
+        min-width: auto;
+    }
+}
+
+/* Efeitos adicionais para o dark theme */
+.conversao-box * {
+    scrollbar-width: thin;
+    scrollbar-color: #555 #2a2a2a;
+}
+
+.conversao-box *::-webkit-scrollbar {
+    width: 8px;
+}
+
+.conversao-box *::-webkit-scrollbar-track {
+    background: #2a2a2a;
+}
+
+.conversao-box *::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+.conversao-box *::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}

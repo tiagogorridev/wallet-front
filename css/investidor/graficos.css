@@ -1,0 +1,163 @@
+#cotacoes {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    position: relative;
+    background: var(--dark-lighter);
+    overflow: hidden;
+}
+
+/* Linha colorida no topo */
+#cotacoes::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+/* Estilo de cada item */
+#cotacoes li {
+    background: var(--dark-lighter);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border-left: 5px solid;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgb(223, 223, 223);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+/* Cores para cada moeda */
+#cotacoes li:nth-child(1) {
+    border-left-color: #3498db;
+}
+
+#cotacoes li:nth-child(2) {
+    border-left-color: #2ecc71;
+}
+
+#cotacoes li:nth-child(3) {
+    border-left-color: #f39c12;
+}
+
+#cotacoes li:nth-child(4) {
+    border-left-color: #e74c3c;
+}
+
+#cotacoes li:nth-child(5) {
+    border-left-color: #9b59b6;
+}
+
+/* Ícones circulares */
+#cotacoes li::before {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    flex-shrink: 0;
+    content: '';
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#cotacoes li:nth-child(1)::before {
+    background-color: #3498db;
+    content: '$';
+}
+
+#cotacoes li:nth-child(2)::before {
+    background-color: #2ecc71;
+    content: '€';
+}
+
+#cotacoes li:nth-child(3)::before {
+    background-color: #f39c12;
+    content: '£';
+}
+
+#cotacoes li:nth-child(4)::before {
+    background-color: #e74c3c;
+    content: 'C$';
+    font-size: 14px;
+}
+
+#cotacoes li:nth-child(5)::before {
+    background-color: #9b59b6;
+    content: '¥';
+}
+
+/* Hover */
+#cotacoes li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+#cotacoes li:hover::before {
+    transform: scale(1.1);
+}
+
+/* Valores das moedas */
+#cotacoes span {
+    font-weight: 700;
+    font-size: 1.3rem;
+    background: linear-gradient(90deg, #27ae60, #2ecc71);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: right;
+    min-width: 100px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    #cotacoes {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+
+    #cotacoes li {
+        padding: 20px;
+        font-size: 1rem;
+    }
+
+    #cotacoes span {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #cotacoes li {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    #cotacoes li::before {
+        margin-right: 0;
+    }
+
+    #cotacoes span {
+        min-width: auto;
+    }
+}
