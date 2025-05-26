@@ -1,14 +1,14 @@
 .assets-section .portfolio-summary {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: clamp(12px, 2.5vw, 16px);
+    margin-bottom: clamp(20px, 4vw, 24px);
 }
 
 .assets-section .summary-item {
     background-color: #222;
     border-radius: 10px;
-    padding: 20px;
+    padding: clamp(15px, 3vw, 20px);
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -21,14 +21,14 @@
 
 .assets-section .summary-item h3 {
     color: #999;
-    font-size: 1rem;
-    margin-bottom: 10px;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    margin-bottom: clamp(8px, 1.5vw, 10px);
     font-weight: 500;
 }
 
 .assets-section .summary-item p {
     color: #ffffff;
-    font-size: 1.8rem;
+    font-size: clamp(1.4rem, 3.5vw, 1.8rem);
     margin: 0;
     font-weight: 700;
 }
@@ -53,24 +53,28 @@
 .assets-section .portfolio-description {
     background-color: #222;
     border-radius: 8px;
-    padding: 16px;
-    margin-top: 16px;
+    padding: clamp(12px, 2.5vw, 16px);
+    margin-top: clamp(12px, 2.5vw, 16px);
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .loading-message {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: clamp(15px, 3vw, 20px);
     color: #888;
     font-style: italic;
+    font-size: clamp(14px, 2.5vw, 16px);
 }
 
 .pie-chart-container {
     position: relative;
-    min-height: 300px;
+    min-height: clamp(250px, 50vw, 300px);
+    width: 100%;
 }
 
 #loading-chart {
@@ -84,4 +88,41 @@
     justify-content: center;
     align-items: center;
     z-index: 10;
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .assets-section .portfolio-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .assets-section .portfolio-description {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .assets-section .summary-item {
+        padding: 15px;
+    }
+
+    .assets-section .summary-item p {
+        font-size: 1.4rem;
+    }
+}
+
+/* Ajustes para telas muito pequenas */
+@media screen and (max-width: 360px) {
+    .assets-section .summary-item {
+        padding: 12px;
+    }
+
+    .assets-section .summary-item h3 {
+        font-size: 0.9rem;
+    }
+
+    .assets-section .summary-item p {
+        font-size: 1.2rem;
+    }
 }

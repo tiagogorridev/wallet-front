@@ -22,15 +22,16 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    padding: 15px;
 }
 
 .modal-content {
     background-color: var(--dark-lighter);
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    width: 90%;
+    width: 100%;
     max-width: 600px;
-    padding: 30px;
+    padding: clamp(20px, 4vw, 30px);
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
@@ -38,19 +39,21 @@ body {
 
 h2 {
     color: var(--white);
-    margin-bottom: 20px;
+    margin-bottom: clamp(15px, 3vw, 20px);
     text-align: center;
     font-weight: 600;
+    font-size: clamp(20px, 4vw, 24px);
 }
 
 h3 {
     color: var(--white);
-    margin-bottom: 20px;
+    margin-bottom: clamp(15px, 3vw, 20px);
     font-weight: 600;
+    font-size: clamp(18px, 3.5vw, 20px);
 }
 
 #etapas-container {
-    margin-bottom: 30px;
+    margin-bottom: clamp(20px, 4vw, 30px);
 }
 
 .etapa {
@@ -62,8 +65,8 @@ h3 {
 }
 
 .etapa p {
-    margin-bottom: 20px;
-    font-size: 16px;
+    margin-bottom: clamp(15px, 3vw, 20px);
+    font-size: clamp(14px, 2.5vw, 16px);
     line-height: 1.6;
     color: var(--white);
 }
@@ -71,18 +74,18 @@ h3 {
 .opcoes-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: clamp(8px, 1.5vw, 10px);
+    margin-bottom: clamp(15px, 3vw, 20px);
 }
 
 .botao-opcao {
-    padding: 15px;
+    padding: clamp(12px, 2.5vw, 15px);
     border: 1px solid var(--dark-lightest);
     border-radius: 6px;
     background-color: var(--dark);
     cursor: pointer;
     text-align: left;
-    font-size: 14px;
+    font-size: clamp(13px, 2vw, 14px);
     color: var(--white);
     transition: all 0.3s ease;
 }
@@ -103,36 +106,42 @@ h3 {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-top: 20px;
+    margin-top: clamp(15px, 3vw, 20px);
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .botao-finalizar-container {
-    margin-top: 30px;
+    margin-top: clamp(20px, 4vw, 30px);
     display: flex;
     justify-content: center;
 }
 
 button {
-    padding: 12px 20px;
+    padding: clamp(10px, 2vw, 12px) clamp(15px, 3vw, 20px);
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: clamp(13px, 2.5vw, 15px);
     font-weight: 600;
     transition: background-color 0.3s;
+    width: 100%;
+    max-width: 200px;
 }
 
 #btnFinalizar {
     background-color: var(--white);
     color: var(--dark);
-    padding: 12px 30px;
+    padding: clamp(10px, 2vw, 12px) clamp(20px, 4vw, 30px);
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: clamp(13px, 2.5vw, 15px);
     font-weight: 600;
     transition: background-color 0.3s;
-    margin-top: 10px;
+    margin-top: clamp(8px, 1.5vw, 10px);
+    width: 100%;
+    max-width: 250px;
 }
 
 #btnFinalizar:hover {
@@ -172,23 +181,23 @@ button {
 
 .resultado {
     text-align: center;
-    padding: 20px;
+    padding: clamp(15px, 3vw, 20px);
 }
 
 .perfil-resultado {
     color: var(--ambar);
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: clamp(1.1em, 2.5vw, 1.2em);
 }
 
 .progresso {
-    margin-bottom: 20px;
+    margin-bottom: clamp(15px, 3vw, 20px);
     text-align: center;
 }
 
 .barra-progresso {
     width: 100%;
-    height: 10px;
+    height: clamp(8px, 1.5vw, 10px);
     background-color: var(--dark-lightest);
     border-radius: 5px;
     margin-bottom: 5px;
@@ -203,6 +212,53 @@ button {
 }
 
 .texto-progresso {
-    font-size: 14px;
+    font-size: clamp(12px, 2vw, 14px);
     color: var(--light-gray);
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .modal-content {
+        padding: 20px;
+    }
+
+    .botoes-navegacao {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    button {
+        max-width: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .modal-content {
+        padding: 15px;
+    }
+
+    .botao-opcao {
+        padding: 12px;
+    }
+
+    #btnFinalizar {
+        padding: 12px 20px;
+    }
+}
+
+/* Ajustes para telas muito pequenas */
+@media screen and (max-width: 360px) {
+    .modal-content {
+        padding: 12px;
+    }
+
+    .botao-opcao {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    button {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
 }

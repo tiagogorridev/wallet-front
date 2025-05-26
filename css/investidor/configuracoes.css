@@ -1,183 +1,242 @@
-
 .config-card {
-    margin-bottom: 30px;
+    margin-bottom: clamp(20px, 4vw, 30px);
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--dark-lightest);
-  }
-  
-  .config-card-header {
+    width: 100%;
+}
+
+.config-card-header {
     background-color: var(--dark-lightest);
-    padding: 16px 20px;
+    padding: clamp(12px, 2.5vw, 16px) clamp(15px, 3vw, 20px);
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  }
-  
-  .config-card-header h3 {
-    font-size: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.config-card-header h3 {
+    font-size: clamp(14px, 2.5vw, 16px);
     font-weight: 600;
     color: var(--white);
     margin: 0;
-  }
-  
-  button.save-btn {
+}
+
+button.save-btn {
     background-color: var(--ambar);
     color: var(--dark);
     border: none;
     border-radius: 6px;
-    padding: 8px 18px;
+    padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2.5vw, 18px);
     font-weight: 600;
-    font-size: 13px;
+    font-size: clamp(12px, 2vw, 13px);
     cursor: pointer;
     transition: all 0.2s ease;
-  }
-  
-  button.save-btn:hover {
+    width: 100%;
+    max-width: 200px;
+}
+
+button.save-btn:hover {
     background-color: #ffb938;
     transform: translateY(-1px);
-  }
-  
-  button.save-btn:active {
+}
+
+button.save-btn:active {
     transform: translateY(1px);
-  }
-  
-  .config-card-content {
-    padding: 20px;
-  }
-  
-  .allocation-table-container {
+}
+
+.config-card-content {
+    padding: clamp(15px, 3vw, 20px);
+}
+
+.allocation-table-container {
     overflow-x: auto;
     border-radius: 6px;
-  }
-  
-  .allocation-table {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+.allocation-table {
     width: 100%;
+    min-width: 600px;
     border-collapse: separate;
     border-spacing: 0;
-  }
-  
-  .allocation-table th {
-    padding: 12px 20px;
+}
+
+.allocation-table th {
+    padding: clamp(8px, 2vw, 12px) clamp(15px, 3vw, 20px);
     text-align: left;
     color: var(--light-gray);
     font-weight: 500;
-    font-size: 14px;
+    font-size: clamp(12px, 2vw, 14px);
     border-bottom: 1px solid var(--dark-lightest);
-  }
-  
-  .allocation-table td {
-    padding: 8px 10px;
-    font-size: 14px;
+    white-space: nowrap;
+}
+
+.allocation-table td {
+    padding: clamp(6px, 1.5vw, 8px) clamp(8px, 2vw, 10px);
+    font-size: clamp(12px, 2vw, 14px);
     color: var(--white);
-  }
-  
-  .category-name {
+}
+
+.category-name {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: clamp(8px, 2vw, 12px);
     font-weight: 500;
-  }
-  
-  .category-color {
-    width: 12px;
-    height: 12px;
+}
+
+.category-color {
+    width: clamp(8px, 2vw, 12px);
+    height: clamp(8px, 2vw, 12px);
     border-radius: 50%;
     display: inline-block;
-  }
-  
-  .category-color.crypto {
+}
+
+.category-color.crypto {
     background-color: var(--green);
     box-shadow: 0 0 6px rgba(var(--green-rgb), 0.6);
-  }
-  
-  .category-color.fixed-income {
+}
+
+.category-color.fixed-income {
     background-color: var(--blue);
     box-shadow: 0 0 6px rgba(var(--blue-rgb), 0.6);
-  }
-  
-  .category-color.stocks {
+}
+
+.category-color.stocks {
     background-color: var(--red);
     box-shadow: 0 0 6px rgba(var(--red-rgb), 0.6);
-  }
-  
-  .allocation-table td:nth-child(2) {
+}
+
+.allocation-table td:nth-child(2) {
     text-align: center;
     font-weight: 600;
-  }
-  
-  .allocation-input {
+}
+
+.allocation-input {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
-  }
-  
-  .allocation-input input {
-    width: 60px;
+    flex-wrap: wrap;
+}
+
+.allocation-input input {
+    width: clamp(50px, 10vw, 60px);
     background-color: var(--dark-lightest);
     border: 1px solid var(--gray);
     border-radius: 6px;
-    padding: 10px;
+    padding: clamp(8px, 1.5vw, 10px);
     color: var(--white);
-    font-size: 14px;
+    font-size: clamp(12px, 2vw, 14px);
     text-align: center;
     font-weight: 600;
     transition: all 0.2s ease;
-  }
-  
-  .allocation-input input:focus {
+}
+
+.allocation-input input:focus {
     border-color: var(--ambar);
     outline: none;
     box-shadow: 0 0 0 2px rgba(255, 170, 0, 0.2);
-  }
-  
-  .allocation-input input:hover {
+}
+
+.allocation-input input:hover {
     border-color: var(--light-gray);
-  }
-  
-  .allocation-input span {
+}
+
+.allocation-input span {
     color: var(--light-gray);
-    font-size: 14px;
-  }
-  
-  .allocation-table tfoot td {
+    font-size: clamp(12px, 2vw, 14px);
+}
+
+.allocation-table tfoot td {
     border-top: 2px solid var(--dark-lightest);
     font-weight: 600;
-    padding-top: 16px;
-    padding-bottom: 16px;
-  }
-  
-  .allocation-table tfoot td:first-child {
+    padding: clamp(12px, 2.5vw, 16px);
+}
+
+.allocation-table tfoot td:first-child {
     color: var(--white);
-  }
-  
-  .allocation-table tfoot td:nth-child(2) {
+}
+
+.allocation-table tfoot td:nth-child(2) {
     text-align: center;
     color: var(--white);
-  }
-  
-  .total-allocation {
+}
+
+.total-allocation {
     color: var(--ambar);
     font-weight: 700;
-    font-size: 15px;
+    font-size: clamp(13px, 2.5vw, 15px);
     text-align: center;
     display: inline-block;
-    width: 60px;
-  }
-  
-  .allocation-table * {
+    width: clamp(50px, 10vw, 60px);
+}
+
+.allocation-table * {
     transition: all 0.2s ease;
-  }
-  
-  .allocation-table tbody tr:hover {
+}
+
+.allocation-table tbody tr:hover {
     background-color: rgba(255, 255, 255, 0.03);
-  }
-  
-  .allocation-table th:last-child,
-  .allocation-table td:last-child {
+}
+
+.allocation-table th:last-child,
+.allocation-table td:last-child {
     text-align: center;
-  }
-  
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .config-card-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    button.save-btn {
+        max-width: none;
+    }
+
+    .allocation-table th,
+    .allocation-table td {
+        padding: 8px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .config-card {
+        margin-bottom: 15px;
+    }
+
+    .allocation-table-container {
+        margin: 0 -15px;
+        width: calc(100% + 30px);
+    }
+
+    .allocation-input {
+        justify-content: flex-start;
+    }
+}
+
+/* Ajustes para telas muito pequenas */
+@media screen and (max-width: 360px) {
+
+    .config-card-header,
+    .config-card-content {
+        padding: 10px;
+    }
+
+    .allocation-table th,
+    .allocation-table td {
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    .allocation-input input {
+        width: 45px;
+        padding: 6px;
+    }
+}

@@ -22,14 +22,84 @@ document.addEventListener('DOMContentLoaded', () => {
         atualizaResumoInvestimentos();
         inicializaDropdownCarteiras();
         configuraFormularioCarteira();
+        configuraLogout();
 
-        // Logout
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMobileMenu = document.getElementById('closeMobileMenu');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const body = document.body;
+
+        // Função para abrir o menu mobile
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            body.style.overflow = 'hidden'; // Previne o scroll do body
+        }
+
+        // Função para fechar o menu mobile
+        function closeMobileMenuHandler() {
+            mobileMenu.classList.remove('active');
+            body.style.overflow = ''; // Restaura o scroll do body
+        }
+
+        // Event listeners
+        mobileMenuBtn.addEventListener('click', openMobileMenu);
+        closeMobileMenu.addEventListener('click', closeMobileMenuHandler);
+
+        // Fechar menu ao clicar em um item
+        const mobileMenuItems = document.querySelectorAll('.mobile-menu-items .nav-item');
+        mobileMenuItems.forEach(item => {
+            item.addEventListener('click', closeMobileMenuHandler);
+        });
+
+        // Fechar menu ao clicar fora
+        mobileMenu.addEventListener('click', function (e) {
+            if (e.target === mobileMenu) {
+                closeMobileMenuHandler();
+            }
+        });
+
+        // Fechar menu ao pressionar ESC
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                closeMobileMenuHandler();
+            }
+        });
+
+        // Atualizar menu ativo baseado na URL atual
+        function updateActiveMenu() {
+            const currentPath = window.location.pathname;
+            const menuItems = document.querySelectorAll('.nav-item');
+
+            menuItems.forEach(item => {
+                const href = item.getAttribute('href');
+                if (currentPath.includes(href)) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // Chamar a função ao carregar a página
+        updateActiveMenu();
+    }
+
+    function configuraLogout() {
+        // Configura logout para desktop e mobile
         const btnLogout = document.getElementById('logoutBtn');
+        const btnMobileLogout = document.getElementById('mobileLogoutBtn');
+
+        const handleLogout = () => {
+            localStorage.clear();
+            window.location.href = '../../index.html';
+        };
+
         if (btnLogout) {
-            btnLogout.onclick = () => {
-                localStorage.clear();
-                window.location.href = '../../index.html';
-            };
+            btnLogout.onclick = handleLogout;
+        }
+
+        if (btnMobileLogout) {
+            btnMobileLogout.onclick = handleLogout;
         }
     }
 

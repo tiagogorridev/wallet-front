@@ -1,15 +1,16 @@
 #cotacoes {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 30px;
+    padding: clamp(15px, 3vw, 30px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     list-style: none;
     display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: clamp(15px, 2vw, 20px);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     position: relative;
     background: var(--dark-lighter);
     overflow: hidden;
+    width: 100%;
 }
 
 /* Linha colorida no topo */
@@ -27,12 +28,12 @@
 /* Estilo de cada item */
 #cotacoes li {
     background: var(--dark-lighter);
-    padding: 25px;
+    padding: clamp(15px, 3vw, 25px);
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     border-left: 5px solid;
     transition: all 0.3s ease;
-    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
     font-weight: 500;
     color: rgb(223, 223, 223);
     display: flex;
@@ -64,19 +65,19 @@
 
 /* Ícones circulares */
 #cotacoes li::before {
-    width: 40px;
-    height: 40px;
+    width: clamp(30px, 5vw, 40px);
+    height: clamp(30px, 5vw, 40px);
     border-radius: 50%;
-    margin-right: 15px;
+    margin-right: clamp(10px, 2vw, 15px);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-weight: bold;
-    font-size: 18px;
+    font-size: clamp(14px, 2vw, 18px);
     flex-shrink: 0;
     content: '';
-    background-size: 20px 20px;
+    background-size: clamp(15px, 2.5vw, 20px);
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -99,7 +100,7 @@
 #cotacoes li:nth-child(4)::before {
     background-color: #e74c3c;
     content: 'C$';
-    font-size: 14px;
+    font-size: clamp(12px, 1.8vw, 14px);
 }
 
 #cotacoes li:nth-child(5)::before {
@@ -120,37 +121,36 @@
 /* Valores das moedas */
 #cotacoes span {
     font-weight: 700;
-    font-size: 1.3rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
     background: linear-gradient(90deg, #27ae60, #2ecc71);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-align: right;
-    min-width: 100px;
+    min-width: clamp(80px, 15vw, 100px);
 }
 
-/* Responsivo */
+/* Media Queries */
 @media (max-width: 768px) {
     #cotacoes {
-        grid-template-columns: 1fr;
-        padding: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        padding: clamp(10px, 2vw, 20px);
     }
 
     #cotacoes li {
-        padding: 20px;
-        font-size: 1rem;
-    }
-
-    #cotacoes span {
-        font-size: 1.2rem;
+        padding: clamp(12px, 2.5vw, 20px);
     }
 }
 
 @media (max-width: 480px) {
+    #cotacoes {
+        grid-template-columns: 1fr;
+    }
+
     #cotacoes li {
         flex-direction: column;
         text-align: center;
-        gap: 10px;
+        gap: clamp(8px, 1.5vw, 10px);
     }
 
     #cotacoes li::before {
@@ -159,5 +159,23 @@
 
     #cotacoes span {
         min-width: auto;
+        text-align: center;
+    }
+}
+
+/* Ajustes para telas muito pequenas */
+@media (max-width: 360px) {
+    #cotacoes {
+        padding: 10px;
+    }
+
+    #cotacoes li {
+        padding: 12px;
+    }
+
+    #cotacoes li::before {
+        width: 25px;
+        height: 25px;
+        font-size: 12px;
     }
 }
