@@ -1,39 +1,42 @@
 .filters {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
     align-items: center;
-  }
-  
-  .filter-data,
-  .filtro-data {
+    margin-top: 10px;
+}
+
+.filter-data,
+.filtro-data {
     display: flex;
-    gap: 5px;
-  }
-  
-  .filter-option {
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.filter-option {
     background-color: var(--dark);
     color: var(--light-gray);
     border: 1px solid var(--dark-lightest);
     border-radius: 4px;
-    padding: 5px 10px;
-    font-size: 12px;
+    padding: 4px 8px;
+    font-size: 11px;
     cursor: pointer;
     transition: all 0.2s ease;
-  }
-  
-  .filter-option:hover {
+    white-space: nowrap;
+}
+
+.filter-option:hover {
     background-color: var(--dark-lightest);
-  }
-  
-  .filter-option.active {
+}
+
+.filter-option.active {
     background-color: var(--ambar);
     color: var(--dark);
     border-color: var(--ambar);
-  }
-  
-  .filter-dropdown,
-  .filter-wrapper {
+}
+
+.filter-dropdown,
+.filter-wrapper {
     position: relative;
     background-color: var(--dark-lightest);
     border: 1px solid var(--gray);
@@ -46,23 +49,23 @@
     font-size: 12px;
     color: var(--light-gray);
     transition: all 0.2s ease;
-  }
-  
-  .filter-dropdown:hover,
-  .filter-wrapper:hover {
+}
+
+.filter-dropdown:hover,
+.filter-wrapper:hover {
     border-color: var(--ambar);
-  }
-  
-  .dropdown-trigger,
-  .selected-option {
+}
+
+.dropdown-trigger,
+.selected-option {
     display: flex;
     align-items: center;
     gap: 10px;
     cursor: pointer;
-  }
-  
-  .dropdown-menu,
-  .options-dropdown {
+}
+
+.dropdown-menu,
+.options-dropdown {
     position: absolute;
     top: 100%;
     left: 0;
@@ -75,41 +78,41 @@
     z-index: 1000;
     list-style: none;
     display: none;
-  }
-  
-  .dropdown-menu.show,
-  .filter-wrapper:hover .options-dropdown {
+}
+
+.dropdown-menu.show,
+.filter-wrapper:hover .options-dropdown {
     display: block;
-  }
-  
-  .dropdown-menu li,
-  .option {
+}
+
+.dropdown-menu li,
+.option {
     padding: 8px 16px;
     cursor: pointer;
     transition: background-color 0.2s;
     font-size: 14px;
-  }
-  
-  .dropdown-menu li:hover,
-  .option:hover {
+}
+
+.dropdown-menu li:hover,
+.option:hover {
     background: rgba(255, 255, 255, 0.1);
-  }
-  
-  .dropdown-icon {
+}
+
+.dropdown-icon {
     font-size: 10px;
     color: var(--ambar);
-  }
-  
-  .categoria-tabs,
-  .goals-tabs {
+}
+
+.categoria-tabs,
+.goals-tabs {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
     overflow-x: auto;
-  }
-  
-  .categoria-tabs button,
-  .goal-tab {
+}
+
+.categoria-tabs button,
+.goal-tab {
     background-color: var(--dark-lightest);
     color: var(--light-gray);
     border: none;
@@ -118,34 +121,34 @@
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
-  }
-  
-  .goal-tab {
+}
+
+.goal-tab {
     background-color: transparent;
     border: 1px solid var(--gray);
     border-radius: 20px;
     padding: 6px 14px;
     font-size: 14px;
-  }
-  
-  .categoria-tabs button.active,
-  .categoria-tabs button:hover,
-  .goal-tab.active,
-  .goal-tab:hover {
+}
+
+.categoria-tabs button.active,
+.categoria-tabs button:hover,
+.goal-tab.active,
+.goal-tab:hover {
     background-color: var(--ambar);
     color: var(--dark);
-  }
-  
-  .goal-tab:hover {
+}
+
+.goal-tab:hover {
     border-color: var(--ambar);
-  }
-  
-  .goal-tab.active {
+}
+
+.goal-tab.active {
     border-color: var(--ambar);
     font-weight: 600;
-  }
-  
-  .year-selector {
+}
+
+.year-selector {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -153,21 +156,54 @@
     border-radius: 4px;
     padding: 8px 16px;
     border: 1px solid var(--gray);
-  }
-  
-  .year-nav {
+}
+
+.year-nav {
     color: var(--ambar);
     cursor: pointer;
     font-size: 12px;
     user-select: none;
-  }
-  
-  .year-nav:hover {
+}
+
+.year-nav:hover {
     opacity: 0.8;
-  }
-  
-  .current-year {
+}
+
+.current-year {
     color: var(--white);
     font-weight: 600;
     margin: 0 10px;
-  }
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .filters {
+        gap: 6px;
+    }
+
+    .filter-data,
+    .filtro-data {
+        gap: 3px;
+    }
+
+    .filter-option {
+        padding: 3px 6px;
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .filters {
+        gap: 4px;
+    }
+
+    .filter-data,
+    .filtro-data {
+        gap: 2px;
+    }
+
+    .filter-option {
+        padding: 2px 4px;
+        font-size: 9px;
+    }
+}

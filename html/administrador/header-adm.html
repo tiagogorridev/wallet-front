@@ -7,30 +7,99 @@
             </div>
         </div>
         <div class="portfolio-actions">
-            <button id="logoutBtn" class="logout-btn">
+            <button id="logoutBtn" class="logout-btn desktop-only">
                 <i class="fas fa-sign-out-alt"></i>
                 <span>Logout</span>
             </button>
-            <div class="user-profile">
+            <div class="user-profile desktop-only">
                 <a href="#">
                     <i class="fas fa-user-circle"></i>
-                  </a>
+                </a>
             </div>
+            <button class="mobile-menu-btn mobile-only">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </header>
-    
+
     <nav class="navigation">
-        <a href="dashboard.html" class="nav-item">
-            <i class="fas fa-tachometer-alt"></i>
-            <span>DASHBOARD</span>
-        </a>
-        <a href="gestao-usuarios.html" class="nav-item">
-            <i class="fas fa-users"></i>
-            <span>GESTÃO DE USUÁRIOS</span>
-        </a>
-                <a href="adicionar-usuario.html" class="nav-item">
-            <i class="fas fa-chart-bar"></i>
-            <span>ADICIONAR USUÁRIO</span>
-        </a>
+        <div class="desktop-menu">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>DASHBOARD</span>
+            </a>
+            <a href="gestao-usuarios.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>GESTÃO DE USUÁRIOS</span>
+            </a>
+            <a href="adicionar-usuario.html" class="nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>ADICIONAR USUÁRIO</span>
+            </a>
+        </div>
     </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span>Administrador</span>
+            </div>
+            <button class="close-mobile-menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-menu-items">
+            <a href="dashboard.html" class="nav-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="gestao-usuarios.html" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Gestão de Usuários</span>
+            </a>
+            <a href="adicionar-usuario.html" class="nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Adicionar Usuário</span>
+            </a>
+        </div>
+        <div class="mobile-menu-footer">
+            <button id="mobileLogoutBtn" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </div>
 </div>
+
+<script>
+    // Mobile menu functionality
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const closeMobileMenu = document.querySelector('.close-mobile-menu');
+    const mobileMenu = document.querySelector('.mobile-menu');
+
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.add('active');
+    });
+
+    closeMobileMenu.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+    });
+
+    // Logout functionality
+    const logoutBtn = document.getElementById('logoutBtn');
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+    const handleLogout = () => {
+        // Clear any stored data
+        localStorage.clear();
+        sessionStorage.clear();
+
+        // Redirect to login page
+        window.location.href = '../auth/login.html';
+    };
+
+    logoutBtn.addEventListener('click', handleLogout);
+    mobileLogoutBtn.addEventListener('click', handleLogout);
+</script>
