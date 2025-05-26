@@ -1,23 +1,64 @@
 :root {
-  --dark: #121212;
-  --dark-lighter: #1e1e1e;
-  --dark-lightest: #333333;
-  --ambar: #FFA500;
-  --white: #FFFFFF;
-  --light-gray: #AAAAAA;
-  --gray: #666666;
-  --green: #22C55E;
-  --red: #EF4444;
-  --blue: #2196f3;
-  --success: #dff0d8;
-  --success-text: #3c763d;
-  --error: #f2dede;
-  --error-text: #a94442;
+    --dark: #121212;
+    --dark-lighter: #1e1e1e;
+    --dark-lightest: #333333;
+    --ambar: #FFA500;
+    --white: #FFFFFF;
+    --light-gray: #AAAAAA;
+    --gray: #666666;
+    --green: #22C55E;
+    --red: #EF4444;
+    --blue: #2196f3;
+    --success: #dff0d8;
+    --success-text: #3c763d;
+    --error: #f2dede;
+    --error-text: #a94442;
+
+    /* Variáveis para responsividade */
+    --container-padding: clamp(15px, 3vw, 30px);
+    --border-radius: clamp(4px, 1vw, 8px);
+    --font-size-base: clamp(14px, 1vw, 16px);
+    --font-size-h1: clamp(24px, 5vw, 32px);
+    --font-size-h2: clamp(18px, 3vw, 24px);
+    --font-size-h3: clamp(16px, 2vw, 20px);
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Estilos base responsivos */
+html {
+    font-size: var(--font-size-base);
+}
+
+h1 {
+    font-size: var(--font-size-h1);
+}
+
+h2 {
+    font-size: var(--font-size-h2);
+}
+
+h3 {
+    font-size: var(--font-size-h3);
+}
+
+/* Utilitários responsivos */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+}
+
+/* Ajustes para telas muito pequenas */
+@media screen and (max-width: 360px) {
+    :root {
+        --container-padding: 10px;
+        --font-size-base: 14px;
+    }
 }
