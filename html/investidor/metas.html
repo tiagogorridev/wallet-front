@@ -1,165 +1,205 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyWallet - Metas</title>
-    <link rel="stylesheet" href="../../css/configuracoes.css">
-    <link rel="stylesheet" href="../../css/auth/style.css">
-    <link rel="stylesheet" href="../../css/investidor/header.css">
-    <link rel="stylesheet" href="../../css/investidor/components-investidor/components-investidor.css">
-    <link rel="shortcut icon" href="../../assets/favicon-icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+    <link rel="stylesheet" href="../../css/configuracoes.css" />
+    <link rel="stylesheet" href="../../css/auth/style.css" />
+    <link rel="stylesheet" href="../../css/investidor/header.css" />
+    <link
+      rel="stylesheet"
+      href="../../css/investidor/components-investidor/components-investidor.css"
+    />
+    <link
+      rel="shortcut icon"
+      href="../../assets/favicon-icon.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
 
-<body>
+  <body>
     <header id="header"></header>
 
     <div class="dashboard-container">
-        <main class="main-content">
-            <section class="goals-summary">
-                <div class="section-header">
-                    <h2>Resumo das Metas</h2>
-                    <button class="add-goal-btn" id="openAddGoalModalBtn">Nova Meta +</button>
-                </div>
-                <div class="goals-stats">
-                    <div class="goal-stat-card">
-                        <div class="stat-value">0</div>
-                        <div class="stat-label">Metas ativas</div>
-                        <div class="progress-bar">
-                            <div class="progress" style="width: 60%;"></div>
-                        </div>
-                    </div>
-                    <div class="goal-stat-card">
-                        <div class="stat-value">0</div>
-                        <div class="stat-label">Metas concluídas</div>
-                        <div class="progress-bar completed">
-                            <div class="progress" style="width: 100%;"></div>
-                        </div>
-                    </div>
-                    <div class="goal-stat-card">
-                        <div class="stat-value">R$ 0,00</div>
-                        <div class="stat-label">Total a alcançar</div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <section class="goals-section">
-            <div class="goals-header">
-                <h2>Minhas Metas</h2>
-                <div class="goals-tabs">
-                    <button class="goal-tab active" data-filter="all">Todas</button>
-                    <button class="goal-tab" data-filter="active">Ativas</button>
-                    <button class="goal-tab" data-filter="completed">Concluídas</button>
-                </div>
+      <main class="main-content">
+        <section class="goals-summary">
+          <div class="section-header">
+            <h2>Resumo das Metas</h2>
+            <button class="add-goal-btn" id="openAddGoalModalBtn">
+              Nova Meta +
+            </button>
+          </div>
+          <div class="goals-stats">
+            <div class="goal-stat-card">
+              <div class="stat-value">0</div>
+              <div class="stat-label">Metas ativas</div>
+              <div class="progress-bar">
+                <div class="progress" style="width: 60%"></div>
+              </div>
             </div>
-
-            <div class="goals-list" id="goalsList"></div>
+            <div class="goal-stat-card">
+              <div class="stat-value">0</div>
+              <div class="stat-label">Metas concluídas</div>
+              <div class="progress-bar completed">
+                <div class="progress" style="width: 100%"></div>
+              </div>
+            </div>
+            <div class="goal-stat-card">
+              <div class="stat-value">R$ 0,00</div>
+              <div class="stat-label">Total a alcançar</div>
+            </div>
+          </div>
         </section>
+      </main>
 
-        <div class="modal-overlay" id="addGoalModal">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h2>Adicionar Nova Meta</h2>
-                    <button class="close-btn" id="closeAddModalBtn">&times;</button>
-                </div>
-
-                <form id="addGoalForm" class="add-goal-form">
-                    <div class="form-group">
-                        <label for="description">Titulo</label>
-                        <input type="text" id="description" name="description" placeholder="Ex: Para gastos imprevistos">
-                        <div class="error-message" id="descriptionError">
-                            Titulo inválido
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="completionDate">Data de Conclusão</label>
-                        <input type="date" id="completionDate" name="completionDate" required>
-                        <div class="error-message" id="completionDateError">
-                            Selecione uma data de conclusão
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="targetValue">Valor da Meta</label>
-                        <input type="number" id="targetValue" name="targetValue"
-                            placeholder="Digite o valor total da meta" required min="0">
-                        <div class="error-message" id="targetValueError">
-                            Digite um valor válido maior que zero
-                        </div>
-                    </div>
-
-                    <div class="modal-actions">
-                        <button type="button" class="cancel-btn close-modal-btn">Cancelar</button>
-                        <button type="submit" class="save-btn" id="saveGoalBtn">Salvar Meta</button>
-                    </div>
-                </form>
-            </div>
+      <section class="goals-section">
+        <div class="goals-header">
+          <h2>Minhas Metas</h2>
+          <div class="goals-tabs">
+            <button class="goal-tab active" data-filter="all">Todas</button>
+            <button class="goal-tab" data-filter="active">Ativas</button>
+            <button class="goal-tab" data-filter="completed">Concluídas</button>
+          </div>
         </div>
 
-        <div class="modal-overlay" id="editGoalModal">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h2>Editar Meta</h2>
-                    <button class="close-btn" id="closeEditModalBtn">&times;</button>
-                </div>
+        <div class="goals-list" id="goalsList"></div>
+      </section>
 
-                <form id="editGoalForm" class="add-goal-form">
-                    <input type="hidden" id="edit-id" name="id">
+      <div class="modal-overlay" id="addGoalModal">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h2>Adicionar Nova Meta</h2>
+            <button class="close-btn" id="closeAddModalBtn">&times;</button>
+          </div>
 
-                    <div class="form-group">
-                        <label for="edit-title">Título da Meta</label>
-                        <input type="text" id="edit-title" name="title" placeholder="Ex: Reserva de Emergência" required
-                            minlength="3">
-                        <div class="error-message" id="edit-titleError">
-                            Título é obrigatório e deve ter no mínimo 3 caracteres
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-completionDate">Data de Conclusão</label>
-                        <input type="date" id="edit-completionDate" name="completionDate" required>
-                        <div class="error-message" id="edit-completionDateError">
-                            Selecione uma data de conclusão
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-targetValue">Valor Alvo</label>
-                        <input type="number" id="edit-targetValue" name="targetValue"
-                            placeholder="Digite o valor total da meta" required min="0">
-                        <div class="error-message" id="edit-targetValueError">
-                            Digite um valor válido maior que zero
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="edit-status">Status</label>
-                        <select id="edit-status" name="status" required>
-                            <option value="ATIVA">Ativa</option>
-                            <option value="CONCLUIDA">Concluída</option>
-                        </select>
-                        <div class="error-message" id="edit-statusError">
-                            Selecione o status da meta
-                        </div>
-                    </div>
-
-                    <div class="modal-actions">
-                        <button type="button" class="cancel-btn close-modal-btn">Cancelar</button>
-                        <button type="submit" class="save-btn" id="saveEditGoalBtn">Salvar Alterações</button>
-                    </div>
-                </form>
+          <form id="addGoalForm" class="add-goal-form">
+            <div class="form-group">
+              <label for="description">Titulo</label>
+              <input
+                type="text"
+                id="description"
+                name="description"
+                placeholder="Ex: Para gastos imprevistos"
+              />
+              <div class="error-message" id="descriptionError">
+                Titulo inválido
+              </div>
             </div>
+
+            <div class="form-group">
+              <label for="completionDate">Data de Conclusão</label>
+              <input
+                type="date"
+                id="completionDate"
+                name="completionDate"
+                required
+              />
+              <div class="error-message" id="completionDateError">
+                Selecione uma data de conclusão
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="targetValue">Valor da Meta</label>
+              <input
+                type="number"
+                id="targetValue"
+                name="targetValue"
+                placeholder="Digite o valor total da meta"
+                required
+                min="0"
+              />
+              <div class="error-message" id="targetValueError">
+                Digite um valor válido maior que zero
+              </div>
+            </div>
+
+            <div class="modal-actions">
+              <button type="button" class="cancel-btn close-modal-btn">
+                Cancelar
+              </button>
+              <button type="submit" class="save-btn" id="saveGoalBtn">
+                Salvar Meta
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
+
+      <div class="modal-overlay" id="editGoalModal">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h2>Editar Meta</h2>
+            <button class="close-btn" id="closeEditModalBtn">&times;</button>
+          </div>
+
+          <form id="editGoalForm" class="add-goal-form">
+            <input type="hidden" id="edit-id" name="id" />
+
+            <div class="form-group">
+              <label for="edit-title">Título da Meta</label>
+              <input
+                type="text"
+                id="edit-title"
+                name="title"
+                placeholder="Ex: Reserva de Emergência"
+                required
+                minlength="3"
+              />
+              <div class="error-message" id="edit-titleError">
+                Título é obrigatório e deve ter no mínimo 3 caracteres
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-completionDate">Data de Conclusão</label>
+              <input
+                type="date"
+                id="edit-completionDate"
+                name="completionDate"
+                required
+              />
+              <div class="error-message" id="edit-completionDateError">
+                Selecione uma data de conclusão
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-targetValue">Valor Alvo</label>
+              <input
+                type="number"
+                id="edit-targetValue"
+                name="targetValue"
+                placeholder="Digite o valor total da meta"
+                required
+                min="0"
+              />
+              <div class="error-message" id="edit-targetValueError">
+                Digite um valor válido maior que zero
+              </div>
+            </div>
+
+            <div class="modal-actions">
+              <button type="button" class="cancel-btn close-modal-btn">
+                Cancelar
+              </button>
+              <button type="submit" class="save-btn" id="saveEditGoalBtn">
+                Salvar Alterações
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
     <script src="../../js/auth/auth-service.js"></script>
     <script src="../../js/auth/acess.js"></script>
     <script src="../../js/investidor/header.js"></script>
     <script src="../../js/investidor/carteira-metas.js"></script>
-</body>
-
+  </body>
 </html>
