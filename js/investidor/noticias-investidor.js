@@ -23,6 +23,16 @@ document.addEventListener('DOMContentLoaded', function () {
     function filterNews(category) {
         currentFilter = category;
         currentPage = 1;
+
+        if (category === 'all') {
+            filteredNews = [...allNews];
+        } else {
+            filteredNews = allNews.filter(item => {
+                const itemCategory = item.categoria.toLowerCase();
+                return itemCategory === category;
+            });
+        }
+
         updateNewsDisplay();
         updatePagination();
     }
@@ -64,16 +74,22 @@ document.addEventListener('DOMContentLoaded', function () {
     function createNewsElement(newsItem) {
         const newsElement = document.createElement('div');
         newsElement.className = 'news-item';
-        newsElement.dataset.category = newsItem.category.toLowerCase();
+        newsElement.dataset.category = newsItem.categoria.toLowerCase();
+
+        // Formatar a categoria para exibição
+        let displayCategory = newsItem.categoria;
+        if (displayCategory === 'acao') {
+            displayCategory = 'Ação';
+        } else if (displayCategory === 'crypto') {
+            displayCategory = 'Crypto';
+        }
+
         newsElement.innerHTML = `
             <div class="news-header">
-                <h3 class="news-title">${newsItem.title}</h3>
-                <span class="news-category ${newsItem.category.toLowerCase()}">${newsItem.category}</span>
+                <h3 class="news-title">${newsItem.titulo}</h3>
+                <span class="news-category ${newsItem.categoria.toLowerCase()}">${displayCategory}</span>
             </div>
-            <p class="news-content">${newsItem.content}</p>
-            <div class="news-footer">
-                <span>Publicado em: ${new Date(newsItem.createdAt).toLocaleDateString('pt-BR')}</span>
-            </div>
+            <p class="news-content">${newsItem.conteudo}</p>
         `;
 
         newsElement.addEventListener('click', () => openNewsModal(newsItem));
@@ -110,10 +126,16 @@ document.addEventListener('DOMContentLoaded', function () {
     async function loadNews() {
         try {
             newsList.innerHTML = '<div class="loading">Carregando notícias...</div>';
-            allNews = await APIService.getNews();
-            filteredNews = [...allNews];
-            updateNewsDisplay();
-            updatePagination();
+            const response = await APIService.getNews();
+
+            if (response && response.data && Array.isArray(response.data.data)) {
+                allNews = response.data.data;
+                filteredNews = [...allNews];
+                updateNewsDisplay();
+                updatePagination();
+            } else {
+                throw new Error('Formato de dados inválido');
+            }
         } catch (error) {
             newsList.innerHTML = '<div class="error-state">Erro ao carregar notícias. Por favor, tente novamente.</div>';
             console.error('Error loading news:', error);
@@ -125,13 +147,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const modalTitle = newsModal.querySelector('.modal-title');
         const modalCategory = newsModal.querySelector('.modal-category');
         const modalText = newsModal.querySelector('.modal-text');
-        const modalDate = newsModal.querySelector('.modal-date');
 
-        modalTitle.textContent = newsItem.title;
-        modalCategory.textContent = newsItem.category;
-        modalCategory.className = `modal-category ${newsItem.category.toLowerCase()}`;
-        modalText.textContent = newsItem.content;
-        modalDate.textContent = `Publicado em: ${new Date(newsItem.createdAt).toLocaleDateString('pt-BR')}`;
+        modalTitle.textContent = newsItem.titulo;
+        modalCategory.textContent = displayCategory;
+        modalCategory.className = `modal-category ${newsItem.categoria.toLowerCase()}`;
+        modalText.textContent = newsItem.conteudo;
 
         newsModal.style.display = 'flex';
     }

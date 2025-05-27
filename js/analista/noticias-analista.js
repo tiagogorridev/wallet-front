@@ -22,12 +22,22 @@ document.addEventListener('DOMContentLoaded', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            const filter = btn.textContent.toLowerCase();
+            const filter = btn.textContent.trim().toLowerCase();
             const newsItems = document.querySelectorAll('.news-item');
 
             newsItems.forEach(item => {
-                const category = item.querySelector('.news-category').textContent.toLowerCase();
-                item.style.display = filter === 'todas' || category.includes(filter) ? 'block' : 'none';
+                const category = item.querySelector('.news-category').textContent.trim().toLowerCase();
+                let shouldShow = false;
+
+                if (filter === 'todas') {
+                    shouldShow = true;
+                } else if (filter === 'ação' && category === 'acao') {
+                    shouldShow = true;
+                } else if (filter === category) {
+                    shouldShow = true;
+                }
+
+                item.style.display = shouldShow ? 'block' : 'none';
             });
         });
     });
@@ -119,10 +129,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const newsElement = document.createElement('div');
         newsElement.className = 'news-item';
         newsElement.dataset.id = newsItem.id;
+
+        // Formatar a categoria para exibição
+        let displayCategory = newsItem.categoria;
+        if (displayCategory === 'acao') {
+            displayCategory = 'Ação';
+        } else if (displayCategory === 'crypto') {
+            displayCategory = 'Crypto';
+        }
+
         newsElement.innerHTML = `
             <div class="news-header">
                 <h3 class="news-title">${newsItem.titulo}</h3>
-                <span class="news-category">${newsItem.categoria}</span>
+                <span class="news-category">${displayCategory}</span>
             </div>
             <p class="news-content">${newsItem.conteudo}</p>
             <div class="news-footer">
