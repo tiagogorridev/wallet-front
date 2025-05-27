@@ -1,77 +1,68 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Constantes e inicialização
+  // Configuração inicial e elementos DOM
   const API_URL = "http://191.239.116.115:8080";
-  const mensagemElement = document.createElement("div");
-  mensagemElement.id = "mensagem";
-  mensagemElement.className = "feedback-message";
-  mensagemElement.style.display = "none";
-  document.querySelector(".users-section").appendChild(mensagemElement);
+  const msg = document.createElement("div");
+  msg.id = "mensagem";
+  msg.className = "feedback-message";
+  msg.style.display = "none";
+  document.querySelector(".users-section").appendChild(msg);
 
-  // Elementos DOM
-  const passwordField = document.getElementById("password");
-  const confirmPasswordField = document.getElementById("confirm-password");
-  const togglePassword = document.getElementById("togglePassword");
-  const toggleConfirmPassword = document.getElementById(
-    "toggleConfirmPassword"
-  );
-  const userForm = document.getElementById("user-form");
+  const pwd = document.getElementById("password");
+  const confirmPwd = document.getElementById("confirm-password");
+  const form = document.getElementById("user-form");
 
-  // Eventos de visibilidade de senha
-  togglePassword.addEventListener("click", function () {
-    const type =
-      passwordField.getAttribute("type") === "password" ? "text" : "password";
-    passwordField.setAttribute("type", type);
-    this.classList.toggle("fa-eye");
-    this.classList.toggle("fa-eye-slash");
-  });
+  // Toggle de visibilidade das senhas
+  document
+    .getElementById("togglePassword")
+    .addEventListener("click", function () {
+      const type = pwd.type === "password" ? "text" : "password";
+      pwd.type = type;
+      this.classList.toggle("fa-eye");
+      this.classList.toggle("fa-eye-slash");
+    });
 
-  toggleConfirmPassword.addEventListener("click", function () {
-    const type =
-      confirmPasswordField.getAttribute("type") === "password"
-        ? "text"
-        : "password";
-    confirmPasswordField.setAttribute("type", type);
-    this.classList.toggle("fa-eye");
-    this.classList.toggle("fa-eye-slash");
-  });
+  document
+    .getElementById("toggleConfirmPassword")
+    .addEventListener("click", function () {
+      const type = confirmPwd.type === "password" ? "text" : "password";
+      confirmPwd.type = type;
+      this.classList.toggle("fa-eye");
+      this.classList.toggle("fa-eye-slash");
+    });
 
-  // Funções auxiliares
-  function mostrarMensagem(texto, tipo) {
-    mensagemElement.textContent = texto;
-    mensagemElement.className = `feedback-message ${tipo}`;
-    mensagemElement.style.display = "block";
-    setTimeout(() => {
-      mensagemElement.style.display = "none";
-    }, 5000);
+  // Função para exibir mensagens de feedback
+  function showMsg(text, type) {
+    msg.textContent = text;
+    msg.className = `feedback-message ${type}`;
+    msg.style.display = "block";
+    setTimeout(() => (msg.style.display = "none"), 5000);
   }
 
-  function validarFormulario() {
+  // Validação do formulário
+  function validate() {
     const nome = document.getElementById("name").value.trim();
     const email = document.getElementById("email").value.trim();
-    const senha = passwordField.value;
-    const confirmSenha = confirmPasswordField.value;
+    const senha = pwd.value;
+    const confirmSenha = confirmPwd.value;
     const perfil = document.getElementById("role").value;
 
     if (!nome || !email || !senha || !confirmSenha || !perfil) {
-      mostrarMensagem("Preencha todos os campos obrigatórios.", "erro");
+      showMsg("Preencha todos os campos obrigatórios.", "erro");
       return false;
     }
-
     if (senha.length < 6) {
-      mostrarMensagem("A senha deve ter pelo menos 6 caracteres.", "erro");
+      showMsg("A senha deve ter pelo menos 6 caracteres.", "erro");
       return false;
     }
-
     if (senha !== confirmSenha) {
-      mostrarMensagem("As senhas não coincidem.", "erro");
+      showMsg("As senhas não coincidem.", "erro");
       return false;
     }
-
     return true;
   }
 
-  // Função de comunicação com a API
-  async function enviarCadastro(dadosUsuario) {
+  // Comunicação com a API
+  async function sendData(data) {
     try {
       const response = await fetch(`${API_URL}/auth/signup`, {
         method: "POST",
@@ -79,75 +70,57 @@ document.addEventListener("DOMContentLoaded", function () {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(dadosUsuario),
+        body: JSON.stringify(data),
       });
 
-      const responseData = await response.json();
+      const result = await response.json();
 
       if (!response.ok) {
-        if (responseData.errors && responseData.errors.length > 0) {
-          throw new Error(
-            responseData.errors[0] ||
-              responseData.msg ||
-              "Erro ao adicionar usuário"
-          );
-        }
-        throw new Error(responseData.msg || "Erro ao adicionar usuário");
+        throw new Error(
+          result.errors?.[0] || result.msg || "Erro ao adicionar usuário"
+        );
       }
-
-      return responseData;
+      return result;
     } catch (error) {
-      mostrarMensagem(
-        error.message || "Erro ao conectar com o servidor",
-        "erro"
-      );
+      showMsg(error.message || "Erro ao conectar com o servidor", "erro");
       return null;
     }
   }
 
-  // Mapeamento de perfis
-  function mapearPerfil(valor) {
-    const mapeamento = {
-      admin: "ADMIN",
-      analyst: "ANALISTA",
-      investor: "USUARIO",
-    };
-    return mapeamento[valor] || "USUARIO";
-  }
+  // Mapeamento de perfis de usuário
+  const profileMap = {
+    admin: "ADMIN",
+    analyst: "ANALISTA",
+    investor: "USUARIO",
+  };
 
-  // Evento de submissão do formulário
-  userForm.addEventListener("submit", async function (event) {
-    event.preventDefault();
+  // Submissão do formulário
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    if (!validate()) return;
 
-    if (!validarFormulario()) {
-      return;
-    }
+    const role = document.getElementById("role").value;
+    const mappedRole = profileMap[role] || "USUARIO";
 
-    const tipoUsuario = document.getElementById("role").value;
-    const perfilMapeado = mapearPerfil(tipoUsuario);
-
-    const dadosUsuario = {
+    const userData = {
       nome: document.getElementById("name").value.trim(),
       email: document.getElementById("email").value.trim(),
-      senha: passwordField.value,
-      perfil: perfilMapeado,
+      senha: pwd.value,
+      perfil: mappedRole,
     };
 
-    const resultado = await enviarCadastro(dadosUsuario);
-
-    if (resultado && resultado.data) {
-      mostrarMensagem(
-        `Usuário ${perfilMapeado.toLowerCase()} adicionado com sucesso!`,
+    const result = await sendData(userData);
+    if (result?.data) {
+      showMsg(
+        `Usuário ${mappedRole.toLowerCase()} adicionado com sucesso!`,
         "sucesso"
       );
-      setTimeout(() => {
-        this.reset();
-      }, 2000);
+      setTimeout(() => this.reset(), 2000);
     }
   });
 
   // Botão cancelar
-  document.querySelector(".cancel-btn").addEventListener("click", function () {
-    window.history.back();
-  });
+  document
+    .querySelector(".cancel-btn")
+    .addEventListener("click", () => window.history.back());
 });
