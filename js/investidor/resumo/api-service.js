@@ -20,7 +20,7 @@ const APIService = {
         if (body) options.body = JSON.stringify(body);
 
         const response = await fetch(`${this.API_URL}${endpoint}`, options);
-        
+
         if (!response.ok) {
             // Tratamento de erros na resposta
             if (response.status === 401) {
@@ -28,11 +28,11 @@ const APIService = {
                 window.location.href = '../../index.html';
                 throw new Error('Sessão expirada. Por favor, faça login novamente.');
             }
-            
+
             const errorData = await response.json();
             throw new Error(errorData.msg || 'Erro ao acessar API');
         }
-        
+
         return response.json();
     },
 
@@ -52,13 +52,30 @@ const APIService = {
         return this.fetchFromAPI('/transactions', 'POST', transactionData);
     },
 
-   async sellAsset(transactionId) {
+    async sellAsset(transactionId) {
         return this.fetchFromAPI(`/transactions/${transactionId}`, 'DELETE');
     },
-    
-   async deleteTransaction(transactionId) {
+
+    async deleteTransaction(transactionId) {
         return this.sellAsset(transactionId);
-    }
+    },
+
+    async getNews() {
+        return this.fetchFromAPI('/news', 'GET');
+    },
+
+    async addNews(newsData) {
+        return this.fetchFromAPI('/news', 'POST', newsData);
+    },
+
+    async updateNews(newsId, newsData) {
+        return this.fetchFromAPI(`/news/${newsId}`, 'PUT', newsData);
+    },
+
+    async deleteNews(newsId) {
+        return this.fetchFromAPI(`/news/${newsId}`, 'DELETE');
+    },
+
 };
 
 window.APIService = APIService;

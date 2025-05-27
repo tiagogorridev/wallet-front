@@ -1,6 +1,7 @@
 .actions-cell {
     text-align: center;
-    width: 60px;
+    width: 80px;
+    white-space: nowrap;
 }
 
 .delete-btn {
@@ -20,6 +21,8 @@
 
 .delete-confirm-modal .modal-content {
     max-width: 400px;
+    width: 90%;
+    margin: 20px;
 }
 
 .modal-footer {
@@ -28,6 +31,7 @@
     gap: 10px;
     padding: 16px;
     border-top: 1px solid #e0e0e0;
+    flex-wrap: wrap;
 }
 
 .btn {
@@ -37,6 +41,7 @@
     cursor: pointer;
     border: none;
     transition: all 0.2s ease;
+    font-size: 14px;
 }
 
 .cancel-btn {
@@ -57,12 +62,8 @@
     background-color: #c82333;
 }
 
-.actions-cell {
-    text-align: center;
-    width: 80px;
-}
-
-.edit-btn, .delete-btn {
+.edit-btn,
+.delete-btn {
     background: transparent;
     border: none;
     cursor: pointer;
@@ -77,11 +78,54 @@
     margin-right: 5px;
 }
 
-
 .delete-btn {
     color: var(--red);
 }
 
 .delete-btn:hover {
     background-color: var(--error-text);
+}
+
+@media screen and (max-width: 768px) {
+    .actions-cell {
+        width: 60px;
+    }
+
+    .edit-btn,
+    .delete-btn {
+        font-size: 14px;
+        padding: 4px 6px;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .modal-footer {
+        gap: 8px;
+        padding: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .actions-cell {
+        width: 50px;
+    }
+
+    .edit-btn,
+    .delete-btn {
+        font-size: 13px;
+        padding: 3px 5px;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .modal-footer {
+        gap: 6px;
+        padding: 10px;
+    }
 }

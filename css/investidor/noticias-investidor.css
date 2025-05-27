@@ -405,30 +405,50 @@ body {
     font-weight: bold;
 }
 
-/* Empty State */
-.empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
+/* Loading and Empty States */
+.loading,
+.empty-state,
+.error-state {
     text-align: center;
-}
-
-.empty-icon {
-    font-size: 48px;
-    color: var(--dark-lightest);
-    margin-bottom: 20px;
-}
-
-.empty-state h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.empty-state p {
+    padding: 20px;
     color: var(--light-gray);
     font-size: 14px;
+}
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.loading::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--dark-lightest);
+    border-top-color: var(--ambar);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.empty-state {
+    background-color: var(--dark-lightest);
+    border-radius: 6px;
+    margin: 20px 0;
+}
+
+.error-state {
+    background-color: var(--dark-lightest);
+    border-radius: 6px;
+    margin: 20px 0;
+    color: var(--red);
 }
 
 /* Modal */
