@@ -50,22 +50,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Updating news with ID:', editingNewsId);
                 console.log('Update data:', newsData);
 
-                // First verify if the news exists
-                const allNews = await APIService.getNews();
-                const newsExists = allNews.data.data.some(news => news.id === editingNewsId);
+                try {
+                    // Verificar se o ID é um número
+                    const newsId = parseInt(editingNewsId);
+                    if (isNaN(newsId)) {
+                        throw new Error('ID da notícia inválido');
+                    }
 
-                if (!newsExists) {
-                    throw new Error('Notícia não encontrada. Por favor, recarregue a página e tente novamente.');
+                    console.log('Sending update request with ID:', newsId);
+                    console.log('Data being sent:', JSON.stringify(newsData, null, 2));
+
+                    const response = await APIService.updateNews(newsId, newsData);
+                    console.log('Update response:', response);
+
+                    if (response.error) {
+                        throw new Error(response.msg || 'Erro ao atualizar notícia');
+                    }
+
+                    alert('Notícia atualizada com sucesso!');
+                    await loadNews();
+                    clearForm();
+                } catch (error) {
+                    console.error('Error updating news:', error);
+                    alert(`Erro ao atualizar a notícia: ${error.message}`);
                 }
-
-                const response = await APIService.updateNews(editingNewsId, newsData);
-                console.log('Update response:', response);
-
-                if (response.error) {
-                    throw new Error(response.msg || 'Erro ao atualizar notícia');
-                }
-
-                alert('Notícia atualizada com sucesso!');
             } else {
                 const response = await APIService.addNews(newsData);
                 console.log('Add response:', response);
@@ -75,10 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 alert('Notícia publicada com sucesso!');
+                await loadNews();
+                clearForm();
             }
-
-            await loadNews();
-            clearForm();
         } catch (error) {
             console.error('Error saving news:', error);
             alert(`Erro ao salvar a notícia: ${error.message}`);
@@ -160,19 +167,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         deleteBtn.addEventListener('click', async () => {
+            console.log('Delete button clicked for news:', newsItem);
             if (!newsItem.id) {
+                console.error('News ID is missing:', newsItem);
                 alert('Erro: ID da notícia não encontrado');
                 return;
             }
 
             if (confirm('Tem certeza que deseja excluir esta publicação?')) {
                 try {
-                    await APIService.deleteNews(newsItem.id);
+                    console.log('Attempting to delete news with ID:', newsItem.id);
+                    const response = await APIService.deleteNews(newsItem.id);
+                    console.log('Delete response:', response);
                     await loadNews();
                     alert('Notícia excluída com sucesso!');
                 } catch (error) {
+                    console.error('Error details:', error);
                     alert('Erro ao excluir a notícia. Por favor, tente novamente.');
-                    console.error('Error deleting news:', error);
                 }
             }
         });

@@ -69,11 +69,25 @@ const APIService = {
     },
 
     async updateNews(newsId, newsData) {
-        return this.fetchFromAPI(`/news/${newsId}`, 'PUT', newsData);
+        // Garantir que o ID seja um número
+        const id = parseInt(newsId);
+        if (isNaN(id)) {
+            throw new Error('ID da notícia inválido');
+        }
+
+        // Garantir que os dados estejam no formato correto
+        const formattedData = {
+            id: id,
+            titulo: newsData.titulo,
+            conteudo: newsData.conteudo,
+            categoria: newsData.categoria
+        };
+
+        return this.fetchFromAPI(`/news?id=${id}`, 'PUT', formattedData);
     },
 
     async deleteNews(newsId) {
-        return this.fetchFromAPI(`/news/${newsId}`, 'DELETE');
+        return this.fetchFromAPI(`/news?id=${newsId}`, 'DELETE');
     },
 
 };
