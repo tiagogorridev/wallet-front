@@ -10,21 +10,21 @@ let etapaAtual = 0, pontuacao = 0, respostaSelecionada = -1;
 
 // Perguntas do questionário
 const perguntas = [
-    {texto: "Introdução", tipo: "info", conteudo: "Bem-vindo(a) ao seu perfil de investidor! Para oferecer recomendações personalizadas que se alinhem aos seus objetivos financeiros, gostaríamos de entender melhor sua relação com investimentos. Nas próximas telas, você responderá a 10 perguntas simples que nos ajudarão a identificar seu perfil: conservador, moderado ou arrojado. Suas respostas determinarão as estratégias e produtos mais adequados para você. Vamos começar?"},
-    {texto: "Qual é a sua idade?", opcoes: ["Acima de 60 anos", "Entre 46 e 60 anos", "Entre 31 e 45 anos", "Entre 18 e 30 anos"]},
-    {texto: "Qual o prazo médio que você planeja manter seus investimentos?", opcoes: ["Menos de 1 ano", "Entre 1 e 3 anos", "Entre 3 e 5 anos", "Mais de 5 anos"]},
-    {texto: "Qual percentual da sua renda mensal você consegue direcionar para investimentos?", opcoes: ["Até 10%", "Entre 11% e 20%", "Entre 21% e 30%", "Mais de 30%"]},
-    {texto: "Como você reagiria se seu investimento sofresse uma queda temporária de 20%?", opcoes: ["Venderia tudo imediatamente para evitar mais perdas", "Venderia parte para reduzir a exposição ao risco", "Manteria o investimento esperando recuperação", "Aproveitaria para aumentar o investimento"]},
-    {texto: "Qual das seguintes frases melhor descreve sua experiência com investimentos?", opcoes: ["Nunca investi e tenho pouco conhecimento sobre o assunto", "Já investi, mas apenas em produtos de baixo risco como poupança e CDBs", "Tenho experiência com diversos produtos, incluindo fundos e algumas ações", "Sou um investidor experiente e conheço bem diferentes classes de ativos"]},
-    {texto: "Quais dos seguintes investimentos você já realizou?", opcoes: ["Poupança, CDBs e Tesouro Direto", "Fundos de investimento e ETFs", "Ações de empresas brasileiras", "Investimentos internacionais, criptomoedas ou derivativos"]},
-    {texto: "Qual a importância do seu investimento para seus objetivos financeiros?", opcoes: ["É minha única reserva financeira", "É importante, mas tenho outras reservas", "É uma parte complementar da minha estratégia financeira", "É um capital que posso arriscar sem comprometer meus objetivos principais"]},
-    {texto: "Qual afirmação melhor reflete sua prioridade ao investir?", opcoes: ["Preservar o capital sem correr riscos", "Obter rendimentos superiores à inflação com segurança", "Crescimento do patrimônio, aceitando oscilações moderadas", "Maximizar retornos, mesmo com alta volatilidade"]},
-    {texto: "Sobre sua renda atual e estabilidade financeira:", opcoes: ["Tenho renda variável e despesas que consomem quase toda minha renda", "Tenho renda estável, mas pouca sobra mensal", "Tenho renda estável com boa margem para investimentos", "Tenho renda elevada e diversificada, com grande capacidade de investimento"]},
-    {texto: "Em um cenário hipotético, qual opção de investimento você escolheria?", opcoes: ["Investimento A: Possibilidade de rendimento de 5% ao ano com risco mínimo", "Investimento B: Possibilidade de rendimento entre 5% e 15% ao ano com risco médio", "Investimento C: Possibilidade de rendimento entre 15% e 25% ao ano com risco alto", "Investimento D: Possibilidade de rendimento acima de 25% ao ano com risco muito alto"]}
+    { texto: "Introdução", tipo: "info", conteudo: "Bem-vindo(a) ao seu perfil de investidor! Para oferecer recomendações personalizadas que se alinhem aos seus objetivos financeiros, gostaríamos de entender melhor sua relação com investimentos. Nas próximas telas, você responderá a 10 perguntas simples que nos ajudarão a identificar seu perfil: conservador, moderado ou arrojado. Suas respostas determinarão as estratégias e produtos mais adequados para você. Vamos começar?" },
+    { texto: "Qual é a sua idade?", opcoes: ["Acima de 60 anos", "Entre 46 e 60 anos", "Entre 31 e 45 anos", "Entre 18 e 30 anos"] },
+    { texto: "Qual o prazo médio que você planeja manter seus investimentos?", opcoes: ["Menos de 1 ano", "Entre 1 e 3 anos", "Entre 3 e 5 anos", "Mais de 5 anos"] },
+    { texto: "Qual percentual da sua renda mensal você consegue direcionar para investimentos?", opcoes: ["Até 10%", "Entre 11% e 20%", "Entre 21% e 30%", "Mais de 30%"] },
+    { texto: "Como você reagiria se seu investimento sofresse uma queda temporária de 20%?", opcoes: ["Venderia tudo imediatamente para evitar mais perdas", "Venderia parte para reduzir a exposição ao risco", "Manteria o investimento esperando recuperação", "Aproveitaria para aumentar o investimento"] },
+    { texto: "Qual das seguintes frases melhor descreve sua experiência com investimentos?", opcoes: ["Nunca investi e tenho pouco conhecimento sobre o assunto", "Já investi, mas apenas em produtos de baixo risco como poupança e CDBs", "Tenho experiência com diversos produtos, incluindo fundos e algumas ações", "Sou um investidor experiente e conheço bem diferentes classes de ativos"] },
+    { texto: "Quais dos seguintes investimentos você já realizou?", opcoes: ["Poupança, CDBs e Tesouro Direto", "Fundos de investimento e ETFs", "Ações de empresas brasileiras", "Investimentos internacionais, criptomoedas ou derivativos"] },
+    { texto: "Qual a importância do seu investimento para seus objetivos financeiros?", opcoes: ["É minha única reserva financeira", "É importante, mas tenho outras reservas", "É uma parte complementar da minha estratégia financeira", "É um capital que posso arriscar sem comprometer meus objetivos principais"] },
+    { texto: "Qual afirmação melhor reflete sua prioridade ao investir?", opcoes: ["Preservar o capital sem correr riscos", "Obter rendimentos superiores à inflação com segurança", "Crescimento do patrimônio, aceitando oscilações moderadas", "Maximizar retornos, mesmo com alta volatilidade"] },
+    { texto: "Sobre sua renda atual e estabilidade financeira:", opcoes: ["Tenho renda variável e despesas que consomem quase toda minha renda", "Tenho renda estável, mas pouca sobra mensal", "Tenho renda estável com boa margem para investimentos", "Tenho renda elevada e diversificada, com grande capacidade de investimento"] },
+    { texto: "Em um cenário hipotético, qual opção de investimento você escolheria?", opcoes: ["Investimento A: Possibilidade de rendimento de 5% ao ano com risco mínimo", "Investimento B: Possibilidade de rendimento entre 5% e 15% ao ano com risco médio", "Investimento C: Possibilidade de rendimento entre 15% e 25% ao ano com risco alto", "Investimento D: Possibilidade de rendimento acima de 25% ao ano com risco muito alto"] }
 ];
 
 const respostasUsuario = new Array(perguntas.length).fill(-1);
-const perfis = {CONSERVADOR: 'Conservador', MODERADO: 'Moderado', ARROJADO: 'Arrojado'};
+const perfis = { CONSERVADOR: 'Conservador', MODERADO: 'Moderado', ARROJADO: 'Arrojado' };
 
 // Funções principais
 function atualizarBarraProgresso() {
@@ -51,7 +51,7 @@ function criarEtapas() {
                 html += `<button class="botao-opcao" data-valor="${i}">${opcao}</button>`;
             });
             div.innerHTML = html + "</div>";
-            
+
             // Adiciona listeners para as opções
             div.querySelectorAll('.botao-opcao').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -68,10 +68,10 @@ function criarEtapas() {
 
 function mostrarEtapa(index) {
     document.querySelectorAll(".etapa").forEach((etapa, i) => etapa.classList.toggle("active", i === index));
-    
+
     btnPular.style.display = index === 0 ? "inline-block" : "none";
     btnVoltar.style.display = index === 0 ? "none" : "inline-block";
-    
+
     if (index > 0 && respostasUsuario[index] !== -1) {
         const botoes = document.querySelector(".etapa.active")?.querySelectorAll(".botao-opcao");
         if (botoes?.length && respostasUsuario[index] < botoes.length) {
@@ -81,7 +81,7 @@ function mostrarEtapa(index) {
     } else {
         respostaSelecionada = -1;
     }
-    
+
     atualizarBarraProgresso();
 }
 
@@ -118,24 +118,24 @@ async function atualizarPerfilNoBackend(perfil) {
         if (!token) return false;
 
         const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-        const dadosAtualizacao = { 
+        const dadosAtualizacao = {
             estilo_investidor: perfil,
-            ...(userInfo.id && userInfo.id !== 'null' && {id: userInfo.id})
+            ...(userInfo.id && userInfo.id !== 'null' && { id: userInfo.id })
         };
 
         const response = await fetch(`${API_URL}/users`, {
             method: 'PUT',
-            headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify(dadosAtualizacao)
         });
 
         if (!response.ok) return false;
-        
+
         const text = await response.text();
         if (text && text.trim()) {
             const data = JSON.parse(text);
             if (data?.data?.user) {
-                localStorage.setItem('userInfo', JSON.stringify({...userInfo, ...data.data.user}));
+                localStorage.setItem('userInfo', JSON.stringify({ ...userInfo, ...data.data.user }));
             }
         }
         return true;
@@ -172,8 +172,8 @@ function mostrarResultado() {
                 </div>
             `;
 
-            document.getElementById("btnFinalizar").addEventListener("click", () => 
-                window.location.href = "../../../html/investidor/perfil.html");
+            document.getElementById("btnFinalizar").addEventListener("click", () =>
+                window.location.href = "perfil.html");
 
             [btnProximo, btnVoltar, btnPular].forEach(btn => btn.style.display = "none");
             atualizarBarraProgresso();
@@ -189,8 +189,8 @@ function mostrarResultado() {
                     </div>
                 </div>
             `;
-            
-            document.getElementById("btnFinalizar").addEventListener("click", () => 
+
+            document.getElementById("btnFinalizar").addEventListener("click", () =>
                 window.location.href = "../../../html/investidor/perfil.html");
 
             [btnProximo, btnVoltar, btnPular].forEach(btn => btn.style.display = "none");
