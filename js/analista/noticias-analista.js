@@ -3,107 +3,198 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const titleInput = document.getElementById('title');
     const contentInput = document.getElementById('content');
-    const highlightCheck = document.getElementById('highlight');
-    const previewBtn = document.querySelector('.btn-preview');
     const submitBtn = document.querySelector('.btn-submit');
     const newsList = document.querySelector('.news-list');
-    
+    let editingNewsId = null;
+
+    // Load initial news
+    loadNews();
+
     categoryBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             categoryBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         });
     });
-    
+
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
+
             const filter = btn.textContent.toLowerCase();
             const newsItems = document.querySelectorAll('.news-item');
-            
+
             newsItems.forEach(item => {
                 const category = item.querySelector('.news-category').textContent.toLowerCase();
                 item.style.display = filter === 'todas' || category.includes(filter) ? 'block' : 'none';
             });
         });
     });
-    
-    submitBtn.addEventListener('click', () => {
+
+    submitBtn.addEventListener('click', async () => {
         if (!titleInput.value || !contentInput.value) {
             alert('Por favor, preencha todos os campos obrigatórios.');
             return;
         }
-        
-        const currentDate = new Date().toLocaleDateString('pt-BR');
-        const selectedCategory = document.querySelector('.category-btn.active').textContent;
-        
-        const newsItem = document.createElement('div');
-        newsItem.className = 'news-item';
-        newsItem.innerHTML = `
+
+        const selectedCategory = document.querySelector('.category-btn.active').textContent.toLowerCase();
+        const newsData = {
+            titulo: titleInput.value,
+            conteudo: contentInput.value,
+            categoria: selectedCategory === 'ação' ? 'acao' : selectedCategory
+        };
+
+        try {
+            if (editingNewsId) {
+                console.log('Updating news with ID:', editingNewsId);
+                console.log('Update data:', newsData);
+
+                try {
+                    // Verificar se o ID é um número
+                    const newsId = parseInt(editingNewsId);
+                    if (isNaN(newsId)) {
+                        throw new Error('ID da notícia inválido');
+                    }
+
+                    console.log('Sending update request with ID:', newsId);
+                    console.log('Data being sent:', JSON.stringify(newsData, null, 2));
+
+                    const response = await APIService.updateNews(newsId, newsData);
+                    console.log('Update response:', response);
+
+                    if (response.error) {
+                        throw new Error(response.msg || 'Erro ao atualizar notícia');
+                    }
+
+                    alert('Notícia atualizada com sucesso!');
+                    await loadNews();
+                    clearForm();
+                } catch (error) {
+                    console.error('Error updating news:', error);
+                    alert(`Erro ao atualizar a notícia: ${error.message}`);
+                }
+            } else {
+                const response = await APIService.addNews(newsData);
+                console.log('Add response:', response);
+
+                if (response.error) {
+                    throw new Error(response.msg || 'Erro ao adicionar notícia');
+                }
+
+                alert('Notícia publicada com sucesso!');
+                await loadNews();
+                clearForm();
+            }
+        } catch (error) {
+            console.error('Error saving news:', error);
+            alert(`Erro ao salvar a notícia: ${error.message}`);
+        }
+    });
+
+    async function loadNews() {
+        try {
+            newsList.innerHTML = '<div class="loading">Carregando notícias...</div>';
+            const response = await APIService.getNews();
+            const news = Array.isArray(response.data.data) ? response.data.data : [];
+            console.log(news);
+
+            if (news.length === 0) {
+                newsList.innerHTML = '<div class="empty-state">Nenhuma notícia publicada ainda.</div>';
+                return;
+            }
+
+            newsList.innerHTML = '';
+            news.forEach(newsItem => {
+                const newsElement = createNewsElement(newsItem);
+                newsList.appendChild(newsElement);
+            });
+        } catch (error) {
+            newsList.innerHTML = '<div class="error-state">Erro ao carregar notícias. Por favor, tente novamente.</div>';
+            console.error('Error loading news:', error);
+        }
+    }
+
+    function createNewsElement(newsItem) {
+        const newsElement = document.createElement('div');
+        newsElement.className = 'news-item';
+        newsElement.dataset.id = newsItem.id;
+        newsElement.innerHTML = `
             <div class="news-header">
-                <h3 class="news-title">${titleInput.value}</h3>
-                <span class="news-category">${selectedCategory}</span>
+                <h3 class="news-title">${newsItem.titulo}</h3>
+                <span class="news-category">${newsItem.categoria}</span>
             </div>
-            <p class="news-content">${contentInput.value}</p>
+            <p class="news-content">${newsItem.conteudo}</p>
             <div class="news-footer">
-                <span>Publicado em: ${currentDate}</span>
                 <div class="news-actions">
-                    <button class="action-btn">
+                    <button class="action-btn edit-btn">
                         <i class="fas fa-edit"></i> Editar
                     </button>
-                    <button class="action-btn">
+                    <button class="action-btn delete-btn">
                         <i class="fas fa-trash"></i> Excluir
                     </button>
                 </div>
             </div>
         `;
-        
-        newsList.insertBefore(newsItem, newsList.firstChild);
-        
-        titleInput.value = '';
-        contentInput.value = '';
-        highlightCheck.checked = false;
-        
-        setupActionButtons(newsItem);
-    });
-    
-    previewBtn.addEventListener('click', () => {
-        if (!titleInput.value || !contentInput.value) {
-            alert('Por favor, preencha todos os campos para visualização.');
-            return;
-        }
-        
-        const selectedCategory = document.querySelector('.category-btn.active').textContent;
-        alert(`Prévia: ${titleInput.value}\nCategoria: ${selectedCategory}\n\n${contentInput.value}`);
-    });
-    
-    function setupActionButtons(newsItem) {
-        const editBtn = newsItem.querySelector('.fa-edit').parentElement;
-        const deleteBtn = newsItem.querySelector('.fa-trash').parentElement;
-        
+
+        setupActionButtons(newsElement, newsItem);
+        return newsElement;
+    }
+
+    function setupActionButtons(newsElement, newsItem) {
+        const editBtn = newsElement.querySelector('.edit-btn');
+        const deleteBtn = newsElement.querySelector('.delete-btn');
+
         editBtn.addEventListener('click', () => {
-            const title = newsItem.querySelector('.news-title').textContent;
-            const content = newsItem.querySelector('.news-content').textContent;
-            const category = newsItem.querySelector('.news-category').textContent;
-            
-            titleInput.value = title;
-            contentInput.value = content;
-            
+            console.log('Editing news item:', newsItem);
+            if (!newsItem.id) {
+                alert('Erro: ID da notícia não encontrado');
+                return;
+            }
+            editingNewsId = newsItem.id;
+            titleInput.value = newsItem.titulo;
+            contentInput.value = newsItem.conteudo;
+
             categoryBtns.forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === category);
+                const btnCategory = btn.textContent.toLowerCase();
+                const newsCategory = newsItem.categoria.toLowerCase();
+                btn.classList.toggle('active', btnCategory === newsCategory ||
+                    (btnCategory === 'ação' && newsCategory === 'acao'));
             });
-            
-            newsItem.remove();
+
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Atualizar';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-        
-        deleteBtn.addEventListener('click', () => {
+
+        deleteBtn.addEventListener('click', async () => {
+            console.log('Delete button clicked for news:', newsItem);
+            if (!newsItem.id) {
+                console.error('News ID is missing:', newsItem);
+                alert('Erro: ID da notícia não encontrado');
+                return;
+            }
+
             if (confirm('Tem certeza que deseja excluir esta publicação?')) {
-                newsItem.remove();
+                try {
+                    console.log('Attempting to delete news with ID:', newsItem.id);
+                    const response = await APIService.deleteNews(newsItem.id);
+                    console.log('Delete response:', response);
+                    await loadNews();
+                    alert('Notícia excluída com sucesso!');
+                } catch (error) {
+                    console.error('Error details:', error);
+                    alert('Erro ao excluir a notícia. Por favor, tente novamente.');
+                }
             }
         });
     }
-    
-    document.querySelectorAll('.news-item').forEach(setupActionButtons);
+
+    function clearForm() {
+        titleInput.value = '';
+        contentInput.value = '';
+        editingNewsId = null;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publicar';
+        categoryBtns[0].click();
+    }
 });
+

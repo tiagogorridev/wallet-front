@@ -36,30 +36,30 @@
         const ehPaginaAnalista = paginaAtual.includes('/analista/');
         const ehPaginaInvestidor = paginaAtual.includes('/investidor/');
         const ehPaginaLogin = paginaAtual.includes('index.html');
-        
+
         // Regra 1: Apenas ADMIN pode acessar páginas de administrador
         if (ehPaginaAdmin && auth.perfil !== 'ADMIN') {
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
-        
+
         // Regra 2: Apenas ANALISTA pode acessar páginas de analista
         if (ehPaginaAnalista && auth.perfil !== 'ANALISTA') {
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
-        
+
         // Regra 3: Apenas USUARIO pode acessar páginas de investidor
         if (ehPaginaInvestidor && auth.perfil !== 'USUARIO') {
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
-        
+
         // Se estiver em uma página que não corresponde ao seu perfil e não é a página de login
-        if (!ehPaginaLogin && 
-            ((auth.perfil === 'ADMIN' && !ehPaginaAdmin) || 
-             (auth.perfil === 'ANALISTA' && !ehPaginaAnalista) || 
-             (auth.perfil === 'USUARIO' && !ehPaginaInvestidor))) {
+        if (!ehPaginaLogin &&
+            ((auth.perfil === 'ADMIN' && !ehPaginaAdmin) ||
+                (auth.perfil === 'ANALISTA' && !ehPaginaAnalista) ||
+                (auth.perfil === 'USUARIO' && !ehPaginaInvestidor))) {
             redirecionarUsuarioPorPerfil(auth.perfil);
             return false;
         }
@@ -82,10 +82,10 @@
                 redirecionarParaLogin();
         }
     }
-    
+
     // Executa verificação ao carregar a página
     verificarPermissao();
-    
+
     // Adiciona listener para eventos de atualização de token
     window.addEventListener('tokenRefreshed', () => {
         console.log('Token atualizado, verificando permissões');
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Atualiza informações do usuário
     atualizarInfoUsuario();
-    
+
     // Registra listener para atualizar informações quando o token for atualizado
     window.addEventListener('tokenRefreshed', atualizarInfoUsuario);
 });

@@ -74,32 +74,66 @@
 </div>
 
 <script>
-    // Mobile menu functionality
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const closeMobileMenu = document.querySelector('.close-mobile-menu');
-    const mobileMenu = document.querySelector('.mobile-menu');
+    document.addEventListener('DOMContentLoaded', function () {
+        // Mobile menu functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const closeMobileMenu = document.querySelector('.close-mobile-menu');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const body = document.body;
 
-    mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.add('active');
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenuHandler() {
+            mobileMenu.classList.remove('active');
+            body.style.overflow = '';
+        }
+
+        mobileMenuBtn.addEventListener('click', openMobileMenu);
+        closeMobileMenu.addEventListener('click', closeMobileMenuHandler);
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (event) {
+            if (mobileMenu.classList.contains('active') &&
+                !mobileMenu.contains(event.target) &&
+                !mobileMenuBtn.contains(event.target)) {
+                closeMobileMenuHandler();
+            }
+        });
+
+        // Close menu when pressing Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                closeMobileMenuHandler();
+            }
+        });
+
+        // Logout functionality
+        const logoutBtn = document.getElementById('logoutBtn');
+        const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+
+        const handleLogout = () => {
+            // Clear any stored data
+            localStorage.clear();
+            sessionStorage.clear();
+
+            // Redirect to login page
+            window.location.href = '../auth/login.html';
+        };
+
+        logoutBtn.addEventListener('click', handleLogout);
+        mobileLogoutBtn.addEventListener('click', handleLogout);
+
+        // Set active nav item based on current page
+        const currentPage = window.location.pathname.split('/').pop();
+        const navItems = document.querySelectorAll('.nav-item');
+
+        navItems.forEach(item => {
+            if (item.getAttribute('href') === currentPage) {
+                item.classList.add('active');
+            }
+        });
     });
-
-    closeMobileMenu.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-    });
-
-    // Logout functionality
-    const logoutBtn = document.getElementById('logoutBtn');
-    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-
-    const handleLogout = () => {
-        // Clear any stored data
-        localStorage.clear();
-        sessionStorage.clear();
-
-        // Redirect to login page
-        window.location.href = '../auth/login.html';
-    };
-
-    logoutBtn.addEventListener('click', handleLogout);
-    mobileLogoutBtn.addEventListener('click', handleLogout);
 </script>

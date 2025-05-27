@@ -25,8 +25,10 @@
                 <h2>Notícias e Dicas</h2>
                 <div class="view-filters">
                     <button class="filter-btn active" data-filter="all">Todas</button>
-                    <button class="filter-btn" data-filter="acoes">Ações</button>
-                    <button class="filter-btn" data-filter="crypto">Crypto</button>
+                    <button class="filter-btn" data-filter="noticia">Notícias</button>
+                    <button class="filter-btn" data-filter="dica de investimento">Dicas</button>
+                    <button class="filter-btn" data-filter="alerta de mercado">Alertas</button>
+                    <button class="filter-btn" data-filter="educacional">Educacional</button>
                 </div>
             </div>
 
@@ -36,92 +38,31 @@
             </div>
 
             <div class="news-list">
-                <div class="news-item" data-category="crypto">
-                    <div class="news-header">
-                        <h3 class="news-title">Bitcoin atinge novo recorde histórico em 2025</h3>
-                        <span class="news-category crypto">Crypto</span>
-                    </div>
-                    <p class="news-content">
-                        A principal criptomoeda do mercado ultrapassou a marca de US$ 100.000, impulsionada pela adoção
-                        institucional e crescente interesse global. Investidores que mantiveram suas posições durante as
-                        correções anteriores comemoram os resultados expressivos.
-                    </p>
-                    <div class="news-footer">
-                        <span>Publicado em: 06/05/2025</span>
-                    </div>
-                </div>
-
-                <div class="news-item" data-category="acoes">
-                    <div class="news-header">
-                        <h3 class="news-title">Resultado trimestral das principais empresas da B3</h3>
-                        <span class="news-category acoes">Ações</span>
-                    </div>
-                    <p class="news-content">
-                        Os resultados do primeiro trimestre de 2025 superaram as expectativas dos analistas. Destaque
-                        para o setor de tecnologia e energia renovável, que apresentaram crescimento acima da média do
-                        mercado, impulsionando o Ibovespa para novos patamares.
-                    </p>
-                    <div class="news-footer">
-                        <span>Publicado em: 05/05/2025</span>
-                    </div>
-                </div>
-
-                <div class="news-item" data-category="acoes">
-                    <div class="news-header">
-                        <h3 class="news-title">Setor de energia renovável em alta na bolsa brasileira</h3>
-                        <span class="news-category acoes">Ações</span>
-                    </div>
-                    <p class="news-content">
-                        As empresas do setor de energia renovável registraram valorização média de 18% nos últimos três
-                        meses. Os investimentos em energia solar e eólica continuam crescendo no Brasil, e as ações das
-                        empresas do setor refletem este momento positivo.
-                    </p>
-                    <div class="news-footer">
-                        <span>Publicado em: 03/05/2025</span>
-                    </div>
-                </div>
-
-                <div class="news-item" data-category="crypto">
-                    <div class="news-header">
-                        <h3 class="news-title">Ethereum completa transição para Proof-of-Stake com sucesso</h3>
-                        <span class="news-category crypto">Crypto</span>
-                    </div>
-                    <p class="news-content">
-                        A atualização final da rede Ethereum foi concluída, marcando a transição completa para o modelo
-                        Proof-of-Stake. Esta mudança reduz drasticamente o consumo de energia da rede e altera
-                        fundamentalmente a dinâmica de recompensas para os participantes.
-                    </p>
-                    <div class="news-footer">
-                        <span>Publicado em: 02/05/2025</span>
-                    </div>
-                </div>
+                <!-- News items will be dynamically loaded here -->
             </div>
 
             <div class="pagination">
                 <button class="pagination-btn prev"><i class="fas fa-chevron-left"></i></button>
                 <div class="page-numbers">
-                    <span class="page-number active"><span>1</span></span>
-                    <span class="page-number"><span>2</span></span>
-                    <span class="page-number"><span>3</span></span>
+                    <!-- Page numbers will be dynamically loaded here -->
                 </div>
                 <button class="pagination-btn next"><i class="fas fa-chevron-right"></i></button>
             </div>
         </section>
-
     </main>
 
     <div class="modal" id="news-modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
             <div class="modal-header">
-                <h2 class="modal-title">Título da Notícia</h2>
-                <span class="modal-category">Categoria</span>
+                <h2 class="modal-title"></h2>
+                <span class="modal-category"></span>
             </div>
             <div class="modal-body">
-                <p class="modal-text">Conteúdo completo da notícia...</p>
+                <p class="modal-text"></p>
             </div>
             <div class="modal-footer">
-                <span class="modal-date">Data de publicação</span>
+                <span class="modal-date"></span>
             </div>
         </div>
     </div>
@@ -129,8 +70,8 @@
     <script src="../../js/auth/auth-service.js"></script>
     <script src="../../js/auth/acess.js"></script>
     <script src="../../js/investidor/header.js"></script>
+    <script src="../../js/investidor/resumo/api-service.js"></script>
     <script src="../../js/investidor/noticias-investidor.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </body>
 
 </html>

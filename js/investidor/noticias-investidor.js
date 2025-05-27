@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Elementos do DOM
+    // DOM Elements
     const newsList = document.querySelector('.news-list');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const searchInput = document.getElementById('news-search');
@@ -9,13 +9,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const newsModal = document.getElementById('news-modal');
     const closeModal = document.querySelector('.close-modal');
 
-    // Estado da aplicação
+    // Application state
     let currentFilter = 'all';
     let currentPage = 1;
     let itemsPerPage = 4;
-    let newsItems = Array.from(document.querySelectorAll('.news-item'));
+    let allNews = [];
+    let filteredNews = [];
 
-    // Função para filtrar notícias
+    // Load initial news
+    loadNews();
+
+    // Filter news function
     function filterNews(category) {
         currentFilter = category;
         currentPage = 1;
@@ -23,65 +27,111 @@ document.addEventListener('DOMContentLoaded', function () {
         updatePagination();
     }
 
-    // Função para buscar notícias
+    // Search news function
     function searchNews(query) {
         const searchTerm = query.toLowerCase();
-        newsItems.forEach(item => {
-            const title = item.querySelector('.news-title').textContent.toLowerCase();
-            const content = item.querySelector('.news-content').textContent.toLowerCase();
+        filteredNews = allNews.filter(item => {
+            const title = item.title.toLowerCase();
+            const content = item.content.toLowerCase();
             const matchesSearch = title.includes(searchTerm) || content.includes(searchTerm);
-            const matchesFilter = currentFilter === 'all' || item.dataset.category === currentFilter;
-            item.style.display = matchesSearch && matchesFilter ? 'block' : 'none';
+            const matchesFilter = currentFilter === 'all' || item.category.toLowerCase() === currentFilter;
+            return matchesSearch && matchesFilter;
         });
+        currentPage = 1;
+        updateNewsDisplay();
+        updatePagination();
     }
 
-    // Função para atualizar a exibição das notícias
+    // Update news display
     function updateNewsDisplay() {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
+        const newsToShow = filteredNews.slice(startIndex, endIndex);
 
-        newsItems.forEach((item, index) => {
-            const matchesFilter = currentFilter === 'all' || item.dataset.category === currentFilter;
-            const isInCurrentPage = index >= startIndex && index < endIndex;
-            item.style.display = matchesFilter && isInCurrentPage ? 'block' : 'none';
+        newsList.innerHTML = '';
+        if (newsToShow.length === 0) {
+            newsList.innerHTML = '<div class="empty-state">Nenhuma notícia encontrada.</div>';
+            return;
+        }
+
+        newsToShow.forEach(newsItem => {
+            const newsElement = createNewsElement(newsItem);
+            newsList.appendChild(newsElement);
         });
     }
 
-    // Função para atualizar a paginação
+    // Create news element
+    function createNewsElement(newsItem) {
+        const newsElement = document.createElement('div');
+        newsElement.className = 'news-item';
+        newsElement.dataset.category = newsItem.category.toLowerCase();
+        newsElement.innerHTML = `
+            <div class="news-header">
+                <h3 class="news-title">${newsItem.title}</h3>
+                <span class="news-category ${newsItem.category.toLowerCase()}">${newsItem.category}</span>
+            </div>
+            <p class="news-content">${newsItem.content}</p>
+            <div class="news-footer">
+                <span>Publicado em: ${new Date(newsItem.createdAt).toLocaleDateString('pt-BR')}</span>
+            </div>
+        `;
+
+        newsElement.addEventListener('click', () => openNewsModal(newsItem));
+        return newsElement;
+    }
+
+    // Update pagination
     function updatePagination() {
-        const filteredItems = newsItems.filter(item =>
-            currentFilter === 'all' || item.dataset.category === currentFilter
-        );
-        const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+        const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+        const pageNumbersContainer = document.querySelector('.page-numbers');
 
-        // Atualiza os números das páginas
-        pageNumbers.forEach((number, index) => {
-            number.style.display = index < totalPages ? 'inline-block' : 'none';
-            number.classList.toggle('active', index + 1 === currentPage);
-        });
+        pageNumbersContainer.innerHTML = '';
+        for (let i = 1; i <= totalPages; i++) {
+            const pageNumber = document.createElement('span');
+            pageNumber.className = `page-number ${i === currentPage ? 'active' : ''}`;
+            pageNumber.innerHTML = `<span>${i}</span>`;
+            pageNumber.addEventListener('click', () => {
+                currentPage = i;
+                updateNewsDisplay();
+                updatePagination();
+            });
+            pageNumbersContainer.appendChild(pageNumber);
+        }
 
-        // Atualiza os botões de navegação
-        paginationButtons[0].disabled = currentPage === 1;
-        paginationButtons[1].disabled = currentPage === totalPages;
+        // Update pagination buttons
+        const prevButton = document.querySelector('.pagination-btn.prev');
+        const nextButton = document.querySelector('.pagination-btn.next');
+
+        prevButton.disabled = currentPage === 1;
+        nextButton.disabled = currentPage === totalPages;
     }
 
-    // Função para abrir o modal com a notícia
-    function openNewsModal(newsItem) {
-        const title = newsItem.querySelector('.news-title').textContent;
-        const category = newsItem.querySelector('.news-category').textContent;
-        const content = newsItem.querySelector('.news-content').textContent;
-        const date = newsItem.querySelector('.news-footer span').textContent;
+    // Load news from API
+    async function loadNews() {
+        try {
+            newsList.innerHTML = '<div class="loading">Carregando notícias...</div>';
+            allNews = await APIService.getNews();
+            filteredNews = [...allNews];
+            updateNewsDisplay();
+            updatePagination();
+        } catch (error) {
+            newsList.innerHTML = '<div class="error-state">Erro ao carregar notícias. Por favor, tente novamente.</div>';
+            console.error('Error loading news:', error);
+        }
+    }
 
+    // Open news modal
+    function openNewsModal(newsItem) {
         const modalTitle = newsModal.querySelector('.modal-title');
         const modalCategory = newsModal.querySelector('.modal-category');
         const modalText = newsModal.querySelector('.modal-text');
         const modalDate = newsModal.querySelector('.modal-date');
 
-        modalTitle.textContent = title;
-        modalCategory.textContent = category;
-        modalCategory.className = `modal-category ${category.toLowerCase()}`;
-        modalText.textContent = content;
-        modalDate.textContent = date;
+        modalTitle.textContent = newsItem.title;
+        modalCategory.textContent = newsItem.category;
+        modalCategory.className = `modal-category ${newsItem.category.toLowerCase()}`;
+        modalText.textContent = newsItem.content;
+        modalDate.textContent = `Publicado em: ${new Date(newsItem.createdAt).toLocaleDateString('pt-BR')}`;
 
         newsModal.style.display = 'flex';
     }
@@ -105,38 +155,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    paginationButtons.forEach((button, index) => {
-        button.addEventListener('click', () => {
-            if (index === 0 && currentPage > 1) {
-                currentPage--;
-            } else if (index === 1) {
-                const filteredItems = newsItems.filter(item =>
-                    currentFilter === 'all' || item.dataset.category === currentFilter
-                );
-                const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                }
-            }
+    // Pagination button events
+    document.querySelector('.pagination-btn.prev').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
             updateNewsDisplay();
             updatePagination();
-        });
+        }
     });
 
-    pageNumbers.forEach((number, index) => {
-        number.addEventListener('click', () => {
-            currentPage = index + 1;
+    document.querySelector('.pagination-btn.next').addEventListener('click', () => {
+        const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+        if (currentPage < totalPages) {
+            currentPage++;
             updateNewsDisplay();
             updatePagination();
-        });
+        }
     });
 
-    newsItems.forEach(item => {
-        item.addEventListener('click', () => {
-            openNewsModal(item);
-        });
-    });
-
+    // Modal close event
     closeModal.addEventListener('click', () => {
         newsModal.style.display = 'none';
     });
@@ -146,8 +183,4 @@ document.addEventListener('DOMContentLoaded', function () {
             newsModal.style.display = 'none';
         }
     });
-
-    // Inicialização
-    updateNewsDisplay();
-    updatePagination();
 });
