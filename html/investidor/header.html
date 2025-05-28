@@ -43,53 +43,13 @@
                     <i class="fas fa-user-circle"></i>
                 </a>
             </div>
-            <button id="mobileMenuBtn" class="mobile-menu-btn">
+            <button class="mobile-menu-btn mobile-only">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
     </header>
 
     <nav class="navigation">
-        <div class="mobile-menu">
-            <div class="mobile-menu-header">
-                <div class="user-profile">
-                    <a href="perfil.html">
-                        <i class="fas fa-user-circle"></i>
-                    </a>
-                </div>
-                <button id="closeMobileMenu" class="close-mobile-menu">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="mobile-menu-items">
-                <a href="resumo.html" class="nav-item">
-                    <i class="fas fa-chart-line"></i>
-                    <span>RESUMO</span>
-                </a>
-                <a href="graficos.html" class="nav-item">
-                    <i class="fas fa-chart-pie"></i>
-                    <span>GRÁFICOS</span>
-                </a>
-                <a href="metas.html" class="nav-item">
-                    <i class="fas fa-search"></i>
-                    <span>METAS</span>
-                </a>
-                <a href="noticias-investidor.html" class="nav-item">
-                    <i class="fas fa-search"></i>
-                    <span>NOTÍCIAS</span>
-                </a>
-                <a href="configuracoes.html" class="nav-item">
-                    <i class="fas fa-cog"></i>
-                    <span>CONFIGURAÇÕES</span>
-                </a>
-                <div class="mobile-menu-footer">
-                    <button id="mobileLogoutBtn" class="logout-btn mobile-only">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
-                    </button>
-                </div>
-            </div>
-        </div>
         <div class="desktop-menu">
             <a href="resumo.html" class="nav-item">
                 <i class="fas fa-chart-line"></i>
@@ -113,6 +73,48 @@
             </a>
         </div>
     </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="user-profile">
+                <a href="perfil.html">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            </div>
+            <button class="close-mobile-menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-menu-items">
+            <a href="resumo.html" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span>RESUMO</span>
+            </a>
+            <a href="graficos.html" class="nav-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>GRÁFICOS</span>
+            </a>
+            <a href="metas.html" class="nav-item">
+                <i class="fas fa-search"></i>
+                <span>METAS</span>
+            </a>
+            <a href="noticias-investidor.html" class="nav-item">
+                <i class="fas fa-search"></i>
+                <span>NOTÍCIAS</span>
+            </a>
+            <a href="configuracoes.html" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>CONFIGURAÇÕES</span>
+            </a>
+        </div>
+        <div class="mobile-menu-footer">
+            <button id="mobileLogoutBtn" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </div>
 </div>
 
 <div id="add-wallet-modal" class="modal">

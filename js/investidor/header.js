@@ -23,22 +23,33 @@ document.addEventListener('DOMContentLoaded', () => {
         inicializaDropdownCarteiras();
         configuraFormularioCarteira();
         configuraLogout();
+        inicializaMenuMobile();
+    }
 
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const closeMobileMenu = document.getElementById('closeMobileMenu');
+    function inicializaMenuMobile() {
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const closeMobileMenu = document.querySelector('.close-mobile-menu');
         const mobileMenu = document.querySelector('.mobile-menu');
         const body = document.body;
 
+        if (!mobileMenuBtn || !closeMobileMenu || !mobileMenu) return;
+
+        let scrollPosition = 0;
+
         // Função para abrir o menu mobile
         function openMobileMenu() {
+            scrollPosition = window.scrollY;
             mobileMenu.classList.add('active');
-            body.style.overflow = 'hidden'; // Previne o scroll do body
+            body.classList.add('menu-open');
+            body.style.top = `-${scrollPosition}px`;
         }
 
         // Função para fechar o menu mobile
         function closeMobileMenuHandler() {
             mobileMenu.classList.remove('active');
-            body.style.overflow = ''; // Restaura o scroll do body
+            body.classList.remove('menu-open');
+            body.style.top = '';
+            window.scrollTo(0, scrollPosition);
         }
 
         // Event listeners
@@ -64,24 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeMobileMenuHandler();
             }
         });
-
-        // Atualizar menu ativo baseado na URL atual
-        function updateActiveMenu() {
-            const currentPath = window.location.pathname;
-            const menuItems = document.querySelectorAll('.nav-item');
-
-            menuItems.forEach(item => {
-                const href = item.getAttribute('href');
-                if (currentPath.includes(href)) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-        }
-
-        // Chamar a função ao carregar a página
-        updateActiveMenu();
     }
 
     function configuraLogout() {
