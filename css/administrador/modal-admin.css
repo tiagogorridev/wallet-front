@@ -13,67 +13,198 @@
     opacity: 0;
     transition: opacity 0.3s ease;
 }
-  
+
 .modal.active {
     display: flex;
     opacity: 1;
 }
-  
-.modal-content {
-    background-color: #272727;
-    color: #f0f0f0;
-    margin: 7% auto;
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
     padding: 20px;
+    box-sizing: border-box;
+}
+
+.modal-content {
+    background-color: var(--dark-lighter);
     border-radius: 8px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    width: 90%;
+    padding: 20px;
+    width: 100%;
     max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
     position: relative;
-    border: 1px solid #333;
-    transform: translateY(-30px);
-    transition: transform 0.3s ease;
-}
-  
-.modal.active .modal-content {
-    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.btn-submit, .btn-primary {
-    background-color: #f2a900;
-    color: #222;
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.btn-cancel {
-    background-color: #444;
-    color: #f0f0f0;
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--white);
+    margin: 0;
 }
 
-.btn-danger {
-    background-color: #d32f2f;
-    color: #f0f0f0;
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--light-gray);
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s ease;
 }
 
-.form-group input, 
+.close-btn:hover {
+    color: var(--ambar);
+}
+
+.modal-body {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    color: var(--light-gray);
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.form-group input,
 .form-group select {
-    background-color: #333;
-    border: 1px solid #444;
-    color: #fff;
+    width: 100%;
+    padding: 8px 12px;
+    background-color: var(--dark);
+    border: 1px solid var(--dark-lightest);
+    border-radius: 4px;
+    color: var(--white);
+    font-size: 0.9rem;
+    box-sizing: border-box;
 }
 
 .form-group input:focus,
 .form-group select:focus {
-    border-color: #f2a900;
+    outline: none;
+    border-color: var(--ambar);
 }
 
-.modal h2 {
-    color: #f2a900;
-    border-bottom: 1px solid #444;
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
-.confirm-message {
-    margin-bottom: 30px;
+.modal-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.modal p {
-    margin-bottom: 30px;
+.cancel-btn {
+    background: none;
+    border: 1px solid var(--dark-lightest);
+    color: var(--light-gray);
+}
+
+.cancel-btn:hover {
+    border-color: var(--ambar);
+    color: var(--ambar);
+}
+
+.confirm-btn {
+    background-color: var(--ambar);
+    border: none;
+    color: var(--dark);
+}
+
+.confirm-btn:hover {
+    background-color: #e69500;
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .modal-overlay {
+        padding: 15px;
+    }
+
+    .modal-content {
+        padding: 15px;
+    }
+
+    .modal-title {
+        font-size: 1.1rem;
+    }
+
+    .form-group label {
+        font-size: 0.85rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+
+    .modal-btn {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .modal-overlay {
+        padding: 12px;
+    }
+
+    .modal-content {
+        padding: 12px;
+    }
+
+    .modal-title {
+        font-size: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-group label {
+        font-size: 0.8rem;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 8px;
+        font-size: 0.8rem;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+
+    .modal-btn {
+        width: 100%;
+        padding: 8px;
+        font-size: 0.8rem;
+    }
 }

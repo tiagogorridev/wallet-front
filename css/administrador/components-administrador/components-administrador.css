@@ -10,3 +10,235 @@
 @import url('pagination.css');
 @import url('table.css');
 @import url('user-details.css');
+
+/* Reset e configurações base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--dark);
+    color: var(--white);
+    line-height: 1.5;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.overview-card {
+    background-color: var(--dark-lighter);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.overview-card i {
+    font-size: 1.5rem;
+    color: var(--ambar);
+}
+
+.overview-card h3 {
+    font-size: 1rem;
+    color: var(--light-gray);
+    font-weight: 500;
+}
+
+.overview-card .value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.overview-card .variation {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.variation.positive {
+    color: var(--green);
+}
+
+.variation.negative {
+    color: var(--red);
+}
+
+.overview-section {
+    background-color: var(--dark-lighter);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.section-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--white);
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.time-filter {
+    background-color: var(--dark);
+    color: var(--white);
+    border: 1px solid var(--dark-lightest);
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.time-filter:hover {
+    border-color: var(--ambar);
+}
+
+.time-filter:focus {
+    outline: none;
+    border-color: var(--ambar);
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .overview-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .section-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .filter-container {
+        width: 100%;
+    }
+
+    .time-filter {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .overview-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .overview-card {
+        padding: 15px;
+    }
+
+    .overview-card i {
+        font-size: 1.25rem;
+    }
+
+    .overview-card h3 {
+        font-size: 0.9rem;
+    }
+
+    .overview-card .value {
+        font-size: 1.25rem;
+    }
+
+    .overview-card .variation {
+        font-size: 0.85rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .overview-section {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .section-header {
+        margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+        font-size: 1rem;
+    }
+
+    .time-filter {
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+
+    .overview-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .overview-card {
+        padding: 12px;
+    }
+
+    .overview-card i {
+        font-size: 1.1rem;
+    }
+
+    .overview-card h3 {
+        font-size: 0.85rem;
+    }
+
+    .overview-card .value {
+        font-size: 1.1rem;
+    }
+
+    .overview-card .variation {
+        font-size: 0.8rem;
+    }
+}

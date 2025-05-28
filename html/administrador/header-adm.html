@@ -1,3 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MyWallet - Administrador</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/administrador/header-adm.css">
+    <link rel="stylesheet" href="../css/administrador/components-administrador/components-administrador.css">
+    <link rel="stylesheet" href="../css/administrador/gestao-usuarios.css">
+    <link rel="stylesheet" href="../css/administrador/relatorios.css">
+    <link rel="stylesheet" href="../css/administrador/modal-admin.css">
+    <link rel="stylesheet" href="../css/administrador/adicionar-usuario.css">
+</head>
 <div class="header-container">
     <header class="header-summary">
         <div class="logo-section">
@@ -33,7 +48,7 @@
                 <span>GESTÃO DE USUÁRIOS</span>
             </a>
             <a href="adicionar-usuario.html" class="nav-item">
-                <i class="fas fa-chart-bar"></i>
+                <i class="fas fa-user-plus"></i>
                 <span>ADICIONAR USUÁRIO</span>
             </a>
         </div>
@@ -43,7 +58,7 @@
     <div class="mobile-menu">
         <div class="mobile-menu-header">
             <div class="user-profile">
-                <a href="perfil.html">
+                <a href="javascript:void(0)">
                     <i class="fas fa-user-circle"></i>
                 </a>
             </div>
@@ -61,7 +76,7 @@
                 <span>Gestão de Usuários</span>
             </a>
             <a href="adicionar-usuario.html" class="nav-item">
-                <i class="fas fa-chart-bar"></i>
+                <i class="fas fa-user-plus"></i>
                 <span>Adicionar Usuário</span>
             </a>
         </div>
@@ -73,68 +88,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Mobile menu functionality
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const closeMobileMenu = document.querySelector('.close-mobile-menu');
-        const mobileMenu = document.querySelector('.mobile-menu');
-        const body = document.body;
-
-        function openMobileMenu() {
-            mobileMenu.classList.add('active');
-            body.style.overflow = 'hidden';
-        }
-
-        function closeMobileMenuHandler() {
-            mobileMenu.classList.remove('active');
-            body.style.overflow = '';
-        }
-
-        mobileMenuBtn.addEventListener('click', openMobileMenu);
-        closeMobileMenu.addEventListener('click', closeMobileMenuHandler);
-
-        // Close menu when clicking outside
-        document.addEventListener('click', function (event) {
-            if (mobileMenu.classList.contains('active') &&
-                !mobileMenu.contains(event.target) &&
-                !mobileMenuBtn.contains(event.target)) {
-                closeMobileMenuHandler();
-            }
-        });
-
-        // Close menu when pressing Escape key
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape' && mobileMenu.classList.contains('active')) {
-                closeMobileMenuHandler();
-            }
-        });
-
-        // Logout functionality
-        const logoutBtn = document.getElementById('logoutBtn');
-        const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
-
-        const handleLogout = () => {
-            // Clear any stored data
-            localStorage.clear();
-            sessionStorage.clear();
-
-            // Redirect to login page
-            window.location.href = '../auth/login.html';
-        };
-
-        logoutBtn.addEventListener('click', handleLogout);
-        mobileLogoutBtn.addEventListener('click', handleLogout);
-
-        // Set active nav item based on current page
-        const currentPage = window.location.pathname.split('/').pop();
-        const navItems = document.querySelectorAll('.nav-item');
-
-        navItems.forEach(item => {
-            if (item.getAttribute('href') === currentPage) {
-                item.classList.add('active');
-            }
-        });
-    });
-</script>

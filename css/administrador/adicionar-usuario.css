@@ -1,37 +1,191 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background-color: var(--dark);
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: var(--dark);
 }
 
 .dashboard-container {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--dark);
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--dark);
 }
 
 .main-content {
-  flex: 1;
-  padding-bottom: 0;
+    flex: 1;
+    padding-bottom: 0;
 }
 
 .users-section {
-  max-width: 800px;
-  margin: 0 auto;
-  margin-bottom: 0;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-bottom: 0;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.users-section form {
+    background-color: var(--dark-lighter);
+    border-radius: 8px;
+    padding: 24px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .form-field {
-  position: relative;
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
-.form-field .fa-eye, .form-field .fa-eye-slash {
-  position: absolute;
-  right: 12px;
-  top: 70%;
-  transform: translateY(-50%);
-  color: var(--light-gray);
-  cursor: pointer;
+.form-field label {
+    display: block;
+    color: var(--light-gray);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--dark);
+    border: 1px solid var(--dark-lightest);
+    border-radius: 4px;
+    color: var(--white);
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    outline: none;
+    border-color: var(--ambar);
+}
+
+.form-field .fa-eye,
+.form-field .fa-eye-slash {
+    position: absolute;
+    right: 12px;
+    top: 70%;
+    transform: translateY(-50%);
+    color: var(--light-gray);
+    cursor: pointer;
+}
+
+.form-field.full-width {
+    width: 100%;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.form-actions button {
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancel-btn {
+    background: none;
+    border: 1px solid var(--dark-lightest);
+    color: var(--light-gray);
+}
+
+.cancel-btn:hover {
+    border-color: var(--ambar);
+    color: var(--ambar);
+}
+
+.save-btn {
+    background-color: var(--ambar);
+    border: none;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.save-btn:hover {
+    background-color: #e69500;
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .users-section {
+        padding: 16px;
+    }
+
+    .users-section form {
+        padding: 20px;
+    }
+
+    .form-field {
+        margin-bottom: 16px;
+    }
+
+    .form-field label {
+        font-size: 0.85rem;
+    }
+
+    .form-field input,
+    .form-field select {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        margin-top: 24px;
+    }
+
+    .form-actions button {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.85rem;
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .users-section {
+        padding: 12px;
+    }
+
+    .users-section form {
+        padding: 16px;
+    }
+
+    .form-field {
+        margin-bottom: 14px;
+    }
+
+    .form-field label {
+        font-size: 0.8rem;
+    }
+
+    .form-field input,
+    .form-field select {
+        padding: 8px;
+        font-size: 0.8rem;
+    }
+
+    .form-actions {
+        margin-top: 20px;
+        gap: 8px;
+    }
+
+    .form-actions button {
+        padding: 8px;
+        font-size: 0.8rem;
+    }
 }
