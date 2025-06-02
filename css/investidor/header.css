@@ -67,6 +67,32 @@ body {
     font-size: 1.8rem;
 }
 
+.investment-summary {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: 2rem;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.summary-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--light-gray);
+    font-size: 0.9rem;
+}
+
+.summary-value {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
 .portfolio-actions {
     display: flex;
     align-items: center;
@@ -281,6 +307,21 @@ body {
 }
 
 /* Media Queries */
+@media screen and (max-width: 1024px) {
+    .investment-summary {
+        gap: 1.5rem;
+        margin-left: 1.5rem;
+    }
+
+    .summary-label {
+        font-size: 0.85rem;
+    }
+
+    .summary-value {
+        font-size: 1rem;
+    }
+}
+
 @media screen and (max-width: 768px) {
     .desktop-only {
         display: none;
@@ -295,11 +336,15 @@ body {
     }
 
     .logo {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
     }
 
     .logo i {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
+    }
+
+    .investment-summary {
+        display: none !important;
     }
 
     .mobile-menu-btn {
@@ -321,11 +366,15 @@ body {
     }
 
     .logo {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
 
     .logo i {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
+    }
+
+    .portfolio-actions {
+        gap: 0.5rem;
     }
 }
 
