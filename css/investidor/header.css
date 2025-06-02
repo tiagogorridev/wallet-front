@@ -385,3 +385,129 @@ body.menu-open {
     width: 100%;
     height: 100%;
 }
+
+.portfolio-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+    padding: 8px 12px;
+    background-color: var(--dark-lightest);
+    border-radius: 6px;
+    border: 1px solid var(--dark-lightest);
+    transition: all 0.2s ease;
+}
+
+.portfolio-selector:hover {
+    border-color: var(--ambar);
+}
+
+.portfolio-selector span {
+    font-weight: 500;
+    color: var(--white);
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.portfolio-selector i {
+    color: var(--ambar);
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
+}
+
+.portfolio-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background-color: var(--dark-lighter);
+    border: 1px solid var(--dark-lightest);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    min-width: 220px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+}
+
+.portfolio-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.portfolio-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: var(--white);
+}
+
+.portfolio-option:hover {
+    background-color: var(--dark-lightest);
+}
+
+.portfolio-option span {
+    font-size: 0.9rem;
+    color: var(--white);
+    max-width: none;
+}
+
+.portfolio-option i {
+    color: var(--ambar);
+    font-size: 0.8rem;
+}
+
+.portfolio-option i.visible {
+    display: inline-block;
+}
+
+.portfolio-option i.hidden {
+    display: none;
+}
+
+.portfolio-option.new-wallet-option {
+    border-top: 1px solid var(--dark-lightest);
+    color: var(--ambar);
+}
+
+.portfolio-option.new-wallet-option span {
+    color: var(--ambar);
+}
+
+.portfolio-option.new-wallet-option i {
+    margin-right: 8px;
+}
+
+@media screen and (max-width: 768px) {
+    .portfolio-selector {
+        padding: 6px 10px;
+    }
+
+    .portfolio-selector span {
+        font-size: 0.85rem;
+        max-width: 150px;
+    }
+
+    .portfolio-dropdown {
+        min-width: 200px;
+    }
+
+    .portfolio-option {
+        padding: 10px 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .portfolio-selector span {
+        max-width: 120px;
+    }
+}
