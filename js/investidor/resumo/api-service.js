@@ -1,95 +1,88 @@
 const APIService = {
-    API_URL: 'http://191.239.116.115:8080',
+  API_URL: "http://191.239.116.115:8080",
 
-    async fetchFromAPI(endpoint, method, body = null) {
-        // Verifica se o token está disponível
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            throw new Error('Sessão expirada. Por favor, faça login novamente.');
-        }
+  // MÉTODO PRINCIPAL PARA REQUISIÇÕES
+  async fetchFromAPI(endpoint, method, body = null) {
+    const token = localStorage.getItem("accessToken");
+    if (!token)
+      throw new Error("Sessão expirada. Por favor, faça login novamente.");
 
-        // Configura as opções da requisição
-        const options = {
-            method: method,
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        };
+    const options = {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    };
 
-        if (body) options.body = JSON.stringify(body);
+    if (body) options.body = JSON.stringify(body);
 
-        const response = await fetch(`${this.API_URL}${endpoint}`, options);
+    const response = await fetch(`${this.API_URL}${endpoint}`, options);
 
-        if (!response.ok) {
-            // Tratamento de erros na resposta
-            if (response.status === 401) {
-                localStorage.removeItem('accessToken');
-                window.location.href = '../../index.html';
-                throw new Error('Sessão expirada. Por favor, faça login novamente.');
-            }
+    if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem("accessToken");
+        window.location.href = "../../index.html";
+        throw new Error("Sessão expirada. Por favor, faça login novamente.");
+      }
 
-            const errorData = await response.json();
-            throw new Error(errorData.msg || 'Erro ao acessar API');
-        }
+      const errorData = await response.json();
+      throw new Error(errorData.msg || "Erro ao acessar API");
+    }
 
-        return response.json();
-    },
+    return response.json();
+  },
 
-    async getWallets() {
-        return this.fetchFromAPI('/wallets', 'GET');
-    },
+  // MÉTODOS DE CARTEIRA
+  getWallets: function () {
+    return this.fetchFromAPI("/wallets", "GET");
+  },
+  getWalletById: function (walletId) {
+    return this.fetchFromAPI(`/wallets/${walletId}`, "GET");
+  },
 
-    async getWalletById(walletId) {
-        return this.fetchFromAPI(`/wallets/${walletId}`, 'GET');
-    },
+  // MÉTODOS DE ATIVOS
+  getAssets: function () {
+    return this.fetchFromAPI("/assets", "GET");
+  },
 
-    async getAssets() {
-        return this.fetchFromAPI('/assets', 'GET');
-    },
+  // MÉTODOS DE TRANSAÇÕES
+  addTransaction: function (data) {
+    return this.fetchFromAPI("/transactions", "POST", data);
+  },
+  sellAsset: function (id) {
+    return this.fetchFromAPI(`/transactions/${id}`, "DELETE");
+  },
+  deleteTransaction: function (id) {
+    return this.sellAsset(id);
+  },
 
-    async addTransaction(transactionData) {
-        return this.fetchFromAPI('/transactions', 'POST', transactionData);
-    },
+  // MÉTODOS DE NOTÍCIAS
+  getNews: function () {
+    return this.fetchFromAPI("/news", "GET");
+  },
+  addNews: function (data) {
+    return this.fetchFromAPI("/news", "POST", data);
+  },
 
-    async sellAsset(transactionId) {
-        return this.fetchFromAPI(`/transactions/${transactionId}`, 'DELETE');
-    },
+  async updateNews(newsId, newsData) {
+    const id = parseInt(newsId);
+    if (isNaN(id)) throw new Error("ID da notícia inválido");
 
-    async deleteTransaction(transactionId) {
-        return this.sellAsset(transactionId);
-    },
+    const formattedData = {
+      id,
+      titulo: newsData.titulo,
+      conteudo: newsData.conteudo,
+      categoria: newsData.categoria,
+    };
 
-    async getNews() {
-        return this.fetchFromAPI('/news', 'GET');
-    },
+    return this.fetchFromAPI(`/news?id=${id}`, "PUT", formattedData);
+  },
 
-    async addNews(newsData) {
-        return this.fetchFromAPI('/news', 'POST', newsData);
-    },
-
-    async updateNews(newsId, newsData) {
-        // Garantir que o ID seja um número
-        const id = parseInt(newsId);
-        if (isNaN(id)) {
-            throw new Error('ID da notícia inválido');
-        }
-
-        // Garantir que os dados estejam no formato correto
-        const formattedData = {
-            id: id,
-            titulo: newsData.titulo,
-            conteudo: newsData.conteudo,
-            categoria: newsData.categoria
-        };
-
-        return this.fetchFromAPI(`/news?id=${id}`, 'PUT', formattedData);
-    },
-
-    async deleteNews(newsId) {
-        return this.fetchFromAPI(`/news?id=${newsId}`, 'DELETE');
-    },
-
+  deleteNews: function (id) {
+    return this.fetchFromAPI(`/news?id=${id}`, "DELETE");
+  },
 };
 
+// EXPOSIÇÃO GLOBAL
 window.APIService = APIService;

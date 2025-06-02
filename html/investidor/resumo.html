@@ -1,268 +1,326 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyWallet - Resumo</title>
-    <link rel="stylesheet" href="../../css/configuracoes.css">
-    <link rel="stylesheet" href="../../css/investidor/teste.css">
-    <link rel="stylesheet" href="../../css/auth/style.css">
-    <link rel="stylesheet" href="../../css/investidor/header.css">
-    <link rel="stylesheet" href="../../css/investidor/resumo.css">
-    <link rel="stylesheet" href="../../css/investidor/components-investidor/components-investidor.css">
-    <link rel="shortcut icon" href="../../assets/favicon-icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/configuracoes.css" />
+    <link rel="stylesheet" href="../../css/investidor/teste.css" />
+    <link rel="stylesheet" href="../../css/auth/style.css" />
+    <link rel="stylesheet" href="../../css/investidor/header.css" />
+    <link rel="stylesheet" href="../../css/investidor/resumo.css" />
+    <link
+      rel="stylesheet"
+      href="../../css/investidor/components-investidor/components-investidor.css"
+    />
+    <link
+      rel="shortcut icon"
+      href="../../assets/favicon-icon.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
-        .assets-list {
-            margin-top: 20px;
-            width: 100%;
-        }
+      .assets-list {
+        margin-top: 20px;
+        width: 100%;
+      }
 
-        .assets-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            background-color: #1a1a1a;
-            border-radius: 8px;
-            overflow: hidden;
-        }
+      .assets-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background-color: #1a1a1a;
+        border-radius: 8px;
+        overflow: hidden;
+      }
 
-        .assets-table th,
-        .assets-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #333;
-        }
+      .assets-table th,
+      .assets-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #333;
+      }
 
-        .assets-table th {
-            background-color: #252525;
-            font-weight: 600;
-            color: #e0e0e0;
-        }
+      .assets-table th {
+        background-color: #252525;
+        font-weight: 600;
+        color: #e0e0e0;
+      }
 
-        .assets-table tr:last-child td {
-            border-bottom: none;
-        }
+      .assets-table tr:last-child td {
+        border-bottom: none;
+      }
 
-        .assets-table tr:hover {
-            background-color: #252525;
-        }
+      .assets-table tr:hover {
+        background-color: #252525;
+      }
 
-        .asset-category {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            font-weight: 500;
-        }
+      .asset-category {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        font-weight: 500;
+      }
 
-        .category-crypto {
-            background-color: #f7931a;
-            color: #000;
-        }
+      .category-crypto {
+        background-color: #f7931a;
+        color: #000;
+      }
 
-        .category-stocks {
-            background-color: #4caf50;
-            color: #000;
-        }
+      .category-stocks {
+        background-color: #4caf50;
+        color: #000;
+      }
 
-        .category-fixed-income {
-            background-color: #2196f3;
-            color: #fff;
-        }
+      .category-fixed-income {
+        background-color: #2196f3;
+        color: #fff;
+      }
 
-        .positive-value {
-            color: #4caf50;
-        }
+      .positive-value {
+        color: #4caf50;
+      }
 
-        .negative-value {
-            color: #f44336;
-        }
+      .negative-value {
+        color: #f44336;
+      }
 
-        .no-assets-message {
-            padding: 20px;
-            text-align: center;
-            color: #888;
-            font-style: italic;
-        }
+      .no-assets-message {
+        padding: 20px;
+        text-align: center;
+        color: #888;
+        font-style: italic;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <header id="header"></header>
     <div class="dashboard-container">
-        <main class="main-content">
-            <section class="chart-section">
-                <div class="section-header">
-                    <h2>Evolução do Patrimônio</h2>
-                    <div class="filters">
-                        <div class="filter-data" id="patrimonyFilter">
-                            <button class="filter-option active" data-value="all">ALL</button>
-                            <button class="filter-option" data-value="3">3 MESES</button>
-                            <button class="filter-option" data-value="6">6 MESES</button>
-                            <button class="filter-option" data-value="12">12 MESES</button>
-                            <button class="filter-option" data-value="24">24 MESES</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="patrimonioChart"></canvas>
-                </div>
-            </section>
-
-            <section class="chart-section">
-                <div class="section-header">
-                    <h2>Patrimônio por Categoria</h2>
-                </div>
-                <div class="pie-chart-container">
-                    <canvas id="assetsDistributionChart"></canvas>
-                    <div class="pie-chart-legend" id="pie-chart-legend"></div>
-                </div>
-            </section>
-        </main>
-
-        <section class="assets-section">
-            <div class="assets-header">
-                <h2>Carteira: x</h2>
-                <button class="btn btn-primary btn-round" id="headerAddAssetBtn">Adicionar Ativo</button>
+      <main class="main-content">
+        <section class="chart-section">
+          <div class="section-header">
+            <h2>Evolução do Patrimônio</h2>
+            <div class="filters">
+              <div class="filter-data" id="patrimonyFilter">
+                <button class="filter-option active" data-value="all">
+                  ALL
+                </button>
+                <button class="filter-option" data-value="3">3 MESES</button>
+                <button class="filter-option" data-value="6">6 MESES</button>
+                <button class="filter-option" data-value="12">12 MESES</button>
+                <button class="filter-option" data-value="24">24 MESES</button>
+              </div>
             </div>
-
-            <div class="portfolio-summary">
-                <div class="summary-item">
-                    <h3>Saldo Total</h3>
-                    <p id="portfolio-balance">R$ 0,00</p>
-                </div>
-                <div class="summary-item">
-                    <h3>Rentabilidade</h3>
-                    <p id="portfolio-return" class="positive-return">0%</p>
-                </div>
-            </div>
-
-            <div class="assets-table-container" id="assets-table-container">
-                <div class="portfolio-info">
-                    <p class="portfolio-description">Descrição: ssas</p>
-                </div>
-
-                <div class="assets-list">
-                    <h3>Ativos na Carteira</h3>
-                    <div id="assets-listing">
-                        <div id="loading-assets" class="loading-message" style="display: none;">
-                            <p>Carregando ativos...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="patrimonioChart"></canvas>
+          </div>
         </section>
+
+        <section class="chart-section">
+          <div class="section-header">
+            <h2>Patrimônio por Categoria</h2>
+          </div>
+          <div class="pie-chart-container">
+            <canvas id="assetsDistributionChart"></canvas>
+            <div class="pie-chart-legend" id="pie-chart-legend"></div>
+          </div>
+        </section>
+      </main>
+
+      <section class="assets-section">
+        <div class="assets-header">
+          <h2>Carteira: x</h2>
+          <button class="btn btn-primary btn-round" id="headerAddAssetBtn">
+            Adicionar Ativo
+          </button>
+        </div>
+
+        <div class="portfolio-summary">
+          <div class="summary-item">
+            <h3>Saldo Total</h3>
+            <p id="portfolio-balance">R$ 0,00</p>
+          </div>
+          <div class="summary-item">
+            <h3>Rentabilidade</h3>
+            <p id="portfolio-return" class="positive-return">0%</p>
+          </div>
+        </div>
+
+        <div class="assets-table-container" id="assets-table-container">
+          <div class="portfolio-info">
+            <p class="portfolio-description">Descrição: ssas</p>
+          </div>
+
+          <div class="assets-list">
+            <h3>Ativos na Carteira</h3>
+            <div id="assets-listing">
+              <div
+                id="loading-assets"
+                class="loading-message"
+                style="display: none"
+              >
+                <p>Carregando ativos...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <div id="addAssetModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Adicionar Ativo</h2>
-                <span class="close-button">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="addAssetForm">
-                    <div class="form-group">
-                        <label for="assetDropdown">Selecione um Ativo:</label>
-                        <select id="assetDropdown" name="assetDropdown" required>
-                            <option value="">Selecione um ativo</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="assetCategory">Categoria:</label>
-                        <select id="assetCategory" name="assetCategory" required>
-                            <option value="CRIPTOMOEDAS">Criptomoedas</option>
-                            <option value="ACOES">Ações</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="assetName">Nome do Ativo:</label>
-                        <input type="text" id="assetName" name="assetName" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="assetValuePerUnit">Valor por Unidade (R$):</label>
-                        <input type="number" id="assetValuePerUnit" name="assetValuePerUnit" step="0.01" min="0.01"
-                            required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="assetQuantity">Quantidade:</label>
-                        <input type="number" id="assetQuantity" name="assetQuantity" step="0.000001" min="0.000001"
-                            required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="assetPurchaseDate">Data de Compra:</label>
-                        <input type="date" id="assetPurchaseDate" required pattern="\d{4}-\d{2}-\d{2}">
-
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn primary-btn">Adicionar</button>
-                        <button type="button" class="btn secondary-btn cancel-btn">Cancelar</button>
-                    </div>
-                </form>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Adicionar Ativo</h2>
+          <span class="close-button">&times;</span>
         </div>
+        <div class="modal-body">
+          <form id="addAssetForm">
+            <div class="form-group">
+              <label for="assetDropdown">Selecione um Ativo:</label>
+              <select id="assetDropdown" name="assetDropdown" required>
+                <option value="">Selecione um ativo</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="assetCategory">Categoria:</label>
+              <select id="assetCategory" name="assetCategory" required>
+                <option value="CRIPTOMOEDAS">Criptomoedas</option>
+                <option value="ACOES">Ações</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="assetName">Nome do Ativo:</label>
+              <input type="text" id="assetName" name="assetName" required />
+            </div>
+
+            <div class="form-group">
+              <label for="assetValuePerUnit">Valor por Unidade (R$):</label>
+              <input
+                type="number"
+                id="assetValuePerUnit"
+                name="assetValuePerUnit"
+                step="0.01"
+                min="0.01"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="assetQuantity">Quantidade:</label>
+              <input
+                type="number"
+                id="assetQuantity"
+                name="assetQuantity"
+                step="0.000001"
+                min="0.000001"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="assetPurchaseDate">Data de Compra:</label>
+              <input
+                type="date"
+                id="assetPurchaseDate"
+                required
+                pattern="\d{4}-\d{2}-\d{2}"
+              />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn primary-btn">Adicionar</button>
+              <button type="button" class="btn secondary-btn cancel-btn">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-
-
 
     <div id="editAssetModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Editar Ativo</h2>
-                <span class="close-button">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="editAssetForm">
-                    <input type="hidden" id="editAssetId">
-                    <input type="hidden" id="editTransactionId">
-                    <div class="form-group">
-                        <label for="editAssetName">Nome do Ativo:</label>
-                        <input type="text" id="editAssetName" name="editAssetName" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editAssetCategory">Categoria:</label>
-                        <select id="editAssetCategory" name="editAssetCategory" required>
-                            <option value="CRIPTOMOEDAS">Criptomoedas</option>
-                            <option value="ACOES">Ações</option>
-                            <option value="RENDA_FIXA">Renda Fixa</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editAssetValuePerUnit">Valor por Unidade (R$):</label>
-                        <input type="number" id="editAssetValuePerUnit" name="editAssetValuePerUnit" step="0.01"
-                            min="0.01" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editAssetQuantity">Quantidade:</label>
-                        <input type="number" id="editAssetQuantity" name="editAssetQuantity" step="0.000001"
-                            min="0.000001" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editAssetPurchaseDate">Data de Compra:</label>
-                        <input type="date" id="editAssetPurchaseDate" required pattern="\d{4}-\d{2}-\d{2}">
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn primary-btn">Salvar Alterações</button>
-                        <button type="button" class="btn secondary-btn cancel-btn">Cancelar</button>
-                    </div>
-                </form>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Editar Ativo</h2>
+          <span class="close-button">&times;</span>
         </div>
-    </div>
+        <div class="modal-body">
+          <form id="editAssetForm">
+            <input type="hidden" id="editAssetId" />
+            <input type="hidden" id="editTransactionId" />
+            <div class="form-group">
+              <label for="editAssetName">Nome do Ativo:</label>
+              <input
+                type="text"
+                id="editAssetName"
+                name="editAssetName"
+                required
+              />
+            </div>
 
+            <div class="form-group">
+              <label for="editAssetCategory">Categoria:</label>
+              <select id="editAssetCategory" name="editAssetCategory" required>
+                <option value="CRIPTOMOEDAS">Criptomoedas</option>
+                <option value="ACOES">Ações</option>
+                <option value="RENDA_FIXA">Renda Fixa</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="editAssetValuePerUnit">Valor por Unidade (R$):</label>
+              <input
+                type="number"
+                id="editAssetValuePerUnit"
+                name="editAssetValuePerUnit"
+                step="0.01"
+                min="0.01"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="editAssetQuantity">Quantidade:</label>
+              <input
+                type="number"
+                id="editAssetQuantity"
+                name="editAssetQuantity"
+                step="0.000001"
+                min="0.000001"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="editAssetPurchaseDate">Data de Compra:</label>
+              <input
+                type="date"
+                id="editAssetPurchaseDate"
+                required
+                pattern="\d{4}-\d{2}-\d{2}"
+              />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn primary-btn">
+                Salvar Alterações
+              </button>
+              <button type="button" class="btn secondary-btn cancel-btn">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
     <script src="../../js/auth/auth-service.js"></script>
     <script src="../../js/auth/acess.js"></script>
@@ -276,7 +334,5 @@
     <script src="../../js/investidor/resumo/modal-function.js"></script>
     <script src="../../js/investidor/resumo/resumo.js"></script>
     <script src="../../js/investidor/resumo/utils.js"></script>
-
-</body>
-
+  </body>
 </html>

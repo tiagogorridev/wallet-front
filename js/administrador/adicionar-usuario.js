@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Configuração inicial e elementos DOM
+  // CONFIGURAÇÃO INICIAL E ELEMENTOS
   const API_URL = "http://191.239.116.115:8080";
   const msg = document.createElement("div");
   msg.id = "mensagem";
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const confirmPwd = document.getElementById("confirm-password");
   const form = document.getElementById("user-form");
 
-  // Toggle de visibilidade das senhas
+  // TOGGLE VISIBILIDADE SENHAS
   document
     .getElementById("togglePassword")
     .addEventListener("click", function () {
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
       this.classList.toggle("fa-eye-slash");
     });
 
-  // Função para exibir mensagens de feedback
+  // FUNÇÃO EXIBIR MENSAGENS
   function showMsg(text, type) {
     msg.textContent = text;
     msg.className = `feedback-message ${type}`;
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(() => (msg.style.display = "none"), 5000);
   }
 
-  // Validação do formulário
+  // VALIDAÇÃO FORMULÁRIO
   function validate() {
     const nome = document.getElementById("name").value.trim();
     const email = document.getElementById("email").value.trim();
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return true;
   }
 
-  // Comunicação com a API
+  // COMUNICAÇÃO API
   async function sendData(data) {
     try {
       const response = await fetch(`${API_URL}/auth/signup`, {
@@ -87,14 +87,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Mapeamento de perfis de usuário
+  // MAPEAMENTO PERFIS
   const profileMap = {
     admin: "ADMIN",
     analyst: "ANALISTA",
     investor: "USUARIO",
   };
 
-  // Submissão do formulário
+  // SUBMISSÃO FORMULÁRIO
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
     if (!validate()) return;
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Botão cancelar
+  // BOTÃO CANCELAR
   document
     .querySelector(".cancel-btn")
     .addEventListener("click", () => window.history.back());

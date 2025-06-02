@@ -1,73 +1,87 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyWallet - Notícias</title>
-    <link rel="stylesheet" href="../../css/configuracoes.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="shortcut icon" href="../../assets/favicon-icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../css/auth/style.css">
-    <link rel="stylesheet" href="../../css/analista/header-analista.css">
-    <link rel="stylesheet" href="../../css/analista/noticias-analista.css">
-</head>
+    <link rel="stylesheet" href="../../css/configuracoes.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      rel="shortcut icon"
+      href="../../assets/favicon-icon.png"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="../../css/auth/style.css" />
+    <link rel="stylesheet" href="../../css/analista/header-analista.css" />
+    <link rel="stylesheet" href="../../css/analista/noticias-analista.css" />
+  </head>
 
-<body>
+  <body>
     <header id="header-analista"></header>
     <main class="content-container">
-        <div class="content-title">
-            <h1>Publicação de Notícias</h1>
-            <p>Compartilhe informações valiosas com os clientes</p>
+      <div class="content-title">
+        <h1>Publicação de Notícias</h1>
+        <p>Compartilhe informações valiosas com os clientes</p>
+      </div>
+
+      <section class="publication-section">
+        <div class="section-header">
+          <h2>Nova Publicação</h2>
         </div>
 
-        <section class="publication-section">
-            <div class="section-header">
-                <h2>Nova Publicação</h2>
+        <div class="publication-form">
+          <div class="form-group">
+            <label for="title">Título</label>
+            <input
+              type="text"
+              id="title"
+              class="form-control"
+              placeholder="Digite o título da publicação"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Categoria</label>
+            <div class="category-selector">
+              <button class="category-btn active">Crypto</button>
+              <button class="category-btn">Ação</button>
             </div>
+          </div>
 
-            <div class="publication-form">
-                <div class="form-group">
-                    <label for="title">Título</label>
-                    <input type="text" id="title" class="form-control" placeholder="Digite o título da publicação">
-                </div>
+          <div class="form-group">
+            <label for="content">Conteúdo</label>
+            <textarea
+              id="content"
+              class="form-control"
+              placeholder="Digite o conteúdo da publicação"
+            ></textarea>
+          </div>
 
-                <div class="form-group">
-                    <label>Categoria</label>
-                    <div class="category-selector">
-                        <button class="category-btn active">Crypto</button>
-                        <button class="category-btn">Ação</button>
-                    </div>
-                </div>
+          <div class="btn-controls">
+            <button class="btn-submit">
+              <i class="fas fa-paper-plane"></i> Publicar
+            </button>
+          </div>
+        </div>
+      </section>
 
-                <div class="form-group">
-                    <label for="content">Conteúdo</label>
-                    <textarea id="content" class="form-control"
-                        placeholder="Digite o conteúdo da publicação"></textarea>
-                </div>
+      <section class="publication-section">
+        <div class="section-header">
+          <h2>Publicações Recentes</h2>
+          <div class="view-filters">
+            <button class="filter-btn active">Todas</button>
+            <button class="filter-btn">Crypto</button>
+            <button class="filter-btn">Ação</button>
+          </div>
+        </div>
 
-                <div class="btn-controls">
-                    <button class="btn-submit">
-                        <i class="fas fa-paper-plane"></i> Publicar
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <section class="publication-section">
-            <div class="section-header">
-                <h2>Publicações Recentes</h2>
-                <div class="view-filters">
-                    <button class="filter-btn active">Todas</button>
-                    <button class="filter-btn">Crypto</button>
-                    <button class="filter-btn">Ação</button>
-                </div>
-            </div>
-
-            <div class="news-list">
-                <!-- News items will be dynamically loaded here -->
-            </div>
-        </section>
+        <div class="news-list">
+          <!-- News items will be dynamically loaded here -->
+        </div>
+      </section>
     </main>
 
     <script src="../../js/auth/auth-service.js"></script>
@@ -75,6 +89,5 @@
     <script src="../../js/analista/header-analista.js"></script>
     <script src="../../js/investidor/resumo/api-service.js"></script>
     <script src="../../js/analista/noticias-analista.js"></script>
-</body>
-
+  </body>
 </html>

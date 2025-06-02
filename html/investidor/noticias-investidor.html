@@ -1,67 +1,92 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyWallet - Notícias para Investidores</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="shortcut icon" href="../../assets/favicon-icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="../../css/auth/style.css">
-    <link rel="stylesheet" href="../../css/investidor/header.css">
-    <link rel="stylesheet" href="../../css/investidor/noticias-investidor.css">
-</head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link
+      rel="shortcut icon"
+      href="../../assets/favicon-icon.png"
+      type="image/x-icon"
+    />
 
-<body>
+    <link
+      rel="shortcut icon"
+      href="../../assets/favicon-icon.png"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="../../css/auth/style.css" />
+    <link rel="stylesheet" href="../../css/investidor/header.css" />
+    <link
+      rel="stylesheet"
+      href="../../css/investidor/noticias-investidor.css"
+    />
+  </head>
+
+  <body>
     <header id="header"></header>
     <main class="content-container">
-        <div class="content-title">
-            <h1>Notícias e Dicas de Investimento</h1>
-            <p>Mantenha-se informado com as últimas novidades do mercado financeiro</p>
+      <div class="content-title">
+        <h1>Notícias e Dicas de Investimento</h1>
+        <p>
+          Mantenha-se informado com as últimas novidades do mercado financeiro
+        </p>
+      </div>
+
+      <section class="news-section">
+        <div class="section-header">
+          <h2>Notícias e Dicas</h2>
+          <div class="view-filters">
+            <button class="filter-btn active" data-filter="all">Todas</button>
+            <button class="filter-btn" data-filter="acao">Ação</button>
+            <button class="filter-btn" data-filter="crypto">Crypto</button>
+          </div>
         </div>
 
-        <section class="news-section">
-            <div class="section-header">
-                <h2>Notícias e Dicas</h2>
-                <div class="view-filters">
-                    <button class="filter-btn active" data-filter="all">Todas</button>
-                    <button class="filter-btn" data-filter="acao">Ação</button>
-                    <button class="filter-btn" data-filter="crypto">Crypto</button>
-                </div>
-            </div>
+        <div class="search-box">
+          <input
+            type="text"
+            id="news-search"
+            class="form-control"
+            placeholder="Buscar notícias..."
+          />
+          <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
 
-            <div class="search-box">
-                <input type="text" id="news-search" class="form-control" placeholder="Buscar notícias...">
-                <button class="search-btn"><i class="fas fa-search"></i></button>
-            </div>
+        <div class="news-list">
+          <!-- News items will be dynamically loaded here -->
+        </div>
 
-            <div class="news-list">
-                <!-- News items will be dynamically loaded here -->
-            </div>
-
-            <div class="pagination">
-                <button class="pagination-btn prev"><i class="fas fa-chevron-left"></i></button>
-                <div class="page-numbers">
-                    <!-- Page numbers will be dynamically loaded here -->
-                </div>
-                <button class="pagination-btn next"><i class="fas fa-chevron-right"></i></button>
-            </div>
-        </section>
+        <div class="pagination">
+          <button class="pagination-btn prev">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div class="page-numbers">
+            <!-- Page numbers will be dynamically loaded here -->
+          </div>
+          <button class="pagination-btn next">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </section>
     </main>
 
     <div class="modal" id="news-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="modal-header">
-                <h2 class="modal-title"></h2>
-                <span class="modal-category"></span>
-            </div>
-            <div class="modal-body">
-                <p class="modal-text"></p>
-            </div>
-            <div class="modal-footer">
-            </div>
+      <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div class="modal-header">
+          <h2 class="modal-title"></h2>
+          <span class="modal-category"></span>
         </div>
+        <div class="modal-body">
+          <p class="modal-text"></p>
+        </div>
+        <div class="modal-footer"></div>
+      </div>
     </div>
 
     <script src="../../js/auth/auth-service.js"></script>
@@ -69,6 +94,5 @@
     <script src="../../js/investidor/header.js"></script>
     <script src="../../js/investidor/resumo/api-service.js"></script>
     <script src="../../js/investidor/noticias-investidor.js"></script>
-</body>
-
+  </body>
 </html>

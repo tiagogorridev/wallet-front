@@ -1,124 +1,142 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyWallet - Relatórios Administrativos</title>
-    <link rel="stylesheet" href="../../css/configuracoes.css">
-    <link rel="stylesheet" href="../../css/auth/style.css">
-    <link rel="stylesheet" href="../../css/administrador/header-adm.css">
-    <link rel="stylesheet" href="../../css/administrador/components-administrador/components-administrador.css">
-    <link rel="shortcut icon" href="../../assets/favicon-icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-</head>
+    <link rel="stylesheet" href="../../css/configuracoes.css" />
+    <link rel="stylesheet" href="../../css/auth/style.css" />
+    <link rel="stylesheet" href="../../css/administrador/header-adm.css" />
+    <link
+      rel="stylesheet"
+      href="../../css/administrador/components-administrador/components-administrador.css"
+    />
+    <link
+      rel="shortcut icon"
+      href="../../assets/favicon-icon.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
 
-<body>
+  <body>
     <header id="admin-header"></header>
 
     <div class="dashboard-container">
-        <div class="dashboard-header">
-            <div class="header-content">
-                <h1>Dashboard Administrativo</h1>
-                <p>Visão geral da plataforma de investimentos</p>
+      <div class="dashboard-header">
+        <div class="header-content">
+          <h1>Dashboard Administrativo</h1>
+          <p>Visão geral da plataforma de investimentos</p>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <section class="overview-section">
+          <div class="section-header">
+            <h2>Usuários Cadastrados</h2>
+            <div class="filter-container">
+              <select id="user-time-filter" class="time-filter">
+                <option value="7">Últimos 7 dias</option>
+                <option value="30" selected>Últimos 30 dias</option>
+                <option value="90">Últimos 90 dias</option>
+                <option value="365">Último ano</option>
+              </select>
             </div>
-        </div>
+          </div>
 
-        <div class="main-content">
-            <section class="overview-section">
-                <div class="section-header">
-                    <h2>Usuários Cadastrados</h2>
-                    <div class="filter-container">
-                        <select id="user-time-filter" class="time-filter">
-                            <option value="7">Últimos 7 dias</option>
-                            <option value="30" selected>Últimos 30 dias</option>
-                            <option value="90">Últimos 90 dias</option>
-                            <option value="365">Último ano</option>
-                        </select>
-                    </div>
-                </div>
+          <div class="overview-grid">
+            <div class="overview-card">
+              <i class="fas fa-users"></i>
+              <h3>Total de Usuários</h3>
+              <div class="value" id="total-users">0</div>
+              <div class="variation positive" id="users-variation">+0%</div>
+            </div>
 
-                <div class="overview-grid">
-                    <div class="overview-card">
-                        <i class="fas fa-users"></i>
-                        <h3>Total de Usuários</h3>
-                        <div class="value" id="total-users">0</div>
-                        <div class="variation positive" id="users-variation">+0%</div>
-                    </div>
+            <div class="overview-card">
+              <i class="fas fa-user-plus"></i>
+              <h3>Novos Usuários</h3>
+              <div class="value" id="new-users">0</div>
+              <div class="variation positive" id="new-users-variation">+0%</div>
+            </div>
 
-                    <div class="overview-card">
-                        <i class="fas fa-user-plus"></i>
-                        <h3>Novos Usuários</h3>
-                        <div class="value" id="new-users">0</div>
-                        <div class="variation positive" id="new-users-variation">+0%</div>
-                    </div>
+            <div class="overview-card">
+              <i class="fas fa-user-check"></i>
+              <h3>Taxa de Ativação</h3>
+              <div class="value" id="activation-rate">0%</div>
+              <div class="variation positive" id="activation-variation">
+                +0%
+              </div>
+            </div>
 
-                    <div class="overview-card">
-                        <i class="fas fa-user-check"></i>
-                        <h3>Taxa de Ativação</h3>
-                        <div class="value" id="activation-rate">0%</div>
-                        <div class="variation positive" id="activation-variation">+0%</div>
-                    </div>
+            <div class="overview-card">
+              <i class="fas fa-user-clock"></i>
+              <h3>Retenção Mensal</h3>
+              <div class="value" id="retention-rate">0%</div>
+              <div class="variation positive" id="retention-variation">+0%</div>
+            </div>
+          </div>
+        </section>
 
-                    <div class="overview-card">
-                        <i class="fas fa-user-clock"></i>
-                        <h3>Retenção Mensal</h3>
-                        <div class="value" id="retention-rate">0%</div>
-                        <div class="variation positive" id="retention-variation">+0%</div>
-                    </div>
-                </div>
-            </section>
+        <section class="overview-section">
+          <div class="section-header">
+            <h2>Total Investido pelos Usuários</h2>
+            <div class="filter-container">
+              <select id="investment-time-filter" class="time-filter">
+                <option value="7">Últimos 7 dias</option>
+                <option value="30" selected>Últimos 30 dias</option>
+                <option value="90">Últimos 90 dias</option>
+                <option value="365">Último ano</option>
+              </select>
+            </div>
+          </div>
 
-            <section class="overview-section">
-                <div class="section-header">
-                    <h2>Total Investido pelos Usuários</h2>
-                    <div class="filter-container">
-                        <select id="investment-time-filter" class="time-filter">
-                            <option value="7">Últimos 7 dias</option>
-                            <option value="30" selected>Últimos 30 dias</option>
-                            <option value="90">Últimos 90 dias</option>
-                            <option value="365">Último ano</option>
-                        </select>
-                    </div>
-                </div>
+          <div class="overview-grid">
+            <div class="overview-card">
+              <i class="fas fa-money-bill-wave"></i>
+              <h3>Total Investido</h3>
+              <div class="value" id="total-invested">R$ 0</div>
+              <div class="variation positive" id="investment-variation">
+                +0%
+              </div>
+            </div>
 
-                <div class="overview-grid">
-                    <div class="overview-card">
-                        <i class="fas fa-money-bill-wave"></i>
-                        <h3>Total Investido</h3>
-                        <div class="value" id="total-invested">R$ 0</div>
-                        <div class="variation positive" id="investment-variation">+0%</div>
-                    </div>
+            <div class="overview-card">
+              <i class="fas fa-chart-line"></i>
+              <h3>Média por Usuário</h3>
+              <div class="value" id="avg-investment">R$ 0</div>
+              <div class="variation positive" id="avg-investment-variation">
+                +0%
+              </div>
+            </div>
 
-                    <div class="overview-card">
-                        <i class="fas fa-chart-line"></i>
-                        <h3>Média por Usuário</h3>
-                        <div class="value" id="avg-investment">R$ 0</div>
-                        <div class="variation positive" id="avg-investment-variation">+0%</div>
-                    </div>
+            <div class="overview-card">
+              <i class="fas fa-calendar-plus"></i>
+              <h3>Novos Investimentos</h3>
+              <div class="value" id="new-investments">0</div>
+              <div class="variation positive" id="new-investments-variation">
+                +0%
+              </div>
+            </div>
 
-                    <div class="overview-card">
-                        <i class="fas fa-calendar-plus"></i>
-                        <h3>Novos Investimentos</h3>
-                        <div class="value" id="new-investments">0</div>
-                        <div class="variation positive" id="new-investments-variation">+0%</div>
-                    </div>
-
-                    <div class="overview-card">
-                        <i class="fas fa-chart-pie"></i>
-                        <h3>Diversificação Média</h3>
-                        <div class="value" id="diversification">0 categorias</div>
-                        <div class="variation positive" id="diversification-variation">+0%</div>
-                    </div>
-                </div>
-            </section>
-        </div>
+            <div class="overview-card">
+              <i class="fas fa-chart-pie"></i>
+              <h3>Diversificação Média</h3>
+              <div class="value" id="diversification">0 categorias</div>
+              <div class="variation positive" id="diversification-variation">
+                +0%
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
 
     <script src="../../js/auth/auth-service.js"></script>
     <script src="../../js/auth/acess.js"></script>
     <script src="../../js/administrador/header-adm.js"></script>
     <script src="../../js/administrador/dashboard.js"></script>
-</body>
-
+  </body>
 </html>

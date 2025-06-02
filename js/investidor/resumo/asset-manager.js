@@ -1,250 +1,251 @@
+// GERENCIADOR DE ATIVOS - OPERAÇÕES CRUD DOS ATIVOS
 const AssetManager = {
-    loadAssetsDropdown() {
-        const assetDropdown = document.getElementById('assetDropdown');
-        if (!assetDropdown) {
-            console.error('Elemento assetDropdown não encontrado');
-            return;
-        }
-        assetDropdown.innerHTML = '<option value="">Carregando ativos...</option>';
+  // CARREGAMENTO DO DROPDOWN DE ATIVOS
+  loadAssetsDropdown() {
+    const dropdown = document.getElementById("assetDropdown");
+    if (!dropdown) return;
 
-        APIService.getAssets()
-            .then(response => {
-                const assets = response.data?.data || [];
-                assetDropdown.innerHTML = '<option value="">Selecione um ativo</option>';
-                if (!assets.length) {
-                    assetDropdown.innerHTML = '<option value="">Nenhum ativo disponível</option>';
-                    return;
-                }
+    dropdown.innerHTML = '<option value="">Carregando...</option>';
 
-                const assetsByType = {};
-                assets.forEach(asset => {
-                    const type = asset.tipo;
-                    if (!assetsByType[type]) assetsByType[type] = [];
-                    assetsByType[type].push(asset);
-                });
+    APIService.getAssets()
+      .then((response) => {
+        const assets = response.data?.data || [];
+        dropdown.innerHTML = '<option value="">Selecione um ativo</option>';
 
-                for (const type in assetsByType) {
-                    if (assetsByType[type].length > 0) {
-                        const optgroup = document.createElement('optgroup');
-                        optgroup.label = Utils.getTypeLabel(type);
-                        assetsByType[type].forEach(asset => {
-                            const option = document.createElement('option');
-                            option.value = asset.id;
-                            option.textContent = asset.nome + (asset.simbolo ? ` (${asset.simbolo})` : '');
-                            option.dataset.price = asset.preco_atual || '';
-                            option.dataset.category = Utils.mapTypeToCategoryForForm(type);
-                            option.dataset.name = asset.nome || '';
-                            optgroup.appendChild(option);
-                        });
-                        assetDropdown.appendChild(optgroup);
-                    }
-                }
-
-                assetDropdown.addEventListener('change', function () {
-                    const selectedOption = this.options[this.selectedIndex];
-                    if (selectedOption?.value) {
-                        const nameInput = document.getElementById('assetName');
-                        const valueInput = document.getElementById('assetValuePerUnit');
-                        const categorySelect = document.getElementById('assetCategory');
-                        if (nameInput) nameInput.value = selectedOption.dataset.name || selectedOption.textContent;
-                        if (valueInput) valueInput.value = selectedOption.dataset.price || '';
-                        if (categorySelect && selectedOption.dataset.category) {
-                            categorySelect.value = selectedOption.dataset.category;
-                        }
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('Erro ao carregar ativos:', error);
-                assetDropdown.innerHTML = '<option value="">Erro ao carregar ativos</option>';
-                alert(`Erro ao carregar a lista de ativos: ${error.message}`);
-            });
-    },
-
-    openEditAssetModal(assetId) {
-        const modal = document.getElementById('editAssetModal');
-        if (!modal) {
-            console.error('Modal de edição não encontrado');
-            return;
+        if (!assets.length) {
+          dropdown.innerHTML =
+            '<option value="">Nenhum ativo disponível</option>';
+          return;
         }
 
-        const editAssetId = document.getElementById('editAssetId');
-        const editAssetName = document.getElementById('editAssetName');
-        const editAssetCategory = document.getElementById('editAssetCategory');
-        const editAssetValuePerUnit = document.getElementById('editAssetValuePerUnit');
-        const editAssetQuantity = document.getElementById('editAssetQuantity');
-        const editAssetPurchaseDate = document.getElementById('editAssetPurchaseDate');
-        const editTransactionId = document.getElementById('editTransactionId');
+        const grouped = {};
+        assets.forEach((asset) => {
+          const type = asset.tipo;
+          if (!grouped[type]) grouped[type] = [];
+          grouped[type].push(asset);
+        });
 
-        const assetRow = document.querySelector(`[data-asset-id="${assetId}"]`).closest('tr');
-        if (!assetRow) {
-            console.error('Linha do ativo não encontrada');
-            return;
+        for (const type in grouped) {
+          const optgroup = document.createElement("optgroup");
+          optgroup.label = Utils.getTypeLabel(type);
+
+          grouped[type].forEach((asset) => {
+            const option = document.createElement("option");
+            option.value = asset.id;
+            option.textContent =
+              asset.nome + (asset.simbolo ? ` (${asset.simbolo})` : "");
+            option.dataset.price = asset.preco_atual || "";
+            option.dataset.category = Utils.mapTypeToCategoryForForm(type);
+            option.dataset.name = asset.nome || "";
+            optgroup.appendChild(option);
+          });
+          dropdown.appendChild(optgroup);
         }
 
-        const assetName = assetRow.cells[0].textContent;
-        const categorySpan = assetRow.cells[1].querySelector('.asset-category');
-        const category = categorySpan ? Utils.getCategoryValueFromClass(categorySpan.className) : 'CRIPTOMOEDAS';
-        const quantity = parseFloat(assetRow.cells[2].textContent.replace(/\./g, '').replace(',', '.'));
-        const valuePerUnit = parseFloat(assetRow.cells[3].textContent.replace('R$ ', '').replace(/\./g, '').replace(',', '.'));
+        dropdown.addEventListener("change", function () {
+          const option = this.options[this.selectedIndex];
+          if (option?.value) {
+            const nameInput = document.getElementById("assetName");
+            const valueInput = document.getElementById("assetValuePerUnit");
+            const categorySelect = document.getElementById("assetCategory");
 
-        const transactionId = assetRow.dataset.transactionId || null;
+            if (nameInput)
+              nameInput.value = option.dataset.name || option.textContent;
+            if (valueInput) valueInput.value = option.dataset.price || "";
+            if (categorySelect && option.dataset.category) {
+              categorySelect.value = option.dataset.category;
+            }
+          }
+        });
+      })
+      .catch((error) => {
+        dropdown.innerHTML = '<option value="">Erro ao carregar</option>';
+        alert(`Erro: ${error.message}`);
+      });
+  },
 
-        editAssetId.value = assetId;
-        editAssetName.value = assetName;
-        editAssetCategory.value = category;
-        editAssetValuePerUnit.value = valuePerUnit;
-        editAssetQuantity.value = quantity;
-        editTransactionId.value = transactionId;
+  // ABERTURA DO MODAL DE EDIÇÃO
+  openEditAssetModal(assetId) {
+    const modal = document.getElementById("editAssetModal");
+    if (!modal) return;
 
-        const today = new Date();
-        editAssetPurchaseDate.value = today.toISOString().substring(0, 10);
+    const assetRow = document
+      .querySelector(`[data-asset-id="${assetId}"]`)
+      .closest("tr");
+    if (!assetRow) return;
+
+    const assetName = assetRow.cells[0].textContent;
+    const categorySpan = assetRow.cells[1].querySelector(".asset-category");
+    const category = categorySpan
+      ? Utils.getCategoryValueFromClass(categorySpan.className)
+      : "CRIPTOMOEDAS";
+    const quantity = parseFloat(
+      assetRow.cells[2].textContent.replace(/\./g, "").replace(",", ".")
+    );
+    const valuePerUnit = parseFloat(
+      assetRow.cells[3].textContent
+        .replace("R$ ", "")
+        .replace(/\./g, "")
+        .replace(",", ".")
+    );
+    const transactionId = assetRow.dataset.transactionId || null;
+
+    document.getElementById("editAssetId").value = assetId;
+    document.getElementById("editAssetName").value = assetName;
+    document.getElementById("editAssetCategory").value = category;
+    document.getElementById("editAssetValuePerUnit").value = valuePerUnit;
+    document.getElementById("editAssetQuantity").value = quantity;
+    document.getElementById("editTransactionId").value = transactionId;
+    document.getElementById("editAssetPurchaseDate").value = new Date()
+      .toISOString()
+      .substring(0, 10);
+
+    if (window.ModalFunctions) {
+      window.ModalFunctions.createModal("editAssetModal").openModal();
+    } else {
+      modal.style.display = "flex";
+    }
+  },
+
+  // ATUALIZAÇÃO DE ATIVO
+  updateAsset(event) {
+    event.preventDefault();
+
+    const assetId = document.getElementById("editAssetId").value;
+    const transactionId = document.getElementById("editTransactionId").value;
+    const assetName = document.getElementById("editAssetName").value;
+    const assetCategory = document.getElementById("editAssetCategory").value;
+    const assetValuePerUnit = parseFloat(
+      document.getElementById("editAssetValuePerUnit").value
+    );
+    const assetQuantity = parseFloat(
+      document.getElementById("editAssetQuantity").value
+    );
+    const assetPurchaseDate = document.getElementById(
+      "editAssetPurchaseDate"
+    ).value;
+
+    if (assetCategory === "ACOES" && !Number.isInteger(assetQuantity)) {
+      alert("Para ações, a quantidade deve ser um número inteiro");
+      return;
+    }
+
+    const walletId = localStorage.getItem("selectedWalletId");
+    if (!walletId) {
+      alert("Carteira não selecionada. Faça login novamente.");
+      window.location.href = "../../index.html";
+      return;
+    }
+
+    const data = {
+      id_carteira: parseInt(walletId),
+      nome_ativo: assetName,
+      tipo: "COMPRA",
+      quantidade: assetQuantity,
+      valor_unitario: assetValuePerUnit,
+      data_transacao: assetPurchaseDate,
+      taxa_corretagem: 0.0,
+      notas: "",
+    };
+
+    const closeModal = () => {
+      if (window.ModalFunctions) {
+        window.ModalFunctions.createModal("editAssetModal").closeModal();
+      } else {
+        document.getElementById("editAssetModal").style.display = "none";
+      }
+      document.getElementById("editAssetForm").reset();
+      window.location.reload();
+    };
+
+    if (transactionId) {
+      APIService.updateTransaction(transactionId, data)
+        .then(() => {
+          alert("Ativo atualizado!");
+          closeModal();
+        })
+        .catch((error) => alert(`Erro: ${error.message}`));
+    } else {
+      data.id_ativo = parseInt(assetId);
+      APIService.addTransaction(data)
+        .then(() => {
+          alert("Ativo atualizado!");
+          closeModal();
+        })
+        .catch((error) => alert(`Erro: ${error.message}`));
+    }
+  },
+
+  // ADIÇÃO DE NOVO ATIVO
+  addAsset(event) {
+    event.preventDefault();
+
+    const assetName = document.getElementById("assetName").value;
+    if (!assetName) {
+      alert("Insira um nome para o ativo");
+      return;
+    }
+
+    const assetCategory = document.getElementById("assetCategory").value;
+    const assetValuePerUnit = parseFloat(
+      document.getElementById("assetValuePerUnit").value
+    );
+    const assetQuantity = parseFloat(
+      document.getElementById("assetQuantity").value
+    );
+    const assetPurchaseDate =
+      document.getElementById("assetPurchaseDate").value;
+
+    if (assetCategory === "ACOES" && !Number.isInteger(assetQuantity)) {
+      alert("Para ações, a quantidade deve ser um número inteiro");
+      return;
+    }
+
+    const walletId = localStorage.getItem("selectedWalletId");
+    if (!walletId) {
+      alert("Carteira não selecionada. Faça login novamente.");
+      window.location.href = "../../index.html";
+      return;
+    }
+
+    const data = {
+      id_carteira: parseInt(walletId),
+      nome_ativo: assetName,
+      tipo: "COMPRA",
+      quantidade: assetQuantity,
+      valor_unitario: assetValuePerUnit,
+      data_transacao: assetPurchaseDate,
+      taxa_corretagem: 0.0,
+      notas: "",
+    };
+
+    APIService.addTransaction(data)
+      .then(() => {
+        alert("Ativo adicionado!");
 
         if (window.ModalFunctions) {
-            const editModal = window.ModalFunctions.createModal('editAssetModal');
-            editModal.openModal();
+          window.ModalFunctions.createModal("addAssetModal").closeModal();
         } else {
-            modal.style.display = 'flex';
-        }
-    },
-
-    updateAsset(event) {
-        event.preventDefault();
-
-        const assetId = document.getElementById('editAssetId').value;
-        const transactionId = document.getElementById('editTransactionId').value;
-        const assetName = document.getElementById('editAssetName').value;
-        const assetCategory = document.getElementById('editAssetCategory').value;
-        const assetValuePerUnit = parseFloat(document.getElementById('editAssetValuePerUnit').value);
-        const assetQuantity = parseFloat(document.getElementById('editAssetQuantity').value);
-        const assetPurchaseDate = document.getElementById('editAssetPurchaseDate').value;
-
-        if (assetCategory === 'ACOES' && !Number.isInteger(assetQuantity)) {
-            alert('Para ações, a quantidade deve ser um número inteiro');
-            return;
+          document.getElementById("addAssetModal").style.display = "none";
         }
 
-        const walletId = localStorage.getItem('selectedWalletId');
-        if (!walletId) {
-            alert('Carteira não selecionada. Por favor, faça login novamente.');
-            window.location.href = '../../index.html';
-            return;
-        }
+        document.getElementById("addAssetForm").reset();
+        window.location.reload();
+      })
+      .catch((error) => alert(`Erro: ${error.message}`));
+  },
 
-        const transactionData = {
-            id_carteira: parseInt(walletId),
-            nome_ativo: assetName,
-            tipo: "COMPRA",
-            quantidade: assetQuantity,
-            valor_unitario: assetValuePerUnit,
-            data_transacao: assetPurchaseDate,
-            taxa_corretagem: 0.0,
-            notas: ""
-        };
+  // EXCLUSÃO DE ATIVO
+  deleteAsset(assetId) {
+    if (!assetId) return;
 
-        const closeModal = () => {
-            if (window.ModalFunctions) {
-                const editModal = window.ModalFunctions.createModal('editAssetModal');
-                editModal.closeModal();
-            } else {
-                document.getElementById('editAssetModal').style.display = 'none';
-            }
-            document.getElementById('editAssetForm').reset();
-            window.location.reload();
-        };
-
-        if (transactionId) {
-            APIService.updateTransaction(transactionId, transactionData)
-                .then(() => {
-                    alert('Ativo atualizado com sucesso!');
-                    closeModal();
-                })
-                .catch(error => {
-                    alert(`Erro ao atualizar ativo: ${error.message}`);
-                });
-        } else {
-            transactionData.id_ativo = parseInt(assetId);
-            APIService.addTransaction(transactionData)
-                .then(() => {
-                    alert('Ativo atualizado com sucesso!');
-                    closeModal();
-                })
-                .catch(error => {
-                    alert(`Erro ao atualizar ativo: ${error.message}`);
-                });
-        }
-    },
-
-    addAsset(event) {
-        event.preventDefault();
-        const assetName = document.getElementById('assetName').value;
-        if (!assetName) {
-            alert('Por favor, insira um nome para o ativo');
-            return;
-        }
-
-        const assetCategory = document.getElementById('assetCategory').value;
-        const assetValuePerUnit = parseFloat(document.getElementById('assetValuePerUnit').value);
-        const assetQuantity = parseFloat(document.getElementById('assetQuantity').value);
-        const assetPurchaseDate = document.getElementById('assetPurchaseDate').value;
-
-        if (assetCategory === 'ACOES' && !Number.isInteger(assetQuantity)) {
-            alert('Para ações, a quantidade deve ser um número inteiro');
-            return;
-        }
-
-        const walletId = localStorage.getItem('selectedWalletId');
-        if (!walletId) {
-            alert('Carteira não selecionada. Por favor, faça login novamente.');
-            window.location.href = '../../index.html';
-            return;
-        }
-
-        const transactionData = {
-            id_carteira: parseInt(walletId),
-            nome_ativo: assetName,
-            tipo: "COMPRA",
-            quantidade: assetQuantity,
-            valor_unitario: assetValuePerUnit,
-            data_transacao: assetPurchaseDate,
-            taxa_corretagem: 0.0,
-            notas: ""
-        };
-
-        APIService.addTransaction(transactionData)
-            .then(() => {
-                alert('Ativo adicionado com sucesso!');
-
-                if (window.ModalFunctions) {
-                    const addModal = window.ModalFunctions.createModal('addAssetModal');
-                    addModal.closeModal();
-                } else {
-                    document.getElementById('addAssetModal').style.display = 'none';
-                }
-
-                document.getElementById('addAssetForm').reset();
-                window.location.reload();
-            })
-            .catch(error => {
-                alert(`Erro ao adicionar ativo: ${error.message}`);
-            });
-    },
-
-    deleteAsset(assetId) {
-        if (!assetId) {
-            console.error('ID do ativo não fornecido');
-            return;
-        }
-
-        if (confirm('Tem certeza que deseja remover este ativo da carteira?')) {
-            APIService.deleteTransaction(assetId)
-                .then(() => {
-                    alert('Ativo removido com sucesso!');
-                    window.location.reload();
-                })
-                .catch(error => {
-                    alert(`Erro ao remover ativo: ${error.message}`);
-                });
-        }
+    if (confirm("Remover este ativo da carteira?")) {
+      APIService.deleteTransaction(assetId)
+        .then(() => {
+          alert("Ativo removido!");
+          window.location.reload();
+        })
+        .catch((error) => alert(`Erro: ${error.message}`));
     }
+  },
 };

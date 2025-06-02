@@ -1,118 +1,130 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const elementsConfig = {
-        portfolioHeader: document.querySelector('.assets-header h2'),
-        assetsTableContainer: document.getElementById('assets-table-container'),
-        loadingMessage: document.getElementById('loading-assets'),
-        portfolioNameElement: document.querySelector('.portfolio-selector span'),
-        walletNameInput: document.getElementById('wallet-name'),
-        walletDescInput: document.getElementById('wallet-description'),
-        pieChartLegend: document.getElementById('pie-chart-legend'),
-        balanceElement: document.getElementById('portfolio-balance'),
-        returnElement: document.getElementById('portfolio-return'),
-        addAssetForm: document.getElementById('addAssetForm'),
-        assetDropdown: document.getElementById('assetDropdown'),
-        addAssetButton: document.getElementById('headerAddAssetBtn')
-    };
+document.addEventListener("DOMContentLoaded", function () {
+  // CONFIGURAÇÃO DOS ELEMENTOS DOM
+  const elements = {
+    portfolioHeader: document.querySelector(".assets-header h2"),
+    assetsTableContainer: document.getElementById("assets-table-container"),
+    loadingMessage: document.getElementById("loading-assets"),
+    portfolioNameElement: document.querySelector(".portfolio-selector span"),
+    walletNameInput: document.getElementById("wallet-name"),
+    walletDescInput: document.getElementById("wallet-description"),
+    pieChartLegend: document.getElementById("pie-chart-legend"),
+    balanceElement: document.getElementById("portfolio-balance"),
+    returnElement: document.getElementById("portfolio-return"),
+    addAssetForm: document.getElementById("addAssetForm"),
+    assetDropdown: document.getElementById("assetDropdown"),
+    addAssetButton: document.getElementById("headerAddAssetBtn"),
+  };
 
-    if (typeof PortfolioManager !== 'undefined') {
-        PortfolioManager.setElements(elementsConfig);
+  // INICIALIZAÇÃO DO PORTFOLIO MANAGER
+  if (typeof PortfolioManager !== "undefined") {
+    PortfolioManager.setElements(elements);
+  }
+
+  // INICIALIZAÇÃO DO CHART MANAGER
+  if (typeof ChartManager !== "undefined") {
+    const charts = new ChartManager();
+    charts.initialize();
+    window.chartsManagerInstance = charts;
+
+    if (typeof PortfolioManager !== "undefined") {
+      PortfolioManager.setCharts(charts);
     }
+  }
 
-    if (typeof ChartManager !== 'undefined') {
-        const chartsManager = new ChartManager();
-        chartsManager.initialize();
-        window.chartsManagerInstance = chartsManager;
+  // CARREGAMENTO INICIAL DO PORTFOLIO
+  if (typeof PortfolioManager !== "undefined") {
+    PortfolioManager.loadPortfolio();
+  }
 
-        if (typeof PortfolioManager !== 'undefined') {
-            PortfolioManager.setCharts(chartsManager);
-        }
-    }
+  // INICIALIZAÇÃO DOS MODAIS
+  initializeModals();
 
-    if (typeof PortfolioManager !== 'undefined') {
-        PortfolioManager.loadPortfolio();
-    }
-
-    initializeModalComponents();
-
-    if (elementsConfig.addAssetButton) {
-        elementsConfig.addAssetButton.addEventListener('click', () => {
-            if (typeof AssetManager !== 'undefined') {
-                AssetManager.loadAssetsDropdown();
-            }
-        });
-    }
-
-    if (elementsConfig.addAssetForm) {
-        elementsConfig.addAssetForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            if (typeof AssetManager !== 'undefined') {
-                AssetManager.addAsset(event);
-            }
-        });
-    }
-
-    document.addEventListener('portfolioChanged', function (e) {
-        if (e.detail && e.detail.portfolio && typeof PortfolioManager !== 'undefined') {
-            PortfolioManager.updatePortfolioUI(e.detail.portfolio);
-        }
+  // EVENT LISTENERS PARA BOTÕES
+  if (elements.addAssetButton) {
+    elements.addAssetButton.addEventListener("click", () => {
+      if (typeof AssetManager !== "undefined") {
+        AssetManager.loadAssetsDropdown();
+      }
     });
+  }
 
-    document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('edit-asset') ||
-            (event.target.parentElement && event.target.parentElement.classList.contains('edit-asset'))) {
-
-            const button = event.target.classList.contains('edit-asset') ?
-                event.target : event.target.parentElement;
-
-            const assetId = button.dataset.assetId;
-            if (typeof AssetManager !== 'undefined') {
-                AssetManager.openEditAssetModal(assetId);
-            }
-        }
-
-        if (event.target.classList.contains('delete-asset') ||
-            (event.target.parentElement && event.target.parentElement.classList.contains('delete-asset'))) {
-
-            const button = event.target.classList.contains('delete-asset') ?
-                event.target : event.target.parentElement;
-
-            const assetId = button.dataset.assetId;
-            if (confirm('Tem certeza que deseja remover este ativo da carteira?')) {
-                if (typeof AssetManager !== 'undefined') {
-                    AssetManager.deleteAsset(assetId);
-                }
-            }
-        }
+  if (elements.addAssetForm) {
+    elements.addAssetForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (typeof AssetManager !== "undefined") {
+        AssetManager.addAsset(e);
+      }
     });
+  }
+
+  // LISTENER PARA MUDANÇAS NO PORTFOLIO
+  document.addEventListener("portfolioChanged", function (e) {
+    if (e.detail?.portfolio && typeof PortfolioManager !== "undefined") {
+      PortfolioManager.updatePortfolioUI(e.detail.portfolio);
+    }
+  });
+
+  // LISTENERS PARA EDIÇÃO E EXCLUSÃO DE ATIVOS
+  document.addEventListener("click", function (e) {
+    const target = e.target.classList.contains("edit-asset")
+      ? e.target
+      : e.target.parentElement?.classList.contains("edit-asset")
+      ? e.target.parentElement
+      : null;
+
+    if (target) {
+      const assetId = target.dataset.assetId;
+      if (typeof AssetManager !== "undefined") {
+        AssetManager.openEditAssetModal(assetId);
+      }
+      return;
+    }
+
+    const deleteTarget = e.target.classList.contains("delete-asset")
+      ? e.target
+      : e.target.parentElement?.classList.contains("delete-asset")
+      ? e.target.parentElement
+      : null;
+
+    if (deleteTarget) {
+      const assetId = deleteTarget.dataset.assetId;
+      if (confirm("Tem certeza que deseja remover este ativo da carteira?")) {
+        if (typeof AssetManager !== "undefined") {
+          AssetManager.deleteAsset(assetId);
+        }
+      }
+    }
+  });
 });
 
-function initializeModalComponents() {
-    if (typeof createModal === 'function') {
-        const addAssetModal = createModal('addAssetModal');
-        addAssetModal.initialize('headerAddAssetBtn');
+// FUNÇÃO DE INICIALIZAÇÃO DOS MODAIS
+function initializeModals() {
+  if (typeof createModal === "function") {
+    const addModal = createModal("addAssetModal");
+    addModal.initialize("headerAddAssetBtn");
 
-        const editAssetModal = createModal('editAssetModal');
-        editAssetModal.initialize();
-    }
+    const editModal = createModal("editAssetModal");
+    editModal.initialize();
+  }
 
-    const modalTrigger = document.getElementById('headerAddAssetBtn');
-    if (modalTrigger) {
-        modalTrigger.addEventListener('click', () => {
-            setTimeout(() => {
-                if (typeof AssetManager !== 'undefined') {
-                    AssetManager.loadAssetsDropdown();
-                }
-            }, 100);
-        });
-    }
+  const trigger = document.getElementById("headerAddAssetBtn");
+  if (trigger) {
+    trigger.addEventListener("click", () => {
+      setTimeout(() => {
+        if (typeof AssetManager !== "undefined") {
+          AssetManager.loadAssetsDropdown();
+        }
+      }, 100);
+    });
+  }
 
-    const editAssetForm = document.getElementById('editAssetForm');
-    if (editAssetForm) {
-        editAssetForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            if (typeof AssetManager !== 'undefined') {
-                AssetManager.updateAsset(event);
-            }
-        });
-    }
+  const editForm = document.getElementById("editAssetForm");
+  if (editForm) {
+    editForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (typeof AssetManager !== "undefined") {
+        AssetManager.updateAsset(e);
+      }
+    });
+  }
 }

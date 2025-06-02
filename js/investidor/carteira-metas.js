@@ -1,6 +1,7 @@
 const API_URL = "http://191.239.116.115:8080";
 
 class GoalManager {
+  // CONSTRUTOR - INICIALIZAÇÃO DA CLASSE
   constructor() {
     this.goals = [];
     this.walletBalance = 0;
@@ -8,6 +9,7 @@ class GoalManager {
     this.token = null;
   }
 
+  // INICIALIZAÇÃO PRINCIPAL
   init() {
     this.loadAuthData();
     this.setupEventListeners();
@@ -15,6 +17,7 @@ class GoalManager {
     this.loadWalletBalance();
   }
 
+  // CARREGAMENTO DE DADOS DE AUTENTICAÇÃO
   loadAuthData() {
     this.token =
       localStorage.getItem("token") || localStorage.getItem("accessToken");
@@ -29,13 +32,11 @@ class GoalManager {
       return false;
     }
 
-    if (!this.currentWalletId) {
-      return false;
-    }
-
+    if (!this.currentWalletId) return false;
     return true;
   }
 
+  // CONFIGURAÇÃO DE EVENT LISTENERS
   setupEventListeners() {
     document
       .getElementById("openAddGoalModalBtn")
@@ -62,21 +63,23 @@ class GoalManager {
     );
   }
 
+  // MANIPULAÇÃO DE FECHAMENTO DE MODAL
   handleCloseModal(e) {
     const modalId = e.target.closest(".modal-overlay").id;
     this.closeModal(modalId);
   }
 
+  // MANIPULAÇÃO DE MUDANÇA DE ABA
   handleTabChange(e) {
     document.querySelector(".goal-tab.active").classList.remove("active");
     e.target.classList.add("active");
     this.renderGoals();
   }
 
+  // MANIPULAÇÃO DE MUDANÇA DE PORTFÓLIO
   handlePortfolioChange(e) {
     if (e.detail?.portfolio?.saldo_total !== undefined) {
       this.walletBalance = e.detail.portfolio.saldo_total;
-
       const newWalletId =
         localStorage.getItem("selectedWalletId") ||
         localStorage.getItem("walletId") ||
@@ -92,6 +95,7 @@ class GoalManager {
     }
   }
 
+  // CARREGAMENTO DO SALDO DA CARTEIRA
   async loadWalletBalance() {
     if (!this.loadAuthData()) return;
 
@@ -107,7 +111,6 @@ class GoalManager {
       );
 
       const data = await response.json();
-
       if (data.error) throw new Error(data.msg);
 
       this.walletBalance = data.data?.saldo_total || data.data?.saldo || 0;
@@ -117,6 +120,7 @@ class GoalManager {
     }
   }
 
+  // CARREGAMENTO DAS METAS
   async loadGoals() {
     if (!this.loadAuthData()) return;
 
@@ -129,7 +133,6 @@ class GoalManager {
       });
 
       const data = await response.json();
-
       if (data.error) throw new Error(data.msg);
 
       const allGoals = data.data?.data || [];
@@ -146,6 +149,7 @@ class GoalManager {
     }
   }
 
+  // ATUALIZAÇÃO DAS ESTATÍSTICAS
   updateStats() {
     const activeGoals = this.goals.filter(
       (goal) => goal.meta_status === "ATIVA"
@@ -164,6 +168,7 @@ class GoalManager {
     statValues[2].textContent = this.formatCurrency(totalValue);
   }
 
+  // RENDERIZAÇÃO DAS METAS
   renderGoals() {
     const goalsList = document.getElementById("goalsList");
     const filter = document.querySelector(".goal-tab.active").dataset.filter;
@@ -181,6 +186,7 @@ class GoalManager {
     this.attachGoalEventListeners();
   }
 
+  // FILTRAGEM DE METAS POR STATUS
   filterGoalsByStatus(filter) {
     switch (filter) {
       case "active":
@@ -192,6 +198,7 @@ class GoalManager {
     }
   }
 
+  // CRIAÇÃO DO CARD DE META
   createGoalCard(goal) {
     const progress = this.calculateProgress(goal);
     const isCompleted = goal.meta_status === "CONCLUIDA";
@@ -236,11 +243,13 @@ class GoalManager {
     `;
   }
 
+  // CÁLCULO DO PROGRESSO
   calculateProgress(goal) {
     const targetValue = parseFloat(goal.valor_meta);
     return targetValue > 0 ? (this.walletBalance / targetValue) * 100 : 0;
   }
 
+  // ANEXAR EVENT LISTENERS DAS METAS
   attachGoalEventListeners() {
     document
       .querySelectorAll(".edit-goal")
@@ -254,18 +263,21 @@ class GoalManager {
       );
   }
 
+  // MANIPULAÇÃO DE EDIÇÃO DE META
   handleEditGoal(e) {
     e.stopPropagation();
     const goalId = parseInt(e.currentTarget.dataset.goalId);
     this.openEditModal(goalId);
   }
 
+  // MANIPULAÇÃO DE EXCLUSÃO DE META
   handleDeleteGoal(e) {
     e.stopPropagation();
     const goalId = parseInt(e.currentTarget.dataset.goalId);
     this.deleteGoal(goalId);
   }
 
+  // MANIPULAÇÃO DE ADIÇÃO DE META
   async handleAddGoal(e) {
     e.preventDefault();
 
@@ -286,7 +298,6 @@ class GoalManager {
       });
 
       const data = await response.json();
-
       if (data.error) throw new Error(data.msg);
 
       alert("Meta criada com sucesso!");
@@ -298,6 +309,7 @@ class GoalManager {
     }
   }
 
+  // MANIPULAÇÃO DE ATUALIZAÇÃO DE META
   async handleUpdateGoal(e) {
     e.preventDefault();
 
@@ -315,7 +327,6 @@ class GoalManager {
       });
 
       const data = await response.json();
-
       if (data.error) throw new Error(data.msg);
 
       alert("Meta atualizada com sucesso!");
@@ -326,6 +337,7 @@ class GoalManager {
     }
   }
 
+  // OBTENÇÃO DOS DADOS DO FORMULÁRIO
   getFormData(type) {
     const prefix = type === "edit" ? "edit-" : "";
     const idField = type === "edit" ? "edit-id" : null;
@@ -342,6 +354,7 @@ class GoalManager {
     };
   }
 
+  // VALIDAÇÃO DO FORMULÁRIO
   validateForm(data, type) {
     const errors = this.getValidationErrors(data);
     this.clearErrors(type);
@@ -354,16 +367,16 @@ class GoalManager {
     return true;
   }
 
+  // OBTENÇÃO DOS ERROS DE VALIDAÇÃO
   getValidationErrors(data) {
     const errors = [];
-
     if (!data.descricao) errors.push("description");
     if (!data.data_final) errors.push("completionDate");
     if (!data.valor_meta || data.valor_meta <= 0) errors.push("targetValue");
-
     return errors;
   }
 
+  // LIMPEZA DOS ERROS
   clearErrors(type) {
     const prefix = type === "edit" ? "edit-" : "";
     ["description", "completionDate", "targetValue"].forEach((field) => {
@@ -376,6 +389,7 @@ class GoalManager {
     });
   }
 
+  // EXIBIÇÃO DOS ERROS
   showErrors(errors, type) {
     const prefix = type === "edit" ? "edit-" : "";
     errors.forEach((field) => {
@@ -388,6 +402,7 @@ class GoalManager {
     });
   }
 
+  // ABERTURA DO MODAL DE EDIÇÃO
   openEditModal(goalId) {
     const goal = this.goals.find((g) => g.id === goalId);
     if (!goal) {
@@ -409,6 +424,7 @@ class GoalManager {
     this.openModal("editGoalModal");
   }
 
+  // EXCLUSÃO DE META
   async deleteGoal(goalId) {
     if (!goalId || !confirm("Tem certeza que deseja excluir esta meta?"))
       return;
@@ -423,7 +439,6 @@ class GoalManager {
       });
 
       const data = await response.json();
-
       if (data.error) throw new Error(data.msg);
 
       alert("Meta excluída com sucesso!");
@@ -433,20 +448,24 @@ class GoalManager {
     }
   }
 
+  // ABERTURA DE MODAL
   openModal(modalId) {
     document.getElementById(modalId).style.display = "flex";
   }
 
+  // FECHAMENTO DE MODAL
   closeModal(modalId) {
     document.getElementById(modalId).style.display = "none";
   }
 
+  // FORMATAÇÃO DE MOEDA
   formatCurrency(value) {
     return `R$ ${parseFloat(value || 0)
       .toFixed(2)
       .replace(".", ",")}`;
   }
 
+  // MUDANÇA DE CARTEIRA
   onWalletChange() {
     const oldWalletId = this.currentWalletId;
     this.loadAuthData();
@@ -458,8 +477,10 @@ class GoalManager {
   }
 }
 
+// INICIALIZAÇÃO DA CLASSE
 const goalManager = new GoalManager();
 
+// EVENT LISTENERS GLOBAIS
 document.addEventListener("DOMContentLoaded", () => {
   goalManager.init();
 });

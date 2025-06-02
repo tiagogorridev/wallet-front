@@ -1,90 +1,99 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>MyWallet - Administrador</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/administrador/header-adm.css">
-    <link rel="stylesheet" href="../css/administrador/components-administrador/components-administrador.css">
-    <link rel="stylesheet" href="../css/administrador/gestao-usuarios.css">
-    <link rel="stylesheet" href="../css/administrador/relatorios.css">
-    <link rel="stylesheet" href="../css/administrador/modal-admin.css">
-    <link rel="stylesheet" href="../css/administrador/adicionar-usuario.css">
-</head>
-<div class="header-container">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/administrador/header-adm.css" />
+    <link
+      rel="stylesheet"
+      href="../css/administrador/components-administrador/components-administrador.css"
+    />
+    <link rel="stylesheet" href="../css/administrador/gestao-usuarios.css" />
+    <link rel="stylesheet" href="../css/administrador/relatorios.css" />
+    <link rel="stylesheet" href="../css/administrador/modal-admin.css" />
+    <link rel="stylesheet" href="../css/administrador/adicionar-usuario.css" />
+  </head>
+  <div class="header-container">
     <header class="header-summary">
-        <div class="logo-section">
-            <div class="logo">
-                <i class="fas fa-chart-line"></i>
-                <span>MyWallet</span>
-            </div>
+      <div class="logo-section">
+        <div class="logo">
+          <i class="fas fa-chart-line"></i>
+          <span>MyWallet</span>
         </div>
-        <div class="portfolio-actions">
-            <button id="logoutBtn" class="logout-btn desktop-only">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </button>
-            <div class="user-profile desktop-only">
-                <a href="#">
-                    <i class="fas fa-user-circle"></i>
-                </a>
-            </div>
-            <button class="mobile-menu-btn mobile-only">
-                <i class="fas fa-bars"></i>
-            </button>
+      </div>
+      <div class="portfolio-actions">
+        <button id="logoutBtn" class="logout-btn desktop-only">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </button>
+        <div class="user-profile desktop-only">
+          <a href="#">
+            <i class="fas fa-user-circle"></i>
+          </a>
         </div>
+        <button class="mobile-menu-btn mobile-only">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
     </header>
 
     <nav class="navigation">
-        <div class="desktop-menu">
-            <a href="dashboard.html" class="nav-item">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>DASHBOARD</span>
-            </a>
-            <a href="gestao-usuarios.html" class="nav-item">
-                <i class="fas fa-users"></i>
-                <span>GESTÃO DE USUÁRIOS</span>
-            </a>
-            <a href="adicionar-usuario.html" class="nav-item">
-                <i class="fas fa-user-plus"></i>
-                <span>ADICIONAR USUÁRIO</span>
-            </a>
-        </div>
+      <div class="desktop-menu">
+        <a href="dashboard.html" class="nav-item">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>DASHBOARD</span>
+        </a>
+        <a href="gestao-usuarios.html" class="nav-item">
+          <i class="fas fa-users"></i>
+          <span>GESTÃO DE USUÁRIOS</span>
+        </a>
+        <a href="adicionar-usuario.html" class="nav-item">
+          <i class="fas fa-user-plus"></i>
+          <span>ADICIONAR USUÁRIO</span>
+        </a>
+      </div>
     </nav>
 
     <!-- Mobile Menu -->
     <div class="mobile-menu">
-        <div class="mobile-menu-header">
-            <div class="user-profile">
-                <a href="javascript:void(0)">
-                    <i class="fas fa-user-circle"></i>
-                </a>
-            </div>
-            <button class="close-mobile-menu">
-                <i class="fas fa-times"></i>
-            </button>
+      <div class="mobile-menu-header">
+        <div class="user-profile">
+          <a href="javascript:void(0)">
+            <i class="fas fa-user-circle"></i>
+          </a>
         </div>
-        <div class="mobile-menu-items">
-            <a href="dashboard.html" class="nav-item">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="gestao-usuarios.html" class="nav-item">
-                <i class="fas fa-users"></i>
-                <span>Gestão de Usuários</span>
-            </a>
-            <a href="adicionar-usuario.html" class="nav-item">
-                <i class="fas fa-user-plus"></i>
-                <span>Adicionar Usuário</span>
-            </a>
-        </div>
-        <div class="mobile-menu-footer">
-            <button id="mobileLogoutBtn" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </button>
-        </div>
+        <button class="close-mobile-menu">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="mobile-menu-items">
+        <a href="dashboard.html" class="nav-item">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="gestao-usuarios.html" class="nav-item">
+          <i class="fas fa-users"></i>
+          <span>Gestão de Usuários</span>
+        </a>
+        <a href="adicionar-usuario.html" class="nav-item">
+          <i class="fas fa-user-plus"></i>
+          <span>Adicionar Usuário</span>
+        </a>
+      </div>
+      <div class="mobile-menu-footer">
+        <button id="mobileLogoutBtn" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </button>
+      </div>
     </div>
-</div>
+  </div>
+</html>

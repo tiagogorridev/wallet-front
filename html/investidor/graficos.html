@@ -1,81 +1,89 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyWallet - Gráficos</title>
-    <link rel="stylesheet" href="../../css/configuracoes.css">
-    <link rel="stylesheet" href="../../css/auth/style.css">
-    <link rel="stylesheet" href="../../css/investidor/header.css">
-    <link rel="stylesheet" href="../../css/investidor/components-investidor/components-investidor.css">
-    <link rel="stylesheet" href="../../css/investidor/graficos.css">
-    <link rel="shortcut icon" href="../../assets/favicon-icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
+    <link rel="stylesheet" href="../../css/configuracoes.css" />
+    <link rel="stylesheet" href="../../css/auth/style.css" />
+    <link rel="stylesheet" href="../../css/investidor/header.css" />
+    <link
+      rel="stylesheet"
+      href="../../css/investidor/components-investidor/components-investidor.css"
+    />
+    <link rel="stylesheet" href="../../css/investidor/graficos.css" />
+    <link
+      rel="shortcut icon"
+      href="../../assets/favicon-icon.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
 
-<body>
+  <body>
     <div class="dashboard-container">
-        <header id="header"></header>
-        <div class="main-content">
-            <section class="section chart-section">
-                <div class="section-header">
-                    <h2>Evolução do Patrimônio</h2>
-                    <div class="filters">
-                        <div class="filter-data" id="patrimonyFilter">
-                            <button class="filter-option active" data-value="all">ALL</button>
-                            <button class="filter-option" data-value="3">3 MESES</button>
-                            <button class="filter-option" data-value="6">6 MESES</button>
-                            <button class="filter-option" data-value="12">12 MESES</button>
-                            <button class="filter-option" data-value="24">24 MESES</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="patrimonioChart"></canvas>
-                </div>
-            </section>
+      <header id="header"></header>
+      <div class="main-content">
+        <section class="section chart-section">
+          <div class="section-header">
+            <h2>Evolução do Patrimônio</h2>
+            <div class="filters">
+              <div class="filter-data" id="patrimonyFilter">
+                <button class="filter-option active" data-value="all">
+                  ALL
+                </button>
+                <button class="filter-option" data-value="3">3 MESES</button>
+                <button class="filter-option" data-value="6">6 MESES</button>
+                <button class="filter-option" data-value="12">12 MESES</button>
+                <button class="filter-option" data-value="24">24 MESES</button>
+              </div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="patrimonioChart"></canvas>
+          </div>
+        </section>
 
-            <section class="section chart-section">
-                <div class="section-header">
-                    <h2>Patrimônio por Categoria</h2>
-                </div>
-                <div class="pie-chart-container">
-                    <canvas id="assetsDistributionChart"></canvas>
-                    <div class="pie-chart-legend" id="assetsDistributionLegend"></div>
-                </div>
-            </section>
-        </div>
+        <section class="section chart-section">
+          <div class="section-header">
+            <h2>Patrimônio por Categoria</h2>
+          </div>
+          <div class="pie-chart-container">
+            <canvas id="assetsDistributionChart"></canvas>
+            <div class="pie-chart-legend" id="assetsDistributionLegend"></div>
+          </div>
+        </section>
+      </div>
 
-        <div class="main-content">
-            <section class="section chart-section">
-                <div class="section-header">
-                    <h2>Ativos na Carteira</h2>
-                </div>
-                <div class="pie-chart-container">
-                    <canvas id="grafico-por-ativos"></canvas>
-                    <div class="pie-chart-legend" id="grafico-por-ativos-legend"></div>
-                </div>
-            </section>
+      <div class="main-content">
+        <section class="section chart-section">
+          <div class="section-header">
+            <h2>Ativos na Carteira</h2>
+          </div>
+          <div class="pie-chart-container">
+            <canvas id="grafico-por-ativos"></canvas>
+            <div class="pie-chart-legend" id="grafico-por-ativos-legend"></div>
+          </div>
+        </section>
 
-            <section class="section chart-section">
-                <div class="section-header">
-                    <h2>Cotação de Moedas</h2>
-                </div>
-                <div>
-                    <ul id="cotacoes">
-                        <li>Dólar Americano (USD): <span id="usd"></span></li>
-                        <li>Euro (EUR): <span id="eur"></span></li>
-                        <li>Libra Esterlina (GBP): <span id="gbp"></span></li>
-                        <li>Dólar Canadense (CAD): <span id="cad"></span></li>
-                    </ul>
-
-                </div>
-            </section>
-        </div>
-
+        <section class="section chart-section">
+          <div class="section-header">
+            <h2>Cotação de Moedas</h2>
+          </div>
+          <div>
+            <ul id="cotacoes">
+              <li>Dólar Americano (USD): <span id="usd"></span></li>
+              <li>Euro (EUR): <span id="eur"></span></li>
+              <li>Libra Esterlina (GBP): <span id="gbp"></span></li>
+              <li>Dólar Canadense (CAD): <span id="cad"></span></li>
+            </ul>
+          </div>
+        </section>
+      </div>
     </div>
-
 
     <script src="../../js/auth/auth-service.js"></script>
     <script src="../../js/auth/acess.js"></script>
@@ -88,6 +96,5 @@
     <script src="../../js/investidor/resumo/asset-manager.js"></script>
     <script src="../../js/investidor/resumo/chart-manager.js"></script>
     <script src="../../js/investidor/graficos-por-ativos.js"></script>
-</body>
-
+  </body>
 </html>

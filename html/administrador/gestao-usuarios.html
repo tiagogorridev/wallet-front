@@ -1,135 +1,153 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyWallet - Gestão de Usuários</title>
-    <link rel="stylesheet" href="../../css/configuracoes.css">
-    <link rel="stylesheet" href="../../css/administrador/modal-admin.css">
-    <link rel="stylesheet" href="../../css/auth/style.css">
-    <link rel="stylesheet" href="../../css/administrador/header-adm.css">
-    <link rel="stylesheet" href="../../css/administrador/gestao-usuarios.css">
-    <link rel="stylesheet" href="../../css/administrador/components-administrador/components-administrador.css">
-    <link rel="shortcut icon" href="../../assets/favicon-icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-</head>
+    <link rel="stylesheet" href="../../css/configuracoes.css" />
+    <link rel="stylesheet" href="../../css/administrador/modal-admin.css" />
+    <link rel="stylesheet" href="../../css/auth/style.css" />
+    <link rel="stylesheet" href="../../css/administrador/header-adm.css" />
+    <link rel="stylesheet" href="../../css/administrador/gestao-usuarios.css" />
+    <link
+      rel="stylesheet"
+      href="../../css/administrador/components-administrador/components-administrador.css"
+    />
+    <link
+      rel="shortcut icon"
+      href="../../assets/favicon-icon.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
 
-<body>
+  <body>
     <header id="admin-header"></header>
 
     <div class="dashboard-container">
-        <div class="dashboard-header">
-            <div class="header-content">
-                <h1>Gestão de Usuários</h1>
-                <p>Gerencie usuários da plataforma MyWallet</p>
-            </div>
+      <div class="dashboard-header">
+        <div class="header-content">
+          <h1>Gestão de Usuários</h1>
+          <p>Gerencie usuários da plataforma MyWallet</p>
         </div>
+      </div>
 
-        <main class="main-content">
-            <section class="search-section">
-                <div class="search-container">
-                    <div class="search-box">
-                        <input type="text" id="search-users" placeholder="Buscar por nome, email ou ID...">
-                        <button class="search-btn">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </section>
+      <main class="main-content">
+        <section class="search-section">
+          <div class="search-container">
+            <div class="search-box">
+              <input
+                type="text"
+                id="search-users"
+                placeholder="Buscar por nome, email ou ID..."
+              />
+              <button class="search-btn">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </section>
 
-            <section class="users-list-section">
-                <div class="section-header">
-                    <h2>Lista de Usuários</h2>
-                    <div class="table-actions"></div>
-                </div>
+        <section class="users-list-section">
+          <div class="section-header">
+            <h2>Lista de Usuários</h2>
+            <div class="table-actions"></div>
+          </div>
 
-                <div class="users-table-container">
-                    <table class="users-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Usuário</th>
-                                <th>Email</th>
-                                <th>Perfil</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="users-table-body">
-                        </tbody>
-                    </table>
-                </div>
+          <div class="users-table-container">
+            <table class="users-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Usuário</th>
+                  <th>Email</th>
+                  <th>Perfil</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body"></tbody>
+            </table>
+          </div>
 
-                <div class="pagination">
-                    <div class="pagination-info">
-                        <span id="pagination-status">Carregando...</span>
-                    </div>
-                    <div class="pagination-controls">
-                        <select class="per-page-select" id="per-page-select">
-                            <option value="8">8 por página</option>
-                            <option value="16">16 por página</option>
-                            <option value="32">32 por página</option>
-                            <option value="64">64 por página</option>
-                        </select>
-                        <div class="pagination-buttons" id="pagination-buttons">
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+          <div class="pagination">
+            <div class="pagination-info">
+              <span id="pagination-status">Carregando...</span>
+            </div>
+            <div class="pagination-controls">
+              <select class="per-page-select" id="per-page-select">
+                <option value="8">8 por página</option>
+                <option value="16">16 por página</option>
+                <option value="32">32 por página</option>
+                <option value="64">64 por página</option>
+              </select>
+              <div class="pagination-buttons" id="pagination-buttons"></div>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
 
     <div class="modal" id="delete-confirmation-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Confirmar Exclusão</h3>
-                <button class="close-modal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Tem certeza que deseja excluir este usuário?</p>
-                <div class="modal-actions">
-                    <button id="confirm-delete" class="btn btn-danger">Excluir</button>
-                    <button id="cancel-delete" class="btn btn-secondary">Cancelar</button>
-                </div>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Confirmar Exclusão</h3>
+          <button class="close-modal">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <p>Tem certeza que deseja excluir este usuário?</p>
+          <div class="modal-actions">
+            <button id="confirm-delete" class="btn btn-danger">Excluir</button>
+            <button id="cancel-delete" class="btn btn-secondary">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="modal" id="edit-user-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Editar Usuário</h3>
-                <button class="close-modal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="edit-user-form">
-                    <div class="form-group">
-                        <label for="edit-user-id">ID</label>
-                        <input type="text" id="edit-user-id" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-user-name">Nome</label>
-                        <input type="text" id="edit-user-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-user-email">Email</label>
-                        <input type="email" id="edit-user-email" required>
-                    </div>
-                    <div class="modal-actions">
-                        <button type="submit" id="save-user" class="btn btn-primary">Salvar</button>
-                        <button type="button" id="cancel-edit" class="btn btn-secondary">Cancelar</button>
-                    </div>
-                </form>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Editar Usuário</h3>
+          <button class="close-modal">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
+        <div class="modal-body">
+          <form id="edit-user-form">
+            <div class="form-group">
+              <label for="edit-user-id">ID</label>
+              <input type="text" id="edit-user-id" readonly />
+            </div>
+            <div class="form-group">
+              <label for="edit-user-name">Nome</label>
+              <input type="text" id="edit-user-name" required />
+            </div>
+            <div class="form-group">
+              <label for="edit-user-email">Email</label>
+              <input type="email" id="edit-user-email" required />
+            </div>
+            <div class="modal-actions">
+              <button type="submit" id="save-user" class="btn btn-primary">
+                Salvar
+              </button>
+              <button type="button" id="cancel-edit" class="btn btn-secondary">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
     <script src="../../js/auth/auth-service.js"></script>
     <script src="../../js/auth/acess.js"></script>
     <script src="../../js/administrador/header-adm.js"></script>
     <script src="../../js/administrador/gestao-usuarios.js"></script>
-</body>
+  </body>
 </html>

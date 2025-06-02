@@ -1,98 +1,98 @@
 <div class="header-container">
-    <header class="header-summary">
-        <div class="logo-section">
-            <div class="logo">
-                <i class="fas fa-chart-line"></i>
-                <span>MyWallet</span>
-            </div>
-        </div>
-        <div class="portfolio-actions">
-            <button id="logoutBtn" class="logout-btn desktop-only">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </button>
-            <div class="user-profile desktop-only">
-                <a href="#">
-                    <i class="fas fa-user-circle"></i>
-                </a>
-            </div>
-            <button class="mobile-menu-btn mobile-only">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-    </header>
-
-    <nav class="navigation">
-        <div class="desktop-menu">
-            <a href="dashboard-analista.html" class="nav-item">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>DASHBOARD</span>
-            </a>
-            <a href="noticias-analista.html" class="nav-item">
-                <i class="fas fa-wallet"></i>
-                <span>NOTÍCIAS</span>
-            </a>
-        </div>
-    </nav>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu">
-        <div class="mobile-menu-header">
-            <div class="user-profile">
-                <a href="perfil.html">
-                    <i class="fas fa-user-circle"></i>
-                </a>
-            </div>
-            <button class="close-mobile-menu">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="mobile-menu-items">
-            <a href="dashboard-analista.html" class="nav-item">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="noticias-analista.html" class="nav-item">
-                <i class="fas fa-wallet"></i>
-                <span>Notícias</span>
-            </a>
-        </div>
-        <div class="mobile-menu-footer">
-            <button id="mobileLogoutBtn" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </button>
-        </div>
+  <header class="header-summary">
+    <div class="logo-section">
+      <div class="logo">
+        <i class="fas fa-chart-line"></i>
+        <span>MyWallet</span>
+      </div>
     </div>
+    <div class="portfolio-actions">
+      <button id="logoutBtn" class="logout-btn desktop-only">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </button>
+      <div class="user-profile desktop-only">
+        <a href="#">
+          <i class="fas fa-user-circle"></i>
+        </a>
+      </div>
+      <button class="mobile-menu-btn mobile-only">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <nav class="navigation">
+    <div class="desktop-menu">
+      <a href="dashboard-analista.html" class="nav-item">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>DASHBOARD</span>
+      </a>
+      <a href="noticias-analista.html" class="nav-item">
+        <i class="fas fa-wallet"></i>
+        <span>NOTÍCIAS</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu">
+    <div class="mobile-menu-header">
+      <div class="user-profile">
+        <a href="perfil.html">
+          <i class="fas fa-user-circle"></i>
+        </a>
+      </div>
+      <button class="close-mobile-menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="mobile-menu-items">
+      <a href="dashboard-analista.html" class="nav-item">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="noticias-analista.html" class="nav-item">
+        <i class="fas fa-wallet"></i>
+        <span>Notícias</span>
+      </a>
+    </div>
+    <div class="mobile-menu-footer">
+      <button id="mobileLogoutBtn" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
-    // Mobile menu functionality
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const closeMobileMenu = document.querySelector('.close-mobile-menu');
-    const mobileMenu = document.querySelector('.mobile-menu');
+  // Mobile menu functionality
+  const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+  const closeMobileMenu = document.querySelector(".close-mobile-menu");
+  const mobileMenu = document.querySelector(".mobile-menu");
 
-    mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.add('active');
-    });
+  mobileMenuBtn.addEventListener("click", () => {
+    mobileMenu.classList.add("active");
+  });
 
-    closeMobileMenu.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-    });
+  closeMobileMenu.addEventListener("click", () => {
+    mobileMenu.classList.remove("active");
+  });
 
-    // Logout functionality
-    const logoutBtn = document.getElementById('logoutBtn');
-    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+  // Logout functionality
+  const logoutBtn = document.getElementById("logoutBtn");
+  const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
 
-    const handleLogout = () => {
-        // Clear any stored data
-        localStorage.clear();
-        sessionStorage.clear();
+  const handleLogout = () => {
+    // Clear any stored data
+    localStorage.clear();
+    sessionStorage.clear();
 
-        // Redirect to login page
-        window.location.href = '../auth/login.html';
-    };
+    // Redirect to login page
+    window.location.href = "../auth/login.html";
+  };
 
-    logoutBtn.addEventListener('click', handleLogout);
-    mobileLogoutBtn.addEventListener('click', handleLogout);
+  logoutBtn.addEventListener("click", handleLogout);
+  mobileLogoutBtn.addEventListener("click", handleLogout);
 </script>

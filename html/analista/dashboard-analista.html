@@ -1,123 +1,128 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyWallet - Dashboard Analista</title>
-    <link rel="shortcut icon" href="../../assets/favicon-icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="../../css/auth/style.css">
-    <link rel="stylesheet" href="../../css/analista/header-analista.css">
-    <link rel="stylesheet" href="../../css/analista/dashboard-analista.css">
-</head>
+    <link
+      rel="shortcut icon"
+      href="../../assets/favicon-icon.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../../css/auth/style.css" />
+    <link rel="stylesheet" href="../../css/analista/header-analista.css" />
+    <link rel="stylesheet" href="../../css/analista/dashboard-analista.css" />
+  </head>
 
-<body>
+  <body>
     <header id="header-analista"></header>
     <main class="dashboard-container">
-        <div class="dashboard-title">
-            <h1>Dashboard Analista</h1>
-            <p>Visão geral da gestão de carteiras</p>
+      <div class="dashboard-title">
+        <h1>Dashboard Analista</h1>
+        <p>Visão geral da gestão de carteiras</p>
+      </div>
+
+      <div class="filter-container">
+        <select id="periodFilter" class="period-filter">
+          <option value="30">Últimos 30 dias</option>
+          <option value="60">Últimos 60 dias</option>
+          <option value="90">Últimos 90 dias</option>
+        </select>
+      </div>
+
+      <section class="stats-section">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-wallet"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Carteiras Ativas</h3>
+            <p class="stat-value">18</p>
+            <p class="stat-change positive">+2.5%</p>
+          </div>
         </div>
 
-        <div class="filter-container">
-            <select id="periodFilter" class="period-filter">
-                <option value="30">Últimos 30 dias</option>
-                <option value="60">Últimos 60 dias</option>
-                <option value="90">Últimos 90 dias</option>
-            </select>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Clientes Atendidos</h3>
+            <p class="stat-value">47</p>
+            <p class="stat-change positive">+5.2%</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="portfolio-section">
+        <div class="section-header">
+          <h2>Últimas Carteiras Geridas</h2>
         </div>
 
-        <section class="stats-section">
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-wallet"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>Carteiras Ativas</h3>
-                    <p class="stat-value">18</p>
-                    <p class="stat-change positive">+2.5%</p>
-                </div>
+        <div class="portfolio-list">
+          <div class="portfolio-item">
+            <div class="portfolio-info">
+              <h3>Carteira Cripto Premium</h3>
+              <p>Cliente: João Silva</p>
+              <p>Valor: R$ 352.500,00</p>
             </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>Clientes Atendidos</h3>
-                    <p class="stat-value">47</p>
-                    <p class="stat-change positive">+5.2%</p>
-                </div>
+            <div class="portfolio-stats">
+              <div class="stat">
+                <span class="stat-label">Retorno</span>
+                <span class="stat-value positive">+5.8%</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Risco</span>
+                <span class="stat-value">Baixo</span>
+              </div>
             </div>
-        </section>
+          </div>
 
-        <section class="portfolio-section">
-            <div class="section-header">
-                <h2>Últimas Carteiras Geridas</h2>
+          <div class="portfolio-item">
+            <div class="portfolio-info">
+              <h3>Carteira Dividendos</h3>
+              <p>Cliente: Maria Oliveira</p>
+              <p>Valor: R$ 187.300,00</p>
             </div>
-
-            <div class="portfolio-list">
-                <div class="portfolio-item">
-                    <div class="portfolio-info">
-                        <h3>Carteira Cripto Premium</h3>
-                        <p>Cliente: João Silva</p>
-                        <p>Valor: R$ 352.500,00</p>
-                    </div>
-                    <div class="portfolio-stats">
-                        <div class="stat">
-                            <span class="stat-label">Retorno</span>
-                            <span class="stat-value positive">+5.8%</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-label">Risco</span>
-                            <span class="stat-value">Baixo</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="portfolio-item">
-                    <div class="portfolio-info">
-                        <h3>Carteira Dividendos</h3>
-                        <p>Cliente: Maria Oliveira</p>
-                        <p>Valor: R$ 187.300,00</p>
-                    </div>
-                    <div class="portfolio-stats">
-                        <div class="stat">
-                            <span class="stat-label">Retorno</span>
-                            <span class="stat-value positive">+7.2%</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-label">Risco</span>
-                            <span class="stat-value">Médio</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="portfolio-item">
-                    <div class="portfolio-info">
-                        <h3>Carteira Growth Tech</h3>
-                        <p>Cliente: Pedro Souza</p>
-                        <p>Valor: R$ 421.800,00</p>
-                    </div>
-                    <div class="portfolio-stats">
-                        <div class="stat">
-                            <span class="stat-label">Retorno</span>
-                            <span class="stat-value negative">-2.3%</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-label">Risco</span>
-                            <span class="stat-value">Alto</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="portfolio-stats">
+              <div class="stat">
+                <span class="stat-label">Retorno</span>
+                <span class="stat-value positive">+7.2%</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Risco</span>
+                <span class="stat-value">Médio</span>
+              </div>
             </div>
-        </section>
+          </div>
+
+          <div class="portfolio-item">
+            <div class="portfolio-info">
+              <h3>Carteira Growth Tech</h3>
+              <p>Cliente: Pedro Souza</p>
+              <p>Valor: R$ 421.800,00</p>
+            </div>
+            <div class="portfolio-stats">
+              <div class="stat">
+                <span class="stat-label">Retorno</span>
+                <span class="stat-value negative">-2.3%</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Risco</span>
+                <span class="stat-value">Alto</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
     <script src="../../js/auth/auth-service.js"></script>
     <script src="../../js/auth/acess.js"></script>
     <script src="../../js/analista/header-analista.js"></script>
     <script src="../../js/analista/dashboard-analista.js"></script>
-</body>
-
+  </body>
 </html>
