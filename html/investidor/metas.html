@@ -20,6 +20,39 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <style>
+      .complete-goal {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 5px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 5px;
+      }
+
+      .complete-goal:hover {
+        background: #218838;
+      }
+
+      .progress-percentage {
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .due-date {
+        font-size: 12px;
+        color: #888;
+        margin-left: 10px;
+      }
+
+      .goal-actions {
+        display: flex;
+        gap: 5px;
+      }
+    </style>
   </head>
 
   <body>
@@ -70,6 +103,7 @@
         <div class="goals-list" id="goalsList"></div>
       </section>
 
+      <!-- Modal para Adicionar Meta -->
       <div class="modal-overlay" id="addGoalModal">
         <div class="modal-container">
           <div class="modal-header">
@@ -79,15 +113,17 @@
 
           <form id="addGoalForm" class="add-goal-form">
             <div class="form-group">
-              <label for="description">Titulo</label>
+              <label for="description">Título</label>
               <input
                 type="text"
                 id="description"
                 name="description"
-                placeholder="Ex: Para gastos imprevistos"
+                placeholder="Ex: Reserva de emergência"
+                required
+                minlength="3"
               />
               <div class="error-message" id="descriptionError">
-                Titulo inválido
+                Título é obrigatório e deve ter no mínimo 3 caracteres
               </div>
             </div>
 
@@ -113,6 +149,7 @@
                 placeholder="Digite o valor total da meta"
                 required
                 min="0"
+                step="0.01"
               />
               <div class="error-message" id="targetValueError">
                 Digite um valor válido maior que zero
@@ -131,6 +168,7 @@
         </div>
       </div>
 
+      <!-- Modal para Editar Meta -->
       <div class="modal-overlay" id="editGoalModal">
         <div class="modal-container">
           <div class="modal-header">
@@ -178,6 +216,7 @@
                 placeholder="Digite o valor total da meta"
                 required
                 min="0"
+                step="0.01"
               />
               <div class="error-message" id="edit-targetValueError">
                 Digite um valor válido maior que zero

@@ -1,7 +1,6 @@
 const API_URL = "http://191.239.116.115:8080";
 
 class GoalManager {
-  // CONSTRUTOR - INICIALIZAÇÃO DA CLASSE
   constructor() {
     this.goals = [];
     this.walletBalance = 0;
@@ -9,7 +8,6 @@ class GoalManager {
     this.token = null;
   }
 
-  // INICIALIZAÇÃO PRINCIPAL
   init() {
     this.loadAuthData();
     this.setupEventListeners();
@@ -17,7 +15,6 @@ class GoalManager {
     this.loadWalletBalance();
   }
 
-  // CARREGAMENTO DE DADOS DE AUTENTICAÇÃO
   loadAuthData() {
     this.token =
       localStorage.getItem("token") || localStorage.getItem("accessToken");
@@ -36,47 +33,48 @@ class GoalManager {
     return true;
   }
 
-  // CONFIGURAÇÃO DE EVENT LISTENERS
   setupEventListeners() {
     document
       .getElementById("openAddGoalModalBtn")
       .addEventListener("click", () => this.openModal("addGoalModal"));
+
     document
       .querySelectorAll(".close-btn, .close-modal-btn")
       .forEach((btn) =>
         btn.addEventListener("click", this.handleCloseModal.bind(this))
       );
+
     document
       .getElementById("addGoalForm")
       .addEventListener("submit", this.handleAddGoal.bind(this));
+
     document
       .getElementById("editGoalForm")
       .addEventListener("submit", this.handleUpdateGoal.bind(this));
+
     document
       .querySelectorAll(".goal-tab")
       .forEach((tab) =>
         tab.addEventListener("click", this.handleTabChange.bind(this))
       );
+
     document.addEventListener(
       "portfolioChanged",
       this.handlePortfolioChange.bind(this)
     );
   }
 
-  // MANIPULAÇÃO DE FECHAMENTO DE MODAL
   handleCloseModal(e) {
     const modalId = e.target.closest(".modal-overlay").id;
     this.closeModal(modalId);
   }
 
-  // MANIPULAÇÃO DE MUDANÇA DE ABA
   handleTabChange(e) {
     document.querySelector(".goal-tab.active").classList.remove("active");
     e.target.classList.add("active");
     this.renderGoals();
   }
 
-  // MANIPULAÇÃO DE MUDANÇA DE PORTFÓLIO
   handlePortfolioChange(e) {
     if (e.detail?.portfolio?.saldo_total !== undefined) {
       this.walletBalance = e.detail.portfolio.saldo_total;
@@ -95,7 +93,6 @@ class GoalManager {
     }
   }
 
-  // CARREGAMENTO DO SALDO DA CARTEIRA
   async loadWalletBalance() {
     if (!this.loadAuthData()) return;
 
@@ -120,7 +117,40 @@ class GoalManager {
     }
   }
 
-  // CARREGAMENTO DAS METAS
+  async updateGoalStatusIfCompleted(goal) {
+    const progress = this.calculateProgress(goal);
+    const shouldBeCompleted = progress >= 100;
+    const isCurrentlyActive = goal.meta_status === "ATIVA";
+
+    if (shouldBeCompleted && isCurrentlyActive) {
+      try {
+        const response = await fetch(`${API_URL}/goals`, {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: goal.id,
+            descricao: goal.descricao,
+            valor_meta: goal.valor_meta,
+            data_final: goal.data_final,
+            meta_status: "CONCLUIDA",
+          }),
+        });
+
+        const data = await response.json();
+        if (!data.error) {
+          goal.meta_status = "CONCLUIDA";
+          return true;
+        }
+      } catch (error) {
+        console.error("Erro ao atualizar status da meta:", error);
+      }
+    }
+    return false;
+  }
+
   async loadGoals() {
     if (!this.loadAuthData()) return;
 
@@ -140,8 +170,20 @@ class GoalManager {
         (goal) => goal.id_carteira == this.currentWalletId
       );
 
+      // Verifica e atualiza status das metas automaticamente
+      let statusUpdated = false;
+      for (const goal of this.goals) {
+        const updated = await this.updateGoalStatusIfCompleted(goal);
+        if (updated) statusUpdated = true;
+      }
+
       this.updateStats();
       this.renderGoals();
+
+      // Se algum status foi atualizado, recarrega para ter dados consistentes
+      if (statusUpdated) {
+        setTimeout(() => this.loadGoals(), 1000);
+      }
     } catch (error) {
       this.goals = [];
       this.updateStats();
@@ -149,7 +191,6 @@ class GoalManager {
     }
   }
 
-  // ATUALIZAÇÃO DAS ESTATÍSTICAS
   updateStats() {
     const activeGoals = this.goals.filter(
       (goal) => goal.meta_status === "ATIVA"
@@ -168,7 +209,6 @@ class GoalManager {
     statValues[2].textContent = this.formatCurrency(totalValue);
   }
 
-  // RENDERIZAÇÃO DAS METAS
   renderGoals() {
     const goalsList = document.getElementById("goalsList");
     const filter = document.querySelector(".goal-tab.active").dataset.filter;
@@ -186,7 +226,6 @@ class GoalManager {
     this.attachGoalEventListeners();
   }
 
-  // FILTRAGEM DE METAS POR STATUS
   filterGoalsByStatus(filter) {
     switch (filter) {
       case "active":
@@ -198,86 +237,116 @@ class GoalManager {
     }
   }
 
-  // CRIAÇÃO DO CARD DE META
   createGoalCard(goal) {
     const progress = this.calculateProgress(goal);
-    const isCompleted = goal.meta_status === "CONCLUIDA";
+    const isCompleted = goal.meta_status === "CONCLUIDA" || progress >= 100;
 
     return `
-      <div class="goal-card ${isCompleted ? "completed" : ""}" data-id="${
+            <div class="goal-card ${isCompleted ? "completed" : ""}" data-id="${
       goal.id
     }">
-        <div class="goal-header">
-          <h3>${goal.descricao}</h3>
-          <div class="goal-actions">
-            <button class="edit-goal" data-goal-id="${goal.id}">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="delete-goal" data-goal-id="${goal.id}">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-        <div class="goal-progress">
-          <div class="progress-bar">
-            <div class="progress" style="width: ${Math.min(
-              progress,
-              100
-            )}%;"></div>
-          </div>
-          <div class="progress-info">
-            <span class="current-value">${this.formatCurrency(
-              this.walletBalance
-            )}</span>
-            <span class="target-value">${this.formatCurrency(
-              goal.valor_meta
-            )}</span>
-          </div>
-        </div>
-        <div class="goal-dates">
-          <span class="status-badge ${isCompleted ? "completed" : "active"}">
-            ${isCompleted ? "Concluída" : "Ativa"}
-          </span>
-        </div>
-      </div>
-    `;
+              <div class="goal-header">
+                <h3>${goal.descricao}</h3>
+                <div class="goal-actions">
+                  ${
+                    !isCompleted && progress >= 100
+                      ? `
+                    <button class="complete-goal" data-goal-id="${goal.id}" title="Marcar como concluída">
+                      <i class="fas fa-check"></i>
+                    </button>
+                  `
+                      : ""
+                  }
+                  <button class="edit-goal" data-goal-id="${goal.id}">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="delete-goal" data-goal-id="${goal.id}">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="goal-progress">
+                <div class="progress-bar">
+                  <div class="progress" style="width: ${Math.min(
+                    progress,
+                    100
+                  )}%;"></div>
+                </div>
+                <div class="progress-info">
+                  <span class="current-value">${this.formatCurrency(
+                    this.walletBalance
+                  )}</span>
+                  <span class="target-value">${this.formatCurrency(
+                    goal.valor_meta
+                  )}</span>
+                </div>
+                <div class="progress-percentage">
+                  ${Math.round(progress)}% concluído
+                </div>
+              </div>
+              <div class="goal-dates">
+                <span class="status-badge ${
+                  isCompleted ? "completed" : "active"
+                }">
+                  ${isCompleted ? "Concluída" : "Ativa"}
+                </span>
+                ${
+                  goal.data_final
+                    ? `<span class="due-date">Prazo: ${new Date(
+                        goal.data_final
+                      ).toLocaleDateString("pt-BR")}</span>`
+                    : ""
+                }
+              </div>
+            </div>
+          `;
   }
 
-  // CÁLCULO DO PROGRESSO
   calculateProgress(goal) {
     const targetValue = parseFloat(goal.valor_meta);
     return targetValue > 0 ? (this.walletBalance / targetValue) * 100 : 0;
   }
 
-  // ANEXAR EVENT LISTENERS DAS METAS
   attachGoalEventListeners() {
     document
       .querySelectorAll(".edit-goal")
       .forEach((btn) =>
         btn.addEventListener("click", this.handleEditGoal.bind(this))
       );
+
     document
       .querySelectorAll(".delete-goal")
       .forEach((btn) =>
         btn.addEventListener("click", this.handleDeleteGoal.bind(this))
       );
+
+    document
+      .querySelectorAll(".complete-goal")
+      .forEach((btn) =>
+        btn.addEventListener("click", this.handleCompleteGoal.bind(this))
+      );
   }
 
-  // MANIPULAÇÃO DE EDIÇÃO DE META
   handleEditGoal(e) {
     e.stopPropagation();
     const goalId = parseInt(e.currentTarget.dataset.goalId);
     this.openEditModal(goalId);
   }
 
-  // MANIPULAÇÃO DE EXCLUSÃO DE META
   handleDeleteGoal(e) {
     e.stopPropagation();
     const goalId = parseInt(e.currentTarget.dataset.goalId);
     this.deleteGoal(goalId);
   }
 
-  // MANIPULAÇÃO DE ADIÇÃO DE META
+  handleCompleteGoal(e) {
+    e.stopPropagation();
+    const goalId = parseInt(e.currentTarget.dataset.goalId);
+    if (confirm("Marcar esta meta como concluída?")) {
+      this.markGoalAsCompleted(goalId);
+    }
+  }
+
   async handleAddGoal(e) {
     e.preventDefault();
 
@@ -309,7 +378,6 @@ class GoalManager {
     }
   }
 
-  // MANIPULAÇÃO DE ATUALIZAÇÃO DE META
   async handleUpdateGoal(e) {
     e.preventDefault();
 
@@ -337,7 +405,6 @@ class GoalManager {
     }
   }
 
-  // OBTENÇÃO DOS DADOS DO FORMULÁRIO
   getFormData(type) {
     const prefix = type === "edit" ? "edit-" : "";
     const idField = type === "edit" ? "edit-id" : null;
@@ -354,7 +421,6 @@ class GoalManager {
     };
   }
 
-  // VALIDAÇÃO DO FORMULÁRIO
   validateForm(data, type) {
     const errors = this.getValidationErrors(data);
     this.clearErrors(type);
@@ -367,16 +433,15 @@ class GoalManager {
     return true;
   }
 
-  // OBTENÇÃO DOS ERROS DE VALIDAÇÃO
   getValidationErrors(data) {
     const errors = [];
-    if (!data.descricao) errors.push("description");
+    if (!data.descricao || data.descricao.length < 3)
+      errors.push("description");
     if (!data.data_final) errors.push("completionDate");
     if (!data.valor_meta || data.valor_meta <= 0) errors.push("targetValue");
     return errors;
   }
 
-  // LIMPEZA DOS ERROS
   clearErrors(type) {
     const prefix = type === "edit" ? "edit-" : "";
     ["description", "completionDate", "targetValue"].forEach((field) => {
@@ -389,7 +454,6 @@ class GoalManager {
     });
   }
 
-  // EXIBIÇÃO DOS ERROS
   showErrors(errors, type) {
     const prefix = type === "edit" ? "edit-" : "";
     errors.forEach((field) => {
@@ -402,7 +466,6 @@ class GoalManager {
     });
   }
 
-  // ABERTURA DO MODAL DE EDIÇÃO
   openEditModal(goalId) {
     const goal = this.goals.find((g) => g.id === goalId);
     if (!goal) {
@@ -424,7 +487,6 @@ class GoalManager {
     this.openModal("editGoalModal");
   }
 
-  // EXCLUSÃO DE META
   async deleteGoal(goalId) {
     if (!goalId || !confirm("Tem certeza que deseja excluir esta meta?"))
       return;
@@ -448,24 +510,50 @@ class GoalManager {
     }
   }
 
-  // ABERTURA DE MODAL
+  async markGoalAsCompleted(goalId) {
+    const goal = this.goals.find((g) => g.id === goalId);
+    if (!goal) return;
+
+    try {
+      const response = await fetch(`${API_URL}/goals`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: goal.id,
+          descricao: goal.descricao,
+          valor_meta: goal.valor_meta,
+          data_final: goal.data_final,
+          meta_status: "CONCLUIDA",
+        }),
+      });
+
+      const data = await response.json();
+      if (data.error) throw new Error(data.msg);
+
+      alert("Meta marcada como concluída!");
+      this.loadGoals();
+    } catch (error) {
+      alert(`Erro ao atualizar meta: ${error.message}`);
+    }
+  }
+
   openModal(modalId) {
     document.getElementById(modalId).style.display = "flex";
   }
 
-  // FECHAMENTO DE MODAL
   closeModal(modalId) {
     document.getElementById(modalId).style.display = "none";
   }
 
-  // FORMATAÇÃO DE MOEDA
   formatCurrency(value) {
     return `R$ ${parseFloat(value || 0)
       .toFixed(2)
       .replace(".", ",")}`;
   }
 
-  // MUDANÇA DE CARTEIRA
   onWalletChange() {
     const oldWalletId = this.currentWalletId;
     this.loadAuthData();
@@ -477,10 +565,9 @@ class GoalManager {
   }
 }
 
-// INICIALIZAÇÃO DA CLASSE
+// Inicialização
 const goalManager = new GoalManager();
 
-// EVENT LISTENERS GLOBAIS
 document.addEventListener("DOMContentLoaded", () => {
   goalManager.init();
 });
